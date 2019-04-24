@@ -14,7 +14,7 @@ void SuperficiePianeta::generaVertici()
 			i * larghezza_finestra_ / NUMERO_DI_LINEE,
 			altezza_finestra_ - (rand() % altezza_massima_)
 		);
-		linee_[i].color = sf::Color::Red; // impostazione del colore della linea
+		linee_[i].color = sf::Color::Blue; // impostazione del colore della linea
 		
 		std::cout << "Punto: " << linee_[i].position.x << " " << linee_[i].position.y << std::endl; // logging
 	}
@@ -23,8 +23,8 @@ void SuperficiePianeta::generaVertici()
 void SuperficiePianeta::generaBunker()
 {
 	std::cout << "----BUNKER----" << std::endl; // logging
-	// Il numero di bunker sarà compreso tra 3 e 6
-	int numero_di_bunker = (rand() % 4) + 3;
+	// Il numero di bunker sarà compreso tra 2 e 5
+	int numero_di_bunker = (rand() % 4) + 2;
 
 	/* Inizialmente viene scelta casualmente la posizione del bunker
 	tra le linee 0 e (MAX - 1), dopo di che, se nella posizione non è presente
@@ -34,21 +34,42 @@ void SuperficiePianeta::generaBunker()
 		int posizione_bunker = rand() % (NUMERO_DI_LINEE - 1);
 
 		if (bunker_presenti_[posizione_bunker] == false) {
-			aggiungiBunker(posizione_bunker); // metodo per aggiungere il bunker alla struttura
-			numero_di_bunker--;
-			// Posizione impostata a true, per indicare che adesso è occupata da un bunker
-			bunker_presenti_[posizione_bunker] = true; 
+			if (!controllaBunkerVicinanze(posizione_bunker)) {
+				std::cout << numero_di_bunker << " -";
+				aggiungiBunker(posizione_bunker); // metodo per aggiungere il bunker alla struttura
+				numero_di_bunker--;
+				// Posizione impostata a true, per indicare che adesso è occupata da un bunker
+				bunker_presenti_[posizione_bunker] = true;
+			}
 		}
 	}
+}
+
+bool SuperficiePianeta::controllaBunkerVicinanze(int posizione)
+{
+	int distanza = 2, startIndex = 0, finishIndex = NUMERO_DI_LINEE - 1;
+	bool found = false;
+
+	if (posizione - distanza > startIndex) startIndex = posizione - distanza;
+	if (posizione + distanza < finishIndex) finishIndex = posizione + distanza;
+
+	int i = startIndex;
+
+	while (!found && i <= finishIndex) {
+		if (bunker_presenti_[i] == true) found = true;
+		i++;
+	}
+	return found;
 }
 
 void SuperficiePianeta::aggiungiBunker(int index)
 {
 	// Vettore che rappresenta la coppia (x,y)
-	float puntiMedi[2];
+	float puntoMedio[2];
+	puntoMedio[0] = rand() % 32 + linee_[index].position.x;
 	// Viene calcolato il punto medio tra il punto (passato come parametro) e il successivo
-	puntiMedi[0] = ((linee_[index].position.x + linee_[index + 1].position.x) / 2);
-	puntiMedi[1] = ((linee_[index].position.y + linee_[index + 1].position.y) / 2);
+	//puntoMedio[0] = ((linee_[index].position.x + linee_[index + 1].position.x) / 2);
+	//puntoMedio[1] = ((linee_[index].position.y + linee_[index + 1].position.y) / 2);
 	
 	/* Viene calcolato l'angolo tra i due punti. Per prima cosa deve essere
 	calcolato il coefficiente_angolare, che poi viene utilizzato per calcolare 
@@ -58,12 +79,15 @@ void SuperficiePianeta::aggiungiBunker(int index)
 	float coefficiente_angolare = (linee_[index + 1].position.y - linee_[index].position.y) /
 		(linee_[index + 1].position.x - linee_[index].position.x);
 
+	float ordinata_origine = linee_[index].position.y - linee_[index].position.x * coefficiente_angolare;
+	puntoMedio[1] = puntoMedio[0] * coefficiente_angolare + ordinata_origine;
+
 	float angolo = (atan2f(linee_[index + 1].position.y - linee_[index].position.y, 
-		linee_[index + 1].position.x - linee_[index].position.x) * 180 / 3.14159265) + 180;
+		linee_[index + 1].position.x - linee_[index].position.x) * 180 / 3.14159265);
 
-	inserisciNodoBunker(puntiMedi, angolo);
+	inserisciNodoBunker(puntoMedio, angolo);
 
-	std::cout << "Proprietà Bunker:\n\tPunto: " << puntiMedi[0] << ", " << puntiMedi[1] << "\n\tSlope: " <<
+	std::cout << "Proprietà Bunker:\n\tPunto: " << puntoMedio[0] << ", " << puntoMedio[1] << "\n\tSlope: " <<
 		coefficiente_angolare << "\n\tArctan: " << angolo << std::endl; // logging
 }
 

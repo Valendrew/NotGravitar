@@ -21,7 +21,7 @@
     <ClCompile Include="universo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="bunker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pianeta.cpp">
@@ -30,29 +30,24 @@
     <ClCompile Include="superficie_pianeta.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bunker.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="superficie_pianeta.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="proiettile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pianeta.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bunker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mappa.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="universo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bunker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pianeta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="superficie_pianeta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

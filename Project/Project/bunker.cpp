@@ -7,6 +7,7 @@ void Bunker::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 Bunker::Bunker(float cord_x, float cord_y, float size, float angolo_rotazione)
 {
+	shape_.setOrigin(0, 0 + size);
 	shape_.setPosition(cord_x, cord_y);
 	shape_.setSize(sf::Vector2f(size, size));
 	shape_.setRotation(angolo_rotazione);

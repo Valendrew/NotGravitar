@@ -28,6 +28,7 @@ private:
 
 	void generaVertici();
 	void generaBunker();
+	bool controllaBunkerVicinanze(int posizione);
 	void aggiungiBunker(int index);
 	void inserisciNodoBunker(float puntiMedi[], float angolo);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

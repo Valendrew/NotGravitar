@@ -125,12 +125,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bunker.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mappa.cpp" />
+    <ClCompile Include="pianeta.cpp" />
+    <ClCompile Include="superficie_pianeta.cpp" />
     <ClCompile Include="universo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bunker.h" />
     <ClInclude Include="mappa.hpp" />
+    <ClInclude Include="pianeta.h" />
+    <ClInclude Include="superficie_pianeta.h" />
     <ClInclude Include="universo.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
