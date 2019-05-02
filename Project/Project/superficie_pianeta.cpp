@@ -5,7 +5,7 @@ void SuperficiePianeta::generaVertici()
 {
 	std::cout << "----LINEE----" << std::endl; // logging
 
-	for (int i = 0; i <= NUMERO_DI_LINEE; i++) {
+	for (int i = 0; i < linee_.getVertexCount(); i++) {
 		/* Calcolo della coppia di coordinate (x,y).
 		La x sarà determinata dalla lunghezza della linea, 
 		moltiplicata per l'indice del punto, mentre la y sarà
@@ -20,11 +20,28 @@ void SuperficiePianeta::generaVertici()
 	}
 }
 
+void SuperficiePianeta::generaSuperficie()
+{
+	for (size_t i = 0; i < NUMERO_DI_LINEE; i++)
+	{
+		superficie_[i].setPointCount(4);
+
+		// Impostazione dei punti
+		superficie_[i].setPoint(0, linee_[i].position);
+		superficie_[i].setPoint(1, linee_[i + 1].position);
+		superficie_[i].setPoint(2, sf::Vector2f(linee_[i + 1].position.x, altezza_finestra_));
+		superficie_[i].setPoint(3, sf::Vector2f(linee_[i].position.x, altezza_finestra_));
+
+		// Impostazione del colore della superficie
+		superficie_[i].setFillColor(sf::Color::Blue);
+	}
+}
+
 void SuperficiePianeta::generaBunker()
 {
 	std::cout << "----BUNKER----" << std::endl; // logging
-	// Il numero di bunker sarà compreso tra 2 e 5
-	int numero_di_bunker = (rand() % 4) + 2;
+	// Il numero di bunker sarà compreso tra 2 e 4
+	int numero_di_bunker = (rand() % 3) + 2;
 
 	/* Inizialmente viene scelta casualmente la posizione del bunker
 	tra le linee 0 e (MAX - 1), dopo di che, se nella posizione non è presente
@@ -35,7 +52,6 @@ void SuperficiePianeta::generaBunker()
 
 		if (bunker_presenti_[posizione_bunker] == false) {
 			if (!controllaBunkerVicinanze(posizione_bunker)) {
-				std::cout << numero_di_bunker << " -";
 				aggiungiBunker(posizione_bunker); // metodo per aggiungere il bunker alla struttura
 				numero_di_bunker--;
 				// Posizione impostata a true, per indicare che adesso è occupata da un bunker
@@ -65,42 +81,47 @@ bool SuperficiePianeta::controllaBunkerVicinanze(int posizione)
 void SuperficiePianeta::aggiungiBunker(int index)
 {
 	// Vettore che rappresenta la coppia (x,y)
-	float puntoMedio[2];
-	puntoMedio[0] = rand() % 32 + linee_[index].position.x;
-	// Viene calcolato il punto medio tra il punto (passato come parametro) e il successivo
-	//puntoMedio[0] = ((linee_[index].position.x + linee_[index + 1].position.x) / 2);
-	//puntoMedio[1] = ((linee_[index].position.y + linee_[index + 1].position.y) / 2);
+	float coordinate_bunker[2];
+	int grandezza_bunker = 24;
 	
 	/* Viene calcolato l'angolo tra i due punti. Per prima cosa deve essere
 	calcolato il coefficiente_angolare, che poi viene utilizzato per calcolare 
-	l'arcotangente, che restituisce l'angolo in radianti, trasformato poi in decimale.
-	Quest'ultimo viene poi aumentato di 180 gradi per permettere che giacia sul segmento
-	tra i due punti.*/
+	l'arcotangente, che restituisce l'angolo in radianti, trasformato poi in decimale.*/
 	float coefficiente_angolare = (linee_[index + 1].position.y - linee_[index].position.y) /
 		(linee_[index + 1].position.x - linee_[index].position.x);
-
-	float ordinata_origine = linee_[index].position.y - linee_[index].position.x * coefficiente_angolare;
-	puntoMedio[1] = puntoMedio[0] * coefficiente_angolare + ordinata_origine;
 
 	float angolo = (atan2f(linee_[index + 1].position.y - linee_[index].position.y, 
 		linee_[index + 1].position.x - linee_[index].position.x) * 180 / 3.14159265);
 
-	inserisciNodoBunker(puntoMedio, angolo);
+	/* Generazione del punto di spawn del Bunker, con l'ascisse tra 0 e 31, in modo tale che la sprite non
+	sia oltre la linea, dato che la posizione è riferita all'angolo in alto a destra. Per ottenere l'ordinata sarà
+	prima ottenuta l'ordinata all'origine della linea, ed infine, tramite l'equazione della retta, si otterrà 
+	il valore dell'ordinata*/
+	float ordinata_origine = linee_[index].position.y - linee_[index].position.x * coefficiente_angolare;
+	int offset = 15;
 
-	std::cout << "Proprietà Bunker:\n\tPunto: " << puntoMedio[0] << ", " << puntoMedio[1] << "\n\tSlope: " <<
-		coefficiente_angolare << "\n\tArctan: " << angolo << std::endl; // logging
+	coordinate_bunker[0] = rand() % (grandezza_bunker) + offset + linee_[index].position.x;
+	coordinate_bunker[1] = coordinate_bunker[0] * coefficiente_angolare + ordinata_origine;;
+
+	inserisciNodoBunker(coordinate_bunker, angolo, grandezza_bunker);
+
+	std::cout << "Proprietà Bunker:\n\tPunto: " << coordinate_bunker[0] << ", " << coordinate_bunker[1] << "\n\tSlope: " <<
+		coefficiente_angolare << "\n\tArctan: " << angolo << 
+		"\n\tOrdinata all'origine: " << ordinata_origine << std::endl; // logging
 }
 
-void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo)
+void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza)
 {
+	Bunker *new_bunker = new Bunker(puntiMedi[0], puntiMedi[1], grandezza, angolo);
+
 	if (bunker_ == nullptr) {
 		bunker_ = new BunkerNode();
-		bunker_->bunker_item = new Bunker(puntiMedi[0], puntiMedi[1], 20, angolo);
+		bunker_->bunker_item = new_bunker;
 		bunker_->next = nullptr;
 	}
 	else {
 		bunker_ptr tmp = new BunkerNode;
-		tmp->bunker_item = new Bunker(puntiMedi[0], puntiMedi[1], 20, angolo);
+		tmp->bunker_item = new_bunker;
 		tmp->next = bunker_;
 		bunker_ = tmp;
 }
@@ -109,7 +130,13 @@ void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo)
 void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	// Draw delle linee
-	target.draw(linee_);
+	//target.draw(linee_);
+
+	// Draw della superficie
+	for (size_t i = 0; i < NUMERO_DI_LINEE; i++)
+	{
+		target.draw(superficie_[i]);
+	}
 
 	// Puntatore all'attuale struttura rappresentante i Bunker
 	bunker_ptr bunker_to_print = bunker_;
@@ -128,11 +155,7 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) {
 
 	/* L'altezza massima della superficie può essere
 	il 30% dell'altezza della finestra*/
-	altezza_massima_ = height * 0.3;
-
-	/* Il vettore di booleani rappresentante i bunker presenti
-	viene impostato tutto a false */
-	for (int i = 0; i < NUMERO_DI_LINEE; i++) bunker_presenti_[i] = false;
+	altezza_massima_ = height * 0.25;
 
 	/* Vengono impostate le proprietà relative
 	al VertexArray delle linee della superficie,
@@ -142,10 +165,15 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) {
 	linee_.resize(NUMERO_DI_LINEE + 1); // il numero dei punti totali delle linee (num_linee + 1)
 	generaVertici();
 
-	/* Metodo per generare i Bunker presenti sulla superficie */
-	//if (bunker_ != nullptr)
-	//delete bunker_;
+	/* Generazione della superficie a partire dai punti delle linee
+	del VertexArray generate precedentemente */
+	generaSuperficie();
+
+	/* Il vettore di booleani rappresentante i bunker presenti
+	viene impostato tutto a false */
+	for (int i = 0; i < NUMERO_DI_LINEE; i++) bunker_presenti_[i] = false;
 	bunker_ = nullptr;
+	/* Metodo per generare i Bunker presenti sulla superficie */
 	generaBunker();
 }
 
