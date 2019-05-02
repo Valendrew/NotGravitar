@@ -103,16 +103,23 @@ void SuperficiePianeta::aggiungiBunker(int index)
 	coordinate_bunker[0] = rand() % (grandezza_bunker) + offset + linee_[index].position.x;
 	coordinate_bunker[1] = coordinate_bunker[0] * coefficiente_angolare + ordinata_origine;;
 
-	inserisciNodoBunker(coordinate_bunker, angolo, grandezza_bunker);
+
+	/* Aggiunta della Texture al Bunker */
+	sf::Texture texture;
+	if (!texture.loadFromFile("Texture/dm300.png", sf::IntRect(0, 0, 20, 20))) {
+		std::cout << "Impossibile caricare texture";
+	}
+
+	inserisciNodoBunker(coordinate_bunker, angolo, grandezza_bunker, texture);
 
 	std::cout << "Proprietà Bunker:\n\tPunto: " << coordinate_bunker[0] << ", " << coordinate_bunker[1] << "\n\tSlope: " <<
 		coefficiente_angolare << "\n\tArctan: " << angolo << 
 		"\n\tOrdinata all'origine: " << ordinata_origine << std::endl; // logging
 }
 
-void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza)
+void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza, sf::Texture texture)
 {
-	Bunker *new_bunker = new Bunker(puntiMedi[0], puntiMedi[1], grandezza, angolo);
+	Bunker *new_bunker = new Bunker(puntiMedi[0], puntiMedi[1], grandezza, angolo, texture);
 
 	if (bunker_ == nullptr) {
 		bunker_ = new BunkerNode();
