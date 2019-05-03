@@ -13,6 +13,8 @@ struct BunkerNode {
 // typedef del puntatore del BunkerNode
 typedef BunkerNode* bunker_ptr;
 
+// Pi greco
+const double PI = 3.14159265;
 // numero di linee
 const int NUMERO_DI_LINEE = 16;
 

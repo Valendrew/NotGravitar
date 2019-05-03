@@ -91,7 +91,7 @@ void SuperficiePianeta::aggiungiBunker(int index)
 		(linee_[index + 1].position.x - linee_[index].position.x);
 
 	float angolo = (atan2f(linee_[index + 1].position.y - linee_[index].position.y, 
-		linee_[index + 1].position.x - linee_[index].position.x) * 180 / 3.14159265);
+		linee_[index + 1].position.x - linee_[index].position.x) * 180 / PI);
 
 	/* Generazione del punto di spawn del Bunker, con l'ascisse tra 0 e 31, in modo tale che la sprite non
 	sia oltre la linea, dato che la posizione è riferita all'angolo in alto a destra. Per ottenere l'ordinata sarà

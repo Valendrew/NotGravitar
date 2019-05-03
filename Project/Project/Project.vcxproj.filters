@@ -56,10 +56,10 @@
     <ClInclude Include="superficie_pianeta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Nave.hpp">
+    <ClInclude Include="nave.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Proiettile.hpp">
+    <ClInclude Include="proiettile.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -137,9 +137,9 @@
   <ItemGroup>
     <ClInclude Include="bunker.h" />
     <ClInclude Include="mappa.hpp" />
-    <ClInclude Include="Nave.hpp" />
+    <ClInclude Include="nave.hpp" />
     <ClInclude Include="pianeta.h" />
-    <ClInclude Include="Proiettile.hpp" />
+    <ClInclude Include="proiettile.hpp" />
     <ClInclude Include="superficie_pianeta.h" />
     <ClInclude Include="universo.hpp" />
   </ItemGroup>

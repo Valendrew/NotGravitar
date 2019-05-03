@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Proiettile.hpp"
+#include "proiettile.hpp"
 using namespace std;
 
 struct proiettili {

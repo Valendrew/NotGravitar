@@ -3,7 +3,7 @@
 #include <iostream>     
 #include <time.h> 
 #include <iostream>
-listaPianeti universo::generaPianeti(listaPianeti p) {
+listaPianeti Universo::generaPianeti(listaPianeti p) {
 	int numPianeti = numeroPianeti - 1;
 	p = new nodoPianeta;
 	p->visitato = false;
@@ -20,7 +20,7 @@ listaPianeti universo::generaPianeti(listaPianeti p) {
 
 }
 
-universo::universo(int d, int x, int y) {
+Universo::Universo(int d, int x, int y) {
 	dimensioniCelle.x = x;
 	dimensioniCelle.y = y;
 	listaPianeti p = NULL;
@@ -70,29 +70,33 @@ universo::universo(int d, int x, int y) {
 		}
 	}
 }
-universo::universo() :universo(0, 0, 0)
+Universo::Universo() :Universo(0, 0, 0)
 {
 
 }
-void universo::setDimensioniCelle(int x, int y) {
+listaPianeti Universo::distruggiPianeta(listaPianeti p)
+{
+	return listaPianeti();
+}
+void Universo::setDimensioniCelle(int x, int y) {
 	dimensioniCelle.x = x;
 	dimensioniCelle.y = y;
 }
-coordinate universo::getDimensioniCelle() {
+coordinate Universo::getDimensioniCelle() {
 	return dimensioniCelle;
 }
-listaPianeti universo::getPianeti() {
+listaPianeti Universo::getPianeti() {
 	return lista_Pianeti;
 }
-bool universo::getMatriceSpawn(int i, int j) {
+bool Universo::getMatriceSpawn(int i, int j) {
 	return matriceSpawn[i][j];
 }
-int universo::getNumeroPianeti() {
+int Universo::getNumeroPianeti() {
 	return numeroPianeti;
 }
-bool universo::getVisitato() {
+bool Universo::getVisitato() {
 	return visitato;
 }
-void universo::setVisitato() {
+void Universo::setVisitato() {
 	visitato = true;
 }

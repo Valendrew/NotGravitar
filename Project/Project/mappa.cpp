@@ -3,7 +3,7 @@
 using namespace std;
 #include <iostream>
 #include <time.h>
-mappa::mappa(int d, int x, int y) {
+Mappa::Mappa(int d, int x, int y) {
 
 	/*
 	quando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
@@ -14,7 +14,7 @@ mappa::mappa(int d, int x, int y) {
 	list_universi = new nodoMappa;
 	list_universi->c.x = -1;
 	list_universi->c.y = 0;
-	list_universi->u = new universo(d, x, y);
+	list_universi->u = new Universo(d, x, y);
 	distanza = d;
 	dimensioniCelle.x = x;
 	dimensioniCelle.y = y;
@@ -28,17 +28,17 @@ mappa::mappa(int d, int x, int y) {
 	universoDiGioco = list_universi;
 	posizioneAttuale = list_universi;
 }
-listaUniversi mappa::addUniverso(int coordinata_universo_x, int coordinata_universo_y) {
+listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_universo_y) {
 	//quando creo un nuovo universo lo aggiungo in testa alla lista cosi da avere l'inserimento in O(1)
 	listaUniversi tmp = new nodoMappa;
 	tmp->c.x = coordinata_universo_x;
 	tmp->c.y = coordinata_universo_y;
-	tmp->u = new universo(distanza, dimensioniCelle.x, dimensioniCelle.y);
+	tmp->u = new Universo(distanza, dimensioniCelle.x, dimensioniCelle.y);
 	tmp->next = list_universi;
 	list_universi = tmp;
 	return list_universi;
 }
-listaUniversi mappa::findUniverso(int x, int y) {
+listaUniversi Mappa::findUniverso(int x, int y) {
 	//Dato che ogni universo è associato ad una coppia di coordinate cosi da distinguelo in modo univoco per sapere se un
 	//universo è gia presente in lista o meno cerco all'interno della lista un universo con le coordinate di interesse
 	listaUniversi appoggio = list_universi;
@@ -54,7 +54,7 @@ listaUniversi mappa::findUniverso(int x, int y) {
 	}
 	return ritorno;
 }
-void mappa::spostamento(int direzione) {
+void Mappa::spostamento(int direzione) {
 	/*
 		0 = nord
 		1 = est
@@ -137,6 +137,6 @@ void mappa::spostamento(int direzione) {
 		break;
 	}
 }
-listaUniversi mappa::getPosizioneAttuale() {
+listaUniversi Mappa::getPosizioneAttuale() {
 	return posizioneAttuale;
 }

@@ -13,7 +13,7 @@ struct coordinate {
 	int y;
 };
 
-class universo {
+class Universo {
 private:
 	listaPianeti lista_Pianeti;
 	int numeroPianeti;
@@ -27,9 +27,9 @@ private:
 	//Precondizione: la lista p passata è = NULL
 
 public:
-	universo(int distanza, int x, int y);
+	Universo(int distanza, int x, int y);
 
-	universo();
+	Universo();
 	listaPianeti distruggiPianeta(listaPianeti p);
 	listaPianeti getPianeti();
 	coordinate getDimensioniCelle();

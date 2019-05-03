@@ -1,17 +1,18 @@
 #ifndef MAPPA_H
 #define MAPPA_H
+
 #include <stdlib.h> 
 #include "universo.hpp";
 #include <stdlib.h>  
 struct nodoMappa {
-	universo *u;
+	Universo *u;
 	coordinate c;
 	nodoMappa *next;
 };
 
 typedef nodoMappa *listaUniversi;
 
-class mappa {
+class Mappa {
 private:
 	listaUniversi list_universi;
 	listaUniversi posizioneAttuale; //puntatore  dove si trova l'astronave
@@ -22,7 +23,7 @@ private:
 	int distanza;
 	coordinate dimensioniCelle;
 public:
-	mappa(int distanza, int dim_x, int dim_y);
+	Mappa(int distanza, int dim_x, int dim_y);
 	//addUniveso aggiunge un universo con coordinate x,y alla lista di universi
 	listaUniversi addUniverso(int x, int y);
 	//spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
