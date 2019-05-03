@@ -128,14 +128,18 @@
     <ClCompile Include="bunker.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mappa.cpp" />
+    <ClCompile Include="Nave.cpp" />
     <ClCompile Include="pianeta.cpp" />
+    <ClCompile Include="Proiettile.cpp" />
     <ClCompile Include="superficie_pianeta.cpp" />
     <ClCompile Include="universo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bunker.h" />
     <ClInclude Include="mappa.hpp" />
+    <ClInclude Include="Nave.hpp" />
     <ClInclude Include="pianeta.h" />
+    <ClInclude Include="Proiettile.hpp" />
     <ClInclude Include="superficie_pianeta.h" />
     <ClInclude Include="universo.hpp" />
   </ItemGroup>
