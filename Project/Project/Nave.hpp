@@ -1,7 +1,7 @@
 #ifndef NAVE_H
 #define NAVE_H
 
-#include <SFML/Graphics.hpp>
+#include "comportamento.h"
 #include "proiettile.hpp"
 
 struct proiettili {
@@ -10,27 +10,25 @@ struct proiettili {
 };
 typedef proiettili *proiettiliP;
 
-class Nave : public sf::Drawable, sf::Transformable {
+class Nave : public Comportamento {
 private:
 	proiettiliP proiettilil;
-	int vita;
-	int carburante;
-	float velocita;
+	int carburante_;
+	float velocita_;
 
 public:
-	Nave(float x, float y, float r, float velocita_, int carburante_ = 10, int vita_ = 10);
+	Nave(float vita, const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione, float velocita, int carburante);
 	Nave();
-	void setVita(int vita_);
-	int getVita();
+
 	void setCarburante(int carburante_);
 	int getCarburante();
 	void colpito();
 	void fill(int carburante_);
 	void muovi();
-	void spara(sf::Vector2f dimensioni, int velocita);
-	void updateProiettili(sf::RenderWindow &window);
-	bool collisioneProiettile(Proiettile proiettile);
-	void eliminaListaProiettili(proiettiliP head);
+	//void spara(sf::Vector2f dimensioni, int velocita);
+	//void updateProiettili(sf::RenderWindow &window);
+	//bool collisioneProiettile(Proiettile proiettile);
+	//void eliminaListaProiettili(proiettiliP head);
 };
 
 #endif

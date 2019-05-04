@@ -4,11 +4,13 @@
 #include <SFML/Graphics.hpp>
 const double PI = 3.14159265;
 
-class Proiettile : public sf::Drawable, sf::Transformable {
+class Proiettile : public sf::Drawable, public sf::Transformable {
 private:
-	float velocita;
+	sf::RectangleShape proiettile_;
+	float velocita_;
 	float x;
 	float y;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
 	Proiettile();
 	Proiettile(sf::Vector2f dim, sf::Vector2f pos, float angolo, float velocita_);

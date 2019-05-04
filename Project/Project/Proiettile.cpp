@@ -1,33 +1,37 @@
 #include "proiettile.hpp"
 
-Proiettile::Proiettile()
+void Proiettile::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	Proiettile::Proiettile(sf::Vector2f(0, 0), sf::Vector2f(0, 0), 0.f, 0.f);
+	target.draw(proiettile_); 
 }
 
-Proiettile::Proiettile(sf::Vector2f dim, sf::Vector2f pos, float angolo, float velocita_)
+Proiettile::Proiettile() : Proiettile(sf::Vector2f(0, 0), sf::Vector2f(0, 0), 0.f, 0.f) {}
+
+Proiettile::Proiettile(sf::Vector2f dim, sf::Vector2f pos, float angolo, float velocita)
 {
-	this->setSize(dim);
-	this->setPosition(pos);
-	this->setRotation(angolo);
-	this->setFillColor(sf::Color::Green);
-	velocita = velocita_;
-	double radianti = this->getRotation()*PI / 180.f;
-	x = this->velocita*sin(radianti);
-	y = -1 * this->velocita*cos(radianti);
+	proiettile_.setSize(dim);
+	proiettile_.setPosition(pos);
+	proiettile_.setRotation(angolo);
+	proiettile_.setFillColor(sf::Color::Green);
+
+	double radianti = angolo * PI / 180.0;
+	
+	velocita_ = velocita;
+	x = velocita_ * sin(radianti);
+	y = -1 * velocita_ * cos(radianti);
 }
 
-void Proiettile::setVelocita(float velocita_)
+void Proiettile::setVelocita(float velocita)
 {
-	velocita = velocita_;
+	velocita_ = velocita;
 }
 
 float Proiettile::getVelocita()
 {
-	return velocita;
+	return velocita_;
 }
 
 void Proiettile::muovi()
 {
-	this->move(x, y);
+	proiettile_.move(x, y);
 }

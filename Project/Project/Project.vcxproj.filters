@@ -39,6 +39,9 @@
     <ClCompile Include="proiettile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="comportamento.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mappa.hpp">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="proiettile.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="comportamento.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

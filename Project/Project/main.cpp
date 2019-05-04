@@ -5,7 +5,10 @@ const int WIDTH = 1280;
 const int HEIGHT = 720;
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Test");
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 8;
+
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Test", sf::Style::Default, settings);
 	Pianeta p = Pianeta(0, 200, 200, WIDTH, HEIGHT);
 
 	while (window.isOpen()) {

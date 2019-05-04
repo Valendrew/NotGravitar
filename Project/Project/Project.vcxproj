@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bunker.cpp" />
+    <ClCompile Include="comportamento.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mappa.cpp" />
     <ClCompile Include="nave.cpp" />
@@ -136,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bunker.h" />
+    <ClInclude Include="comportamento.h" />
     <ClInclude Include="mappa.hpp" />
     <ClInclude Include="nave.hpp" />
     <ClInclude Include="pianeta.h" />

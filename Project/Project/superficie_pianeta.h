@@ -35,7 +35,7 @@ private:
 	void generaBunker();
 	bool controllaBunkerVicinanze(int posizione);
 	void aggiungiBunker(int index);
-	void inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza, sf::Texture texture);
+	void inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
