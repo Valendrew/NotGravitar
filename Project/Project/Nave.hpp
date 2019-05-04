@@ -1,7 +1,8 @@
-#pragma once
+#ifndef NAVE_H
+#define NAVE_H
+
 #include <SFML/Graphics.hpp>
 #include "proiettile.hpp"
-using namespace std;
 
 struct proiettili {
 	Proiettile *val;
@@ -9,7 +10,7 @@ struct proiettili {
 };
 typedef proiettili *proiettiliP;
 
-class Nave : public sf::Sprite {
+class Nave : public sf::Drawable, sf::Transformable {
 private:
 	proiettiliP proiettilil;
 	int vita;
@@ -31,3 +32,5 @@ public:
 	bool collisioneProiettile(Proiettile proiettile);
 	void eliminaListaProiettili(proiettiliP head);
 };
+
+#endif

@@ -1,6 +1,6 @@
 #include "mappa.hpp";
 #include <stdlib.h> 
-using namespace std;
+
 #include <iostream>
 #include <time.h>
 Mappa::Mappa(int d, int x, int y) {

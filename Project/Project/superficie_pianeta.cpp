@@ -4,16 +4,42 @@
 void SuperficiePianeta::generaVertici()
 {
 	std::cout << "----LINEE----" << std::endl; // logging
+	int range = 50;
+	int altezza_massima2 = altezza_finestra_ - 15;
 
 	for (int i = 0; i < linee_.getVertexCount(); i++) {
 		/* Calcolo della coppia di coordinate (x,y).
 		La x sarà determinata dalla lunghezza della linea, 
 		moltiplicata per l'indice del punto, mentre la y sarà
 		generata casualmente tra 0 e l'altezza massima*/
-		linee_[i].position = sf::Vector2f(
-			i * larghezza_finestra_ / NUMERO_DI_LINEE,
-			altezza_finestra_ - (rand() % altezza_massima_)
-		);
+		if (i == 0)
+		{
+			linee_[i].position = sf::Vector2f(
+				i * larghezza_finestra_ / NUMERO_DI_LINEE,
+				altezza_massima2 - (rand() % (altezza_massima2 - altezza_massima_))
+			);
+		}
+		else {
+			int scarto = 0;
+			if (altezza_massima_ + range > linee_[i - 1].position.y) {
+				scarto = altezza_massima_ - linee_[i - 1].position.y;
+			}
+			else if (altezza_massima2 - range < linee_[i - 1].position.y) {
+				scarto = altezza_massima2 - linee_[i - 1].position.y;
+			}
+
+			int altezza_random = ((rand() % (range * 2 + 1)) - (range + scarto)) + linee_[i - 1].position.y;
+			//int altezza_random = ((rand() % (range * 2 + 1)) - range) + linee_[i - 1].position.y;
+
+			if (altezza_random > altezza_massima2) altezza_random = altezza_massima2;
+			else if (altezza_random < altezza_massima_) altezza_random = altezza_massima_;
+
+			linee_[i].position = sf::Vector2f(
+				i * larghezza_finestra_ / NUMERO_DI_LINEE,
+				altezza_random
+			);
+		}
+		
 		linee_[i].color = sf::Color::Blue; // impostazione del colore della linea
 		
 		std::cout << "Punto: " << linee_[i].position.x << " " << linee_[i].position.y << std::endl; // logging
@@ -162,7 +188,7 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) {
 
 	/* L'altezza massima della superficie può essere
 	il 30% dell'altezza della finestra*/
-	altezza_massima_ = height * 0.25;
+	altezza_massima_ = height * 0.75;
 
 	/* Vengono impostate le proprietà relative
 	al VertexArray delle linee della superficie,

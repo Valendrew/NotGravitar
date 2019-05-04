@@ -1,8 +1,10 @@
-#pragma once
-#include <SFML/Graphics.hpp>
-#define PI 3.14159265
+#ifndef MAPPA_H
+#define MAPPA_H
 
-class Proiettile : public sf::RectangleShape {
+#include <SFML/Graphics.hpp>
+const double PI = 3.14159265;
+
+class Proiettile : public sf::Drawable, sf::Transformable {
 private:
 	float velocita;
 	float x;
@@ -15,3 +17,4 @@ public:
 	void muovi();
 };
 
+#endif

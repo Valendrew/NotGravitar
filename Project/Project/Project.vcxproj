@@ -128,9 +128,9 @@
     <ClCompile Include="bunker.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mappa.cpp" />
-    <ClCompile Include="Nave.cpp" />
+    <ClCompile Include="nave.cpp" />
     <ClCompile Include="pianeta.cpp" />
-    <ClCompile Include="Proiettile.cpp" />
+    <ClCompile Include="proiettile.cpp" />
     <ClCompile Include="superficie_pianeta.cpp" />
     <ClCompile Include="universo.cpp" />
   </ItemGroup>

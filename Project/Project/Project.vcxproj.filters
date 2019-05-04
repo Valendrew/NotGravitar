@@ -33,10 +33,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Nave.cpp">
+    <ClCompile Include="nave.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Proiettile.cpp">
+    <ClCompile Include="proiettile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

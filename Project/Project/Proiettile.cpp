@@ -1,4 +1,4 @@
-#include "Proiettile.hpp"
+#include "proiettile.hpp"
 
 Proiettile::Proiettile()
 {
