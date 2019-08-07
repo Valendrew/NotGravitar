@@ -2,6 +2,7 @@
 #define _COMPORTAMENTO_H
 
 #include "SFML\Graphics.hpp"
+#include "proiettile.hpp"
 
 class Comportamento : public sf::Drawable, public sf::Transformable {
 protected:
@@ -9,6 +10,13 @@ protected:
 	
 	sf::RectangleShape entita_;
 	sf::Texture texture_;
+
+	struct ProiettileNode {
+		Proiettile *proiettile;
+		ProiettileNode *next;
+	};
+	typedef ProiettileNode *proiettile_ptr;
+	proiettile_ptr proiettili_;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public: 

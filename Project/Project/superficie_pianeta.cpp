@@ -3,7 +3,6 @@
 
 void SuperficiePianeta::generaVertici()
 {
-	std::cout << "----LINEE----" << std::endl; // logging
 	int range = 50;
 	int altezza_massima2 = altezza_finestra_ - 15;
 
@@ -41,8 +40,6 @@ void SuperficiePianeta::generaVertici()
 		}
 		
 		linee_[i].color = sf::Color::Blue; // impostazione del colore della linea
-		
-		std::cout << "Punto: " << linee_[i].position.x << " " << linee_[i].position.y << std::endl; // logging
 	}
 }
 
@@ -65,7 +62,6 @@ void SuperficiePianeta::generaSuperficie()
 
 void SuperficiePianeta::generaBunker()
 {
-	std::cout << "----BUNKER----" << std::endl; // logging
 	// Il numero di bunker sarà compreso tra 2 e 4
 	int numero_di_bunker = (rand() % 3) + 2;
 
@@ -130,10 +126,6 @@ void SuperficiePianeta::aggiungiBunker(int index)
 	coordinate_bunker[1] = coordinate_bunker[0] * coefficiente_angolare + ordinata_origine;;
 
 	inserisciNodoBunker(coordinate_bunker, angolo, grandezza_bunker);
-
-	std::cout << "Proprietà Bunker:\n\tPunto: " << coordinate_bunker[0] << ", " << coordinate_bunker[1] << "\n\tSlope: " <<
-		coefficiente_angolare << "\n\tArctan: " << angolo << 
-		"\n\tOrdinata all'origine: " << ordinata_origine << std::endl; // logging
 }
 
 void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza)
@@ -155,9 +147,6 @@ void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int
 
 void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	// Draw delle linee
-	//target.draw(linee_);
-
 	// Draw della superficie
 	for (size_t i = 0; i < NUMERO_DI_LINEE; i++)
 	{

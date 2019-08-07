@@ -1,5 +1,6 @@
 #include <SFML\Graphics.hpp>
-#include "pianeta.h";
+#include "nave.hpp"
+#include "pianeta.h"
 
 const int WIDTH = 1280;
 const int HEIGHT = 720;
@@ -9,7 +10,10 @@ int main() {
 	settings.antialiasingLevel = 8;
 
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Test", sf::Style::Default, settings);
+	//sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Test");
+
 	Pianeta p = Pianeta(0, 200, 200, WIDTH, HEIGHT);
+	Nave n = Nave(50, "Texture/ship3.png", sf::IntRect(), 300, 200, 32, 37, 0, 20, 50);
 
 	while (window.isOpen()) {
 
@@ -26,6 +30,7 @@ int main() {
 
 		window.clear(sf::Color::Black);
 		window.draw(p.getSuperficie());
+		window.draw(n);
 		window.display();
 		
 	}

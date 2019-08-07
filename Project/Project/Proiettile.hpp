@@ -2,7 +2,7 @@
 #define MAPPA_H
 
 #include <SFML/Graphics.hpp>
-const double PI = 3.14159265;
+const double PI_G = 3.14159265;
 
 class Proiettile : public sf::Drawable, public sf::Transformable {
 private:

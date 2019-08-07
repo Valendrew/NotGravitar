@@ -14,7 +14,7 @@ Proiettile::Proiettile(sf::Vector2f dim, sf::Vector2f pos, float angolo, float v
 	proiettile_.setRotation(angolo);
 	proiettile_.setFillColor(sf::Color::Green);
 
-	double radianti = angolo * PI / 180.0;
+	double radianti = angolo * PI_G / 180.0;
 	
 	velocita_ = velocita;
 	x = velocita_ * sin(radianti);
