@@ -2,14 +2,12 @@
 #define BUNKER_H
 
 // include header
-#include <SFML\Graphics.hpp>
+#include "comportamento.h"
 
-class Bunker : public sf::Drawable, public sf::Transformable {
-private: float vita_;
-		 sf::RectangleShape shape_;
-		 sf::Texture texture_;
-		 virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-public: Bunker(float cord_x, float cord_y, float size, float angolo_rotazione, sf::Texture texture);
-		Bunker();
+class Bunker : public Comportamento {
+private: 
+public: 
+	Bunker(float vita, const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione);
+	Bunker();
 };
 #endif // !BUNKER_H

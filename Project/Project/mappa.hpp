@@ -1,9 +1,7 @@
 #ifndef MAPPA_H
 #define MAPPA_H
 
-#include <stdlib.h> 
-#include "universo.hpp";
-#include <stdlib.h>  
+#include "universo.hpp"; 
 struct nodoMappa {
 	Universo *u;
 	coordinate c;

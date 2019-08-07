@@ -3,20 +3,43 @@
 
 void SuperficiePianeta::generaVertici()
 {
-	std::cout << "----LINEE----" << std::endl; // logging
+	int range = 50;
+	int altezza_massima2 = altezza_finestra_ - 15;
 
 	for (int i = 0; i < linee_.getVertexCount(); i++) {
 		/* Calcolo della coppia di coordinate (x,y).
 		La x sarà determinata dalla lunghezza della linea, 
 		moltiplicata per l'indice del punto, mentre la y sarà
 		generata casualmente tra 0 e l'altezza massima*/
-		linee_[i].position = sf::Vector2f(
-			i * larghezza_finestra_ / NUMERO_DI_LINEE,
-			altezza_finestra_ - (rand() % altezza_massima_)
-		);
-		linee_[i].color = sf::Color::Blue; // impostazione del colore della linea
+		if (i == 0)
+		{
+			linee_[i].position = sf::Vector2f(
+				i * larghezza_finestra_ / NUMERO_DI_LINEE,
+				altezza_massima2 - (rand() % (altezza_massima2 - altezza_massima_))
+			);
+		}
+		else {
+			int scarto = 0;
+			if (altezza_massima_ + range > linee_[i - 1].position.y) {
+				scarto = altezza_massima_ - linee_[i - 1].position.y;
+			}
+			else if (altezza_massima2 - range < linee_[i - 1].position.y) {
+				scarto = altezza_massima2 - linee_[i - 1].position.y;
+			}
+
+			int altezza_random = ((rand() % (range * 2 + 1)) - (range + scarto)) + linee_[i - 1].position.y;
+			//int altezza_random = ((rand() % (range * 2 + 1)) - range) + linee_[i - 1].position.y;
+
+			if (altezza_random > altezza_massima2) altezza_random = altezza_massima2;
+			else if (altezza_random < altezza_massima_) altezza_random = altezza_massima_;
+
+			linee_[i].position = sf::Vector2f(
+				i * larghezza_finestra_ / NUMERO_DI_LINEE,
+				altezza_random
+			);
+		}
 		
-		std::cout << "Punto: " << linee_[i].position.x << " " << linee_[i].position.y << std::endl; // logging
+		linee_[i].color = sf::Color::Blue; // impostazione del colore della linea
 	}
 }
 
@@ -39,7 +62,6 @@ void SuperficiePianeta::generaSuperficie()
 
 void SuperficiePianeta::generaBunker()
 {
-	std::cout << "----BUNKER----" << std::endl; // logging
 	// Il numero di bunker sarà compreso tra 2 e 4
 	int numero_di_bunker = (rand() % 3) + 2;
 
@@ -103,23 +125,12 @@ void SuperficiePianeta::aggiungiBunker(int index)
 	coordinate_bunker[0] = rand() % (grandezza_bunker) + offset + linee_[index].position.x;
 	coordinate_bunker[1] = coordinate_bunker[0] * coefficiente_angolare + ordinata_origine;;
 
-
-	/* Aggiunta della Texture al Bunker */
-	sf::Texture texture;
-	if (!texture.loadFromFile("Texture/dm300.png", sf::IntRect(0, 0, 20, 20))) {
-		std::cout << "Impossibile caricare texture";
-	}
-
-	inserisciNodoBunker(coordinate_bunker, angolo, grandezza_bunker, texture);
-
-	std::cout << "Proprietà Bunker:\n\tPunto: " << coordinate_bunker[0] << ", " << coordinate_bunker[1] << "\n\tSlope: " <<
-		coefficiente_angolare << "\n\tArctan: " << angolo << 
-		"\n\tOrdinata all'origine: " << ordinata_origine << std::endl; // logging
+	inserisciNodoBunker(coordinate_bunker, angolo, grandezza_bunker);
 }
 
-void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza, sf::Texture texture)
+void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza)
 {
-	Bunker *new_bunker = new Bunker(puntiMedi[0], puntiMedi[1], grandezza, angolo, texture);
+	Bunker *new_bunker = new Bunker(50, "Texture/dm300.png", sf::IntRect(0, 0, 20, 20), puntiMedi[0], puntiMedi[1], grandezza, grandezza, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_ = new BunkerNode();
@@ -136,9 +147,6 @@ void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int
 
 void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	// Draw delle linee
-	//target.draw(linee_);
-
 	// Draw della superficie
 	for (size_t i = 0; i < NUMERO_DI_LINEE; i++)
 	{
@@ -162,7 +170,7 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) {
 
 	/* L'altezza massima della superficie può essere
 	il 30% dell'altezza della finestra*/
-	altezza_massima_ = height * 0.25;
+	altezza_massima_ = height * 0.75;
 
 	/* Vengono impostate le proprietà relative
 	al VertexArray delle linee della superficie,

@@ -1,6 +1,6 @@
 #ifndef UNIVERSO_H
 #define UNIVERSO_H
-#include <stdlib.h> 
+
 struct nodoPianeta {
 	bool visitato;
 	nodoPianeta *next;

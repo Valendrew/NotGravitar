@@ -5,14 +5,6 @@
 #include <SFML/Graphics.hpp>
 #include "bunker.h"
 
-// lista dei Bunker presenti nel pianeta
-struct BunkerNode {
-	Bunker *bunker_item;
-	BunkerNode *next;
-};
-// typedef del puntatore del BunkerNode
-typedef BunkerNode* bunker_ptr;
-
 // Pi greco
 const double PI = 3.14159265;
 // numero di linee
@@ -30,12 +22,20 @@ private:
 	void generaVertici();
 	void generaSuperficie();
 
+	// lista dei Bunker presenti nel pianeta
+	struct BunkerNode {
+		Bunker *bunker_item;
+		BunkerNode *next;
+	};
+	// typedef del puntatore del BunkerNode
+	typedef BunkerNode* bunker_ptr;
+
 	bunker_ptr bunker_;
 	bool bunker_presenti_[NUMERO_DI_LINEE];
 	void generaBunker();
 	bool controllaBunkerVicinanze(int posizione);
 	void aggiungiBunker(int index);
-	void inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza, sf::Texture texture);
+	void inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
