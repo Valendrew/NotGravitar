@@ -1,12 +1,13 @@
 #include <SFML\Graphics.hpp>
 #include "pianeta.h";
-
+#include "universo.hpp";
+#include "mappa.hpp";
 const int WIDTH = 1280;
 const int HEIGHT = 720;
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Test");
-	Pianeta p = Pianeta(0, 200, 200, WIDTH, HEIGHT);
+	Mappa mappa_ = Mappa(2, WIDTH, HEIGHT);
 
 	while (window.isOpen()) {
 
@@ -22,7 +23,8 @@ int main() {
 		}
 
 		window.clear(sf::Color::Black);
-		window.draw(p.getSuperficie());
+
+		window.draw(mappa_);
 		window.display();
 		
 	}

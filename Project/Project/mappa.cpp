@@ -3,21 +3,20 @@
 using namespace std;
 #include <iostream>
 #include <time.h>
-Mappa::Mappa(int d, int x, int y) {
+Mappa::Mappa(int distanza_, int width_, int height_) {
 
 	/*
 	quando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
 	e quelli nelle 4 direzioni possibili che l'astronave potrà visitare
 	*/
-
+	width = width_;
+	height = height_;
 	srand(time(0));
 	list_universi = new nodoMappa;
 	list_universi->c.x = -1;
 	list_universi->c.y = 0;
-	list_universi->u = new Universo(d, x, y);
-	distanza = d;
-	dimensioniCelle.x = x;
-	dimensioniCelle.y = y;
+	list_universi->u = new Universo(distanza_, width_, height_);
+	distanza = distanza_;
 	list_universi->next = NULL;
 	list_universi = addUniverso(0, 1);
 	list_universi = addUniverso(1, 0);
@@ -33,7 +32,7 @@ listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_unive
 	listaUniversi tmp = new nodoMappa;
 	tmp->c.x = coordinata_universo_x;
 	tmp->c.y = coordinata_universo_y;
-	tmp->u = new Universo(distanza, dimensioniCelle.x, dimensioniCelle.y);
+	tmp->u = new Universo(distanza, width, height);
 	tmp->next = list_universi;
 	list_universi = tmp;
 	return list_universi;
@@ -139,4 +138,8 @@ void Mappa::spostamento(int direzione) {
 }
 listaUniversi Mappa::getPosizioneAttuale() {
 	return posizioneAttuale;
+}
+void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(*posizioneAttuale->u);
 }

@@ -3,7 +3,9 @@
 
 #include <stdlib.h> 
 #include "universo.hpp";
-#include <stdlib.h>  
+#include "Nave.hpp";
+#include <stdlib.h>
+#include <SFML/Graphics.hpp>
 struct nodoMappa {
 	Universo *u;
 	coordinate c;
@@ -12,16 +14,18 @@ struct nodoMappa {
 
 typedef nodoMappa *listaUniversi;
 
-class Mappa {
+class Mappa : public sf::Drawable, public sf::Transformable {
 private:
+	int width;
+	int height;
 	listaUniversi list_universi;
 	listaUniversi posizioneAttuale; //puntatore  dove si trova l'astronave
 	listaUniversi universoDiGioco;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
-	//astrovane a;
+	
 	//findUniversi cerca un universo con coordinate x,y all'interno della lista e lo resistuisce (ritorna NULL se non lo trova)
 	listaUniversi findUniverso(int x, int y);
 	int distanza;
-	coordinate dimensioniCelle;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
 	Mappa(int distanza, int dim_x, int dim_y);
 	//addUniveso aggiunge un universo con coordinate x,y alla lista di universi
