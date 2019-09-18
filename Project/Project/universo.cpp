@@ -9,7 +9,7 @@ listaPianeti Universo::generaPianeti(listaPianeti p) {
 	p->visitato = false;
 	int spawn_x = -dimensioniCelle.x;
 	int spawn_y = -dimensioniCelle.y;
-	int i = 0, j = 0;
+	int i = 0, j = 0; 
 	bool ok = true;
 	while (i<18 && ok)
 	{

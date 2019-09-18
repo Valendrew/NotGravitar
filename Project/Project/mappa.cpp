@@ -10,7 +10,7 @@ Mappa::Mappa(int distanza_, int width_, int height_) {
 	e quelli nelle 4 direzioni possibili che l'astronave potrà visitare
 	*/
 	width = width_;
-	height = height_;
+	height = height_; 
 	srand(time(0));
 	list_universi = new nodoMappa;
 	list_universi->c.x = -1;

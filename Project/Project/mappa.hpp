@@ -14,7 +14,7 @@ struct nodoMappa {
 
 typedef nodoMappa *listaUniversi;
 
-class Mappa : public sf::Drawable, public sf::Transformable {
+class Mappa : public sf::Drawable, public sf::Transformable  {
 private:
 	int width;
 	int height;
