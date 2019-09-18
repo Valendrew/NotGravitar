@@ -1,43 +1,38 @@
 #include "Nave.hpp"
 
-
-Nave::Nave(float x, float y, float r, float velocita_, int carburante_, int vita_) {
-	vita = 10;
-	carburante = carburante_;
-	this->setPosition(x, y);
-	this->setRotation(r);
+Nave::Nave(float vita, const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione, float velocita, int carburante) 
+: Comportamento(vita, nomeFile, dimensione_texture, cord_x, cord_y, larghezza_e, altezza_e, angolo_rotazione) {
+	carburante_ = carburante;
+	velocita_ = velocita;
 	proiettilil = NULL;
-	velocita = velocita_;
+	
 }
-Nave::Nave() {
-	Nave(0.f, 0.f, 0.f, 0.f, 0, 0);
+Nave::Nave() : Comportamento() {
+	carburante_ = 10;
+	velocita_ = 10;
 }
-void Nave::setVita(int vita_) {
-	vita = vita;
-}
-int Nave::getVita() {
-	return vita;
-}
+
 void Nave::setCarburante(int carburante_) {
-	carburante = carburante_
-		;
+	carburante_ = carburante_;
 }
 int Nave::getCarburante() {
-	return carburante;
+	return carburante_;
 }
 void Nave::colpito() {
-	if (vita <= 0)
-		vita--;
+	if (vita_ <= 0)
+		vita_--;
 }
 void Nave::fill(int carburante_) {
-	carburante += carburante_;
+	carburante_ += carburante_;
 }
 void Nave::muovi() {
-	float velX = velocita * sin(this->getRotation()*PI / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
-	float velY = -velocita * cos(this->getRotation()*PI / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
-	this->move(velX, velY);
+	float velX = velocita_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
+	float velY = -velocita_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
+	
+	entita_.move(velX, velY);
 }
-void Nave::spara(sf::Vector2f dimensioni, int velocita) { // crea un nuovo proiettile e lo inserisce in cima alla lista dei proiettili
+
+/*void Nave::spara(sf::Vector2f dimensioni, int velocita) { // crea un nuovo proiettile e lo inserisce in cima alla lista dei proiettili
 	proiettiliP p = new proiettili;
 	sf::Vector2f posizione = this->getPosition();
 	float r = this->getRotation();
@@ -62,7 +57,7 @@ void Nave::updateProiettili(sf::RenderWindow &window) { // aggiorna la posizione
 		else {
 			pOld = p;
 			p = p->next;
-		}
+		//}
 
 	}
 }
@@ -77,4 +72,4 @@ void Nave::eliminaListaProiettili(proiettiliP head) {
 		eliminaListaProiettili(head->next);
 		delete(head);
 	}
-}
+}*/

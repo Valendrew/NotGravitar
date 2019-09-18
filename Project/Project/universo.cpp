@@ -1,7 +1,5 @@
 #include "universo.hpp";
-#include <stdlib.h>     
-#include <iostream>     
-#include <time.h> 
+   
 #include <iostream>
 listaPianeti Universo::generaPianeti(listaPianeti p) {
 	int numPianeti = numeroPianeti - 1;

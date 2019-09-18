@@ -126,16 +126,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bunker.cpp" />
+    <ClCompile Include="comportamento.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mappa.cpp" />
-    <ClCompile Include="Nave.cpp" />
+    <ClCompile Include="nave.cpp" />
     <ClCompile Include="pianeta.cpp" />
-    <ClCompile Include="Proiettile.cpp" />
+    <ClCompile Include="proiettile.cpp" />
     <ClCompile Include="superficie_pianeta.cpp" />
     <ClCompile Include="universo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bunker.h" />
+    <ClInclude Include="comportamento.h" />
     <ClInclude Include="mappa.hpp" />
     <ClInclude Include="nave.hpp" />
     <ClInclude Include="pianeta.h" />
