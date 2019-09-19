@@ -1,5 +1,7 @@
 #include "mappa.hpp";
 
+Mappa::Mappa() : Mappa(1280, 720) {}
+
 Mappa::Mappa(int width_, int height_) {
 
 	/*

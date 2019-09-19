@@ -150,11 +150,11 @@ void Universo::setVisitato() {
 }
 void Universo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-
 	listaPianeti pianeti_print = lista_Pianeti;
+	target.draw((*pianeti_print->pianeta_).getSuperficie());
 
-	while (pianeti_print != NULL) {
+	/*while (pianeti_print != NULL) {
 		target.draw(*pianeti_print->pianeta_);
 		pianeti_print = pianeti_print->next;
-	}
+	}*/
 }

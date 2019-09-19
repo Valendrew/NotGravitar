@@ -15,5 +15,6 @@ private:
 public: 
 	Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigned int height);
 	SuperficiePianeta getSuperficie();
+	void cambiaColore();
 };
 #endif // !PIANETA_H

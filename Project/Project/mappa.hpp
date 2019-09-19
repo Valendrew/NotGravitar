@@ -24,6 +24,7 @@ private:
 	int distanza;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
+	Mappa();
 	Mappa(int dim_x, int dim_y);
 	//addUniveso aggiunge un universo con coordinate x,y alla lista di universi
 	listaUniversi addUniverso(int x, int y);
