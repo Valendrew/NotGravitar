@@ -2,7 +2,8 @@
 #define SUPERFICIE_PIANETA_H
 
 // includes
-#include "bunker.h"
+#include <SFML/Graphics.hpp>
+#include "bunker.hpp"
 
 // Pi greco
 const double PI = 3.14159265;

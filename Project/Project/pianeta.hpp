@@ -2,8 +2,8 @@
 #define PIANETA_H
 
 // include
-#include "bunker.h"
-#include "superficie_pianeta.h"
+#include "bunker.hpp"
+#include "superficie_pianeta.hpp"
 
 class Pianeta : public sf::Drawable, public sf::Transformable {
 private: 

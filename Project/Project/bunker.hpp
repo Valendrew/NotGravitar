@@ -2,8 +2,7 @@
 #define BUNKER_H
 
 // include header
-#include "comportamento.h"
-#include <SFML/Graphics.hpp>
+#include "comportamento.hpp"
 
 class Bunker : public Comportamento {
 private: 

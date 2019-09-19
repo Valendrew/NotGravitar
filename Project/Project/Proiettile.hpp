@@ -1,8 +1,8 @@
-#ifndef MAPPA_H
-#define MAPPA_H
+#ifndef PROIETTILE_H
+#define PROIETTILE_H
 
-#include <SFML/Graphics.hpp>
 const double PI_G = 3.14159265;
+#include <SFML/Graphics.hpp>
 
 class Proiettile : public sf::Drawable, public sf::Transformable {
 private:

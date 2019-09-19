@@ -1,11 +1,8 @@
 #ifndef MAPPA_H
 #define MAPPA_H
 
-#include <stdlib.h> 
 #include "universo.hpp";
-#include "Nave.hpp";
-#include <stdlib.h>
-#include <SFML/Graphics.hpp>
+
 struct nodoMappa {
 	Universo *u;
 	coordinate c;
@@ -27,7 +24,7 @@ private:
 	int distanza;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
-	Mappa(int distanza, int dim_x, int dim_y);
+	Mappa(int dim_x, int dim_y);
 	//addUniveso aggiunge un universo con coordinate x,y alla lista di universi
 	listaUniversi addUniverso(int x, int y);
 	//spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi

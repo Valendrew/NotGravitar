@@ -1,6 +1,5 @@
 #include "universo.hpp";
-   
-#include <iostream>
+  
 listaPianeti Universo::generaPianeti(listaPianeti p) {
 	int numPianeti = numeroPianeti - 1;
 	p = new nodoPianeta;
@@ -116,16 +115,7 @@ Universo::Universo(int d, int width_, int height_) {
 			numPianeti--;
 		}
 	}
-	std::cout << "\n"; std::cout << "\n";
-	for (int i = 0; i < 18; i++)
-	{
-		for (int j = 0; j < 24; j++)
-		{
-			std::cout << matriceSpawn[i][j]<<" ";
-		}
-		std::cout << "\n";
-	}
-	std::cout << "\n" << numeroPianeti << "\n";
+
 	lista_Pianeti = generaPianeti(p);
 }
 Universo::Universo() :Universo(0, 0, 0)

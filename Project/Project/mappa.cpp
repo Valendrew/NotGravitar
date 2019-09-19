@@ -1,9 +1,6 @@
 #include "mappa.hpp";
-#include <stdlib.h> 
 
-#include <iostream>
-#include <time.h>
-Mappa::Mappa(int distanza_, int width_, int height_) {
+Mappa::Mappa(int width_, int height_) {
 
 	/*
 	quando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
@@ -11,12 +8,13 @@ Mappa::Mappa(int distanza_, int width_, int height_) {
 	*/
 	width = width_;
 	height = height_; 
+	distanza = 2;
 	srand(time(0));
 	list_universi = new nodoMappa;
 	list_universi->c.x = -1;
 	list_universi->c.y = 0;
-	list_universi->u = new Universo(distanza_, width_, height_);
-	distanza = distanza_;
+	list_universi->u = new Universo(distanza, width_, height_);
+	
 	list_universi->next = NULL;
 	list_universi = addUniverso(0, 1);
 	list_universi = addUniverso(1, 0);

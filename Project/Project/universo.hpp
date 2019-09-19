@@ -1,8 +1,10 @@
 #ifndef UNIVERSO_H
 #define UNIVERSO_H
+
 #include <stdlib.h> 
 #include "pianeta.h"
 #include <SFML/Graphics.hpp>
+
 struct nodoPianeta {
 	Pianeta *pianeta_;
 	bool visitato;

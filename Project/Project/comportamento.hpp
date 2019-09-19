@@ -1,8 +1,8 @@
 #ifndef _COMPORTAMENTO_H
 #define _COMPORTAMENTO_H
 
+#include "SFML\Graphics.hpp"
 #include "proiettile.hpp"
-#include <SFML/Graphics.hpp>
 
 class Comportamento : public sf::Drawable, public sf::Transformable {
 protected:
