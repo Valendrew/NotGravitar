@@ -8,7 +8,9 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 	shape_.setPosition(cord_x, cord_y);
 	shape_.setFillColor(sf::Color(255, 0, 0, 255));
 }
-
+int Pianeta::getRadius() {
+	return shape_.getRadius();
+}
 SuperficiePianeta Pianeta::getSuperficie()
 {
 	return superficie_;

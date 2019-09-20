@@ -14,6 +14,7 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public: 
 	Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigned int height);
+	int getRadius();
 	SuperficiePianeta getSuperficie();
 	void cambiaColore();
 };
