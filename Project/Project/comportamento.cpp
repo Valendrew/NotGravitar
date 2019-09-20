@@ -14,4 +14,4 @@ Comportamento::Comportamento(float vita,const char nomeFile[], sf::IntRect dimen
 	texture_.loadFromFile(nomeFile, dimensione_texture); // texture dell'oggetto
 	entita_.setTexture(&texture_); // impostata la texture*/
 }
-Comportamento::Comportamento() : Comportamento(50, "Texture/ship3.png", sf::IntRect(), 0, 0, 25, 25, 0) {}
+Comportamento::Comportamento() : Comportamento(50, "Texture/ship3.png", sf::IntRect(), 300, 300, 25, 25, 0) {}

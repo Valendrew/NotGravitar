@@ -9,11 +9,6 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 	shape_.setFillColor(sf::Color(255, 0, 0, 255));
 }
 
-sf::Vector2f Pianeta::getCoordinate()
-{
-	return shape_.getPosition();
-}
-
 int Pianeta::getRadius() {
 	return shape_.getRadius();
 }

@@ -26,13 +26,13 @@ private:
 public:
 	Mappa();
 	Mappa(int dim_x, int dim_y);
-	void pianetaAttualeRicerca(int x_astronave, int y_astronave);
 	//addUniveso aggiunge un universo con coordinate x,y alla lista di universi
 	listaUniversi addUniverso(int x, int y);
 	//spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
 	//adiacenti a quello attuale
 	void spostamento(int i);
 	listaUniversi getPosizioneAttuale();
+	bool ricercaPianeta(int x_astronave, int y_astronave);
 };
 
 #endif

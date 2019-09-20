@@ -1,8 +1,15 @@
 #include "gioco.hpp"
+#include <iostream>
 
 void Gioco::gestioneEventi(Nave nave, Mappa mappa)
 {
+	
+}
 
+Gioco::Gioco()
+{
+	eventi_H = nullptr;
+	eventi_T = nullptr;
 }
 
 void Gioco::avviaGioco()
@@ -33,6 +40,10 @@ void Gioco::avviaGioco()
 		window.clear(sf::Color::Black);
 
 		gestioneEventi(nave, mappa);
+
+		if (mappa.ricercaPianeta(nave.getPosition().x, nave.getPosition().y)) {
+		
+		}
 
 		window.draw(mappa);
 		window.draw(nave);

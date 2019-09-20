@@ -33,12 +33,10 @@ private:
 	listaPianeti generaPianeti(listaPianeti p);
 	//Precondizione: la lista p passata è = NULL
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	Pianeta *pianetaAttuale;
+	listaPianeti pianetaAttuale;
 public:
 	Universo(int distanza, int width, int height);
 	Universo();
-	Pianeta* getPianeta();
-	void setPianeta(Pianeta *p);
 	listaPianeti distruggiPianeta(listaPianeti p);
 	listaPianeti getPianeti();
 	coordinate getDimensioniCelle();
@@ -46,6 +44,8 @@ public:
 	bool getMatriceSpawn(int i, int j);
 	int getNumeroPianeti();
 	void setVisitato();
+	bool pianetaAttualeRicerca(int x_astronave, int y_astronave);
 	bool getVisitato();
+
 };
 #endif // !UNIVERSO_H
