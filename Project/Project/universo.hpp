@@ -33,10 +33,11 @@ private:
 	listaPianeti generaPianeti(listaPianeti p);
 	//Precondizione: la lista p passata è = NULL
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	Pianeta *pianetaAttuale;
 public:
 	Universo(int distanza, int width, int height);
-
 	Universo();
+	void pianetaAttualeRicerca(int x_astronave, int y_astronave);
 	listaPianeti distruggiPianeta(listaPianeti p);
 	listaPianeti getPianeti();
 	coordinate getDimensioniCelle();
