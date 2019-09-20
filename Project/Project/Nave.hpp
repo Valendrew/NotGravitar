@@ -19,12 +19,16 @@ private:
 public:
 	Nave(float vita, const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione, float velocita, int carburante);
 	Nave();
-	void rotate(float r);
+
 	void setCarburante(int carburante_);
 	int getCarburante();
 	void colpito();
 	void fill(int carburante_);
 	void muovi();
+	//void spara(sf::Vector2f dimensioni, int velocita);
+	//void updateProiettili(sf::RenderWindow &window);
+	//bool collisioneProiettile(Proiettile proiettile);
+	//void eliminaListaProiettili(proiettiliP head);
 };
 
 #endif

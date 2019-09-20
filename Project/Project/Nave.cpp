@@ -4,16 +4,12 @@ Nave::Nave(float vita, const char nomeFile[], sf::IntRect dimensione_texture, fl
 : Comportamento(vita, nomeFile, dimensione_texture, cord_x, cord_y, larghezza_e, altezza_e, angolo_rotazione) {
 	carburante_ = carburante;
 	velocita_ = velocita;
+	proiettilil = NULL;
 	
 }
 Nave::Nave() : Comportamento() {
 	carburante_ = 10;
 	velocita_ = 10;
-}
-
-void Nave::rotate(float r)
-{
-	entita_.rotate(r);
 }
 
 void Nave::setCarburante(int carburante_) {
@@ -35,3 +31,45 @@ void Nave::muovi() {
 	
 	entita_.move(velX, velY);
 }
+
+/*void Nave::spara(sf::Vector2f dimensioni, int velocita) { // crea un nuovo proiettile e lo inserisce in cima alla lista dei proiettili
+	proiettiliP p = new proiettili;
+	sf::Vector2f posizione = this->getPosition();
+	float r = this->getRotation();
+	p->val = new Proiettile(dimensioni, posizione, r, velocita);
+	p->val->setFillColor(sf::Color::Green);
+	p->next = this->proiettilil;
+	proiettilil = p;
+}
+void Nave::updateProiettili(sf::RenderWindow &window) { // aggiorna la posizione e controlla collisione di tutta la lista di elementi
+	proiettiliP p = proiettilil;
+	proiettiliP pOld = proiettilil;
+	Proiettile pr;
+	while (p != NULL) // scorro la lista
+	{
+		p->val->muovi();
+		window.draw(*p->val);
+		if (collisioneProiettile(*p->val)) { //elimina un proiettile in caso di collisione
+			pOld->next = p->next;
+			delete(p);
+			p = pOld->next;
+		}
+		else {
+			pOld = p;
+			p = p->next;
+		//}
+
+	}
+}
+bool Nave::collisioneProiettile(Proiettile proiettile) {
+	// TODO
+	return false;
+}
+void Nave::eliminaListaProiettili(proiettiliP head) {
+	if (head == nullptr)
+		delete(head);
+	else {
+		eliminaListaProiettili(head->next);
+		delete(head);
+	}
+}*/

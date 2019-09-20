@@ -13,7 +13,7 @@ int main() {
 	//sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Test");
 
 	Pianeta p = Pianeta(0, 200, 200, WIDTH, HEIGHT);
-	Nave n = Nave(50, "Texture/ship3.png", sf::IntRect(), 300, 200, 32, 37, 0, 2, 50);
+	Nave n = Nave(50, "Texture/ship3.png", sf::IntRect(), 300, 200, 32, 37, 0, 20, 50);
 
 	while (window.isOpen()) {
 
@@ -27,10 +27,7 @@ int main() {
 				break;
 			}
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) n.muovi();
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) n.ruota(-1.f);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) n.ruota(1.0);
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) n.spara(5.f);
+
 		window.clear(sf::Color::Black);
 		window.draw(p.getSuperficie());
 		window.draw(n);

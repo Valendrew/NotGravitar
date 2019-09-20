@@ -3,13 +3,6 @@
 void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(entita_);
-	proiettile_ptr p = proiettili_;
-	while (p!=NULL)	// Aggiorna la li posizione della lista dei proiettili,		forse da spostare in funzione a parte!!
-	{
-		target.draw(p->proiettile->getProiettile());
-		p->proiettile->muovi();
-		p = p->next;
-	}
 }
 
 Comportamento::Comportamento(float vita,const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione) {
@@ -23,43 +16,3 @@ Comportamento::Comportamento(float vita,const char nomeFile[], sf::IntRect dimen
 
 }
 Comportamento::Comportamento() : Comportamento(50, "default.png", sf::IntRect(), 0, 0, 25, 25, 0) {}
-
-void Comportamento::setPosition(sf::Vector2f pos)
-{
-	entita_.setPosition(pos);
-}
-
-sf::Vector2f Comportamento::getPositon()
-{
-	return entita_.getPosition();
-}
-
-void Comportamento::setRotation(float rot)
-{
-	entita_.setRotation(rot);
-}
-
-float Comportamento::getRotation()
-{
-	return entita_.getRotation();
-}
-
-void Comportamento::spara(float angolo)
-{
-	proiettile_ptr p= new ProiettileNode;
-	p->proiettile = new Proiettile(sf::Vector2f(5.f,5.f), entita_.getPosition(), angolo, 5.f); //crea una nuovo peroiettile e lo mette in cima alla lista
-	p->next = this->proiettili_; 
-	proiettili_ = p;
-}
-
-void Comportamento::eliminaProiettile(proiettile_ptr p)
-{
-	if (p->next != NULL) {
-		proiettile_ptr tmp = p->next;
-		p->proiettile = p->next->proiettile;
-		p->next = p->next->next;
-		delete tmp;
-	}
-	else
-		delete p;
-}
