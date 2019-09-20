@@ -5,7 +5,6 @@ Nave::Nave(float vita, const char nomeFile[], sf::IntRect dimensione_texture, fl
 	carburante_ = carburante;
 	velocita_ = velocita;
 	proiettilil = NULL;
-	
 }
 Nave::Nave() : Comportamento() {
 	carburante_ = 10;

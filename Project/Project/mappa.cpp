@@ -1,5 +1,7 @@
 #include "mappa.hpp";
 
+Mappa::Mappa() : Mappa(1280, 720) {}
+
 Mappa::Mappa(int width_, int height_) {
 
 	/*
@@ -51,6 +53,7 @@ listaUniversi Mappa::findUniverso(int x, int y) {
 	}
 	return ritorno;
 }
+
 void Mappa::spostamento(int direzione) {
 	/*
 		0 = nord
@@ -134,9 +137,15 @@ void Mappa::spostamento(int direzione) {
 		break;
 	}
 }
+
 listaUniversi Mappa::getPosizioneAttuale() {
 	return posizioneAttuale;
 }
+
+bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
+	return (posizioneAttuale->u)->pianetaAttualeRicerca(x_astronave, y_astronave);
+}
+
 void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(*posizioneAttuale->u);
