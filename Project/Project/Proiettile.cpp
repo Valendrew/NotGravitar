@@ -2,7 +2,12 @@
 
 void Proiettile::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	target.draw(proiettile_); 
+	target.draw(proiettile_);
+}
+
+sf::RectangleShape Proiettile::getProiettile()
+{
+	return proiettile_;
 }
 
 Proiettile::Proiettile() : Proiettile(sf::Vector2f(0, 0), sf::Vector2f(0, 0), 0.f, 0.f) {}
@@ -15,7 +20,7 @@ Proiettile::Proiettile(sf::Vector2f dim, sf::Vector2f pos, float angolo, float v
 	proiettile_.setFillColor(sf::Color::Green);
 
 	double radianti = angolo * PI_G / 180.0;
-	
+
 	velocita_ = velocita;
 	x = velocita_ * sin(radianti);
 	y = -1 * velocita_ * cos(radianti);
