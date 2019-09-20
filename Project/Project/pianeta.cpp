@@ -1,5 +1,10 @@
 #include "pianeta.h"
 
+sf::Vector2f Pianeta::getCoordinate()
+{
+	return shape_.getPosition();
+}
+
 Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigned int height) : superficie_(width, height){
 	id_ = id;
 	shape_.setRadius(25.0);
@@ -9,14 +14,14 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 	shape_.setFillColor(sf::Color(255, 0, 0, 255));
 }
 
-SuperficiePianeta Pianeta::getSuperficie()
-{
-	return superficie_;
-}
-
 void Pianeta::cambiaColore()
 {
 	shape_.setFillColor(sf::Color(255, 0, 0, shape_.getFillColor().a - 25));
+}
+
+void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)
+{
+	target.draw(superficie_);
 }
 
 /*Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigned int height) {
