@@ -160,7 +160,7 @@ void Universo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	}
 	else {
 		Pianeta p = *pianetaAttuale;
-		target.draw(p.getSuperficie());
+		p.drawSuperficie(target, states);
 	}
 }
 void Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
