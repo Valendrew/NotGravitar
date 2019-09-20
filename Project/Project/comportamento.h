@@ -22,6 +22,7 @@ protected:
 public: 
 	Comportamento(float vita, const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione);
 	Comportamento();
+	sf::Vector2f getPosizione();
 
 };
 #endif // !_COMPORTAMENTO_H
