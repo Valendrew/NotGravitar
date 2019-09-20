@@ -47,7 +47,7 @@ float Comportamento::getRotation()
 void Comportamento::spara(float angolo)
 {
 	proiettile_ptr p = new ProiettileNode;
-	p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, 5.f); //crea una nuovo peroiettile e lo mette in cima alla lista
+	p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, 5.f); //crea una nuovo peroiettile, lo mette in cima alla lista
 	p->next = this->proiettili_;
 	proiettili_ = p;
 }
