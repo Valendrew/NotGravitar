@@ -139,6 +139,20 @@ void Mappa::spostamento(int direzione) {
 listaUniversi Mappa::getPosizioneAttuale() {
 	return posizioneAttuale;
 }
+
+void Mappa::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
+	listaPianeti app = posizioneAttuale->u->getPianeti();
+	posizioneAttuale->u->setPianeta(nullptr);
+	while (app != nullptr && posizioneAttuale->u->getPianeta() == nullptr) {
+		int x_pianeta = app->pianeta_->getPosition().x;
+		int y_pianeta = app->pianeta_->getPosition().y;
+		int radius_pianeta = app->pianeta_->getRadius();
+		if ((x_pianeta <= x_astronave && x_astronave <= x_pianeta + radius_pianeta) && (y_pianeta <= y_astronave && y_astronave <= y_pianeta + radius_pianeta)) {
+			posizioneAttuale->u->setPianeta(app->pianeta_);
+		}
+		app = app->next;
+	}
+}
 void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(*posizioneAttuale->u);

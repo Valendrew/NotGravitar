@@ -37,7 +37,8 @@ private:
 public:
 	Universo(int distanza, int width, int height);
 	Universo();
-	void pianetaAttualeRicerca(int x_astronave, int y_astronave);
+	Pianeta* getPianeta();
+	void setPianeta(Pianeta *p);
 	listaPianeti distruggiPianeta(listaPianeti p);
 	listaPianeti getPianeti();
 	coordinate getDimensioniCelle();

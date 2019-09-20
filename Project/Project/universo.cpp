@@ -148,6 +148,12 @@ bool Universo::getVisitato() {
 void Universo::setVisitato() {
 	visitato = true;
 }
+void Universo::setPianeta(Pianeta *p) {
+	pianetaAttuale = p;
+}
+Pianeta* Universo::getPianeta() {
+	return pianetaAttuale;
+}
 void Universo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	listaPianeti pianeti_print = lista_Pianeti;
@@ -161,18 +167,5 @@ void Universo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	else {
 		Pianeta p = *pianetaAttuale;
 		p.drawSuperficie(target, states);
-	}
-}
-void Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
-	listaPianeti app = getPianeti();
-	pianetaAttuale = nullptr;
-	while (app != nullptr && pianetaAttuale == nullptr) {
-		int x_pianeta = app->pianeta_->getPosition().x;
-		int y_pianeta = app->pianeta_->getPosition().y;
-		int radius_pianeta = app->pianeta_->getRadius();
-		if ((x_pianeta <= x_astronave && x_astronave <= x_pianeta + radius_pianeta) && (y_pianeta <= y_astronave && y_astronave <= y_pianeta + radius_pianeta)) {
-			pianetaAttuale = app->pianeta_;
-		}
-		app = app->next;
 	}
 }
