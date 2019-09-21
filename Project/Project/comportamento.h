@@ -23,7 +23,7 @@ public:
 	Comportamento(float vita, const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione);
 	Comportamento();
 	void setPosition(sf::Vector2f pos);
-	sf::Vector2f getPositon();
+	sf::Vector2f getPosizione();
 	void setRotation(float rot);
 	float getRotation();
 	void spara(float angolo);
