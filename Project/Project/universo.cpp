@@ -1,14 +1,61 @@
 #include "universo.hpp";
-   
-#include <iostream>
+  
 listaPianeti Universo::generaPianeti(listaPianeti p) {
 	int numPianeti = numeroPianeti - 1;
 	p = new nodoPianeta;
 	p->visitato = false;
+	int spawn_x = -dimensioniCelle.x;
+	int spawn_y = -dimensioniCelle.y;
+	int i = 0, j = 0; 
+	bool ok = true;
+	while (i<18 && ok)
+	{
+		while (j<24 && ok)
+		{
+			if (matriceSpawn[i][j])
+			{
+				//p->pianeta_ = new Pianeta(idPianeta, spawn_x-25, spawn_y-25, width, height);//25 è il radius del pianeta
+				p->pianeta_ = new Pianeta(idPianeta, spawn_x, spawn_y, width, height);//25 è il radius del pianeta
+				ok = false;
+				matriceSpawn[i][j] = false;
+			}
+			spawn_x += dimensioniCelle.x;
+			j++;
+		}
+		spawn_x = 0;
+		spawn_y += dimensioniCelle.y;
+		j = 0;
+		i++;
+	}
 	p->next = NULL;
 	while (numPianeti > 0) {
+		//diminuisco di 1 la i perche quando esco dal ciclo precedente viene aumentata senza effettivamente esaminare
+		//la relativa riga
+		i--;
+		spawn_y -= dimensioniCelle.y;
+		idPianeta++;
 		listaPianeti tmp = new nodoPianeta;
 		tmp->visitato = false;
+		ok = true;
+		while (i < 18 && ok)
+		{
+			while (j < 24 && ok)
+			{
+				if (matriceSpawn[i][j])
+				{
+					//tmp->pianeta_ = new Pianeta(idPianeta, spawn_x-25, spawn_y-25, width, height);//25 è il radius del pianeta
+					tmp->pianeta_ = new Pianeta(idPianeta, spawn_x, spawn_y, width, height);//25 è il radius del pianeta
+					ok = false;
+					matriceSpawn[i][j] = false;
+				}
+				spawn_x += dimensioniCelle.x;
+				j++;
+			}
+			spawn_x = 0;
+			spawn_y += dimensioniCelle.y;
+			j = 0;
+			i++;
+		}
 		tmp->next = p;
 		p = tmp;
 		numPianeti--;
@@ -18,14 +65,15 @@ listaPianeti Universo::generaPianeti(listaPianeti p) {
 
 }
 
-Universo::Universo(int d, int x, int y) {
-	dimensioniCelle.x = x;
-	dimensioniCelle.y = y;
+Universo::Universo(int d, int width_, int height_) {
+	width = width_;
+	height = height_;
+	dimensioniCelle.x = width_ / 24;
+	dimensioniCelle.y = height_ / 18;
 	listaPianeti p = NULL;
 	numeroPianeti = rand() % 3 + 3; //Pianeti da 3 a 5
 	visitato = false;
-	lista_Pianeti = generaPianeti(p);
-
+	idPianeta = 0;
 	//setto tutta la matrice di spawn a false (i pianeti saranno generati dove avro true)
 	for (int i = 0; i < 24; i++)
 		for (int j = 0; j < 18; j++)
@@ -67,6 +115,8 @@ Universo::Universo(int d, int x, int y) {
 			numPianeti--;
 		}
 	}
+
+	lista_Pianeti = generaPianeti(p);
 }
 Universo::Universo() :Universo(0, 0, 0)
 {
@@ -97,4 +147,38 @@ bool Universo::getVisitato() {
 }
 void Universo::setVisitato() {
 	visitato = true;
+}
+
+bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
+	listaPianeti app = lista_Pianeti;
+	pianetaAttuale = nullptr;
+	bool found = false;
+
+	while (app != nullptr && !found) {
+		int x_pianeta = app->pianeta_->getPosition().x;
+		int y_pianeta = app->pianeta_->getPosition().y;
+		int radius_pianeta = app->pianeta_->getRadius();
+		if ((x_pianeta <= x_astronave && x_astronave <= x_pianeta + radius_pianeta) && (y_pianeta <= y_astronave && y_astronave <= y_pianeta + radius_pianeta)) {
+			pianetaAttuale = app;
+			found = true;
+		}
+		app = app->next;
+	}
+
+	return found;
+}
+
+void Universo::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	listaPianeti pianeti_print = lista_Pianeti;
+	
+	if (pianetaAttuale == nullptr) {
+		while (pianeti_print != nullptr) {
+			target.draw(*pianeti_print->pianeta_);
+			pianeti_print = pianeti_print->next;
+		}
+	}
+	else {
+		(*pianetaAttuale->pianeta_).drawSuperficie(target, states);
+	}
 }

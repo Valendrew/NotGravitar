@@ -4,6 +4,7 @@ Nave::Nave(float vita, const char nomeFile[], sf::IntRect dimensione_texture, fl
 	: Comportamento(vita, nomeFile, dimensione_texture, cord_x, cord_y, larghezza_e, altezza_e, angolo_rotazione) {
 	carburante_ = carburante;
 	velocita_ = velocita;
+	entita_.setOrigin(sf::Vector2f(larghezza_e / 2.f, altezza_e / 2.f));
 
 }
 Nave::Nave() : Comportamento() {

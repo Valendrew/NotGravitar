@@ -1,5 +1,4 @@
 #include "superficie_pianeta.h"
-#include <iostream>
 
 void SuperficiePianeta::generaVertici()
 {

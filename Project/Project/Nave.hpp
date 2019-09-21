@@ -4,15 +4,9 @@
 #include "comportamento.h"
 #include "proiettile.hpp"
 
-struct proiettili {
-	Proiettile *val;
-	proiettili *next;
-};
-typedef proiettili *proiettiliP;
-
 class Nave : public Comportamento {
 private:
-	proiettiliP proiettilil;
+	//proiettiliP proiettilil;
 	int carburante_;
 	float velocita_;
 

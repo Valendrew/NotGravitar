@@ -1,7 +1,8 @@
 #ifndef MAPPA_H
 #define MAPPA_H
 
-#include "universo.hpp"; 
+#include "universo.hpp";
+
 struct nodoMappa {
 	Universo *u;
 	coordinate c;
@@ -10,24 +11,28 @@ struct nodoMappa {
 
 typedef nodoMappa *listaUniversi;
 
-class Mappa {
+class Mappa : public sf::Drawable, public sf::Transformable  {
 private:
+	int width;
+	int height;
 	listaUniversi list_universi;
 	listaUniversi posizioneAttuale; //puntatore  dove si trova l'astronave
 	listaUniversi universoDiGioco;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
-	//astrovane a;
+	
 	//findUniversi cerca un universo con coordinate x,y all'interno della lista e lo resistuisce (ritorna NULL se non lo trova)
 	listaUniversi findUniverso(int x, int y);
 	int distanza;
-	coordinate dimensioniCelle;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
-	Mappa(int distanza, int dim_x, int dim_y);
+	Mappa();
+	Mappa(int dim_x, int dim_y);
 	//addUniveso aggiunge un universo con coordinate x,y alla lista di universi
 	listaUniversi addUniverso(int x, int y);
 	//spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
 	//adiacenti a quello attuale
 	void spostamento(int i);
 	listaUniversi getPosizioneAttuale();
+	bool ricercaPianeta(int x_astronave, int y_astronave);
 };
 
 #endif
