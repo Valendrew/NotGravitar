@@ -41,7 +41,7 @@ void Gioco::avviaGioco()
 
 		gestioneEventi(nave, mappa);
 
-		if (mappa.ricercaPianeta(nave.getPosition().x, nave.getPosition().y)) {
+		if (mappa.ricercaPianeta(nave.getPosizione().x, nave.getPosizione().y)) {
 		
 		}
 

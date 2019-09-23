@@ -9,8 +9,13 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 	shape_.setFillColor(sf::Color(255, 0, 0, 255));
 }
 
-int Pianeta::getRadius() {
+int Pianeta::getRaggio() {
 	return shape_.getRadius();
+}
+
+sf::Vector2f Pianeta::getPosizione()
+{
+	return shape_.getPosition();
 }
 
 void Pianeta::cambiaColore() {

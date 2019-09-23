@@ -155,9 +155,10 @@ bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
 	bool found = false;
 
 	while (app != nullptr && !found) {
-		int x_pianeta = app->pianeta_->getPosition().x;
-		int y_pianeta = app->pianeta_->getPosition().y;
-		int radius_pianeta = app->pianeta_->getRadius();
+		int x_pianeta = (*app->pianeta_).getPosizione().x;
+		int y_pianeta = (*app->pianeta_).getPosizione().y;
+		int radius_pianeta = (*app->pianeta_).getRaggio();
+
 		if ((x_pianeta <= x_astronave && x_astronave <= x_pianeta + radius_pianeta) && (y_pianeta <= y_astronave && y_astronave <= y_pianeta + radius_pianeta)) {
 			pianetaAttuale = app;
 			found = true;
