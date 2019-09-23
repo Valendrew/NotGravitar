@@ -6,8 +6,8 @@ void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) con
 	proiettile_ptr p = proiettili_;
 	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili,		forse da spostare in funzione a parte!!
 	{
-		target.draw(p->proiettile->getProiettile());
-		p->proiettile->muovi();
+		target.draw(p->proiettile.getProiettile());
+		p->proiettile.muovi();
 		p = p->next;
 	}
 }
@@ -29,7 +29,7 @@ void Comportamento::setPosition(sf::Vector2f pos)
 	entita_.setPosition(pos);
 }
 
-sf::Vector2f Comportamento::getPositon()
+sf::Vector2f Comportamento::getPosizione()
 {
 	return entita_.getPosition();
 }

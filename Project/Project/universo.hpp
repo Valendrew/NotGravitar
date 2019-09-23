@@ -1,7 +1,12 @@
 #ifndef UNIVERSO_H
 #define UNIVERSO_H
 
+#include <stdlib.h> 
+#include "pianeta.h"
+#include <SFML/Graphics.hpp>
+
 struct nodoPianeta {
+	Pianeta *pianeta_;
 	bool visitato;
 	nodoPianeta *next;
 };
@@ -13,8 +18,10 @@ struct coordinate {
 	int y;
 };
 
-class Universo {
+class Universo : public sf::Drawable, public sf::Transformable {
 private:
+	int width;
+	int height;
 	listaPianeti lista_Pianeti;
 	int numeroPianeti;
 	bool matriceSpawn[18][24];
@@ -22,13 +29,13 @@ private:
 	coordinate dimensioniCelle;
 	//Booleano per verificare se è la prima volta che visito un universo o meno (in caso affermativo genero gli universi adiacenti)
 	bool visitato;
-
+	int idPianeta;
 	listaPianeti generaPianeti(listaPianeti p);
 	//Precondizione: la lista p passata è = NULL
-
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	listaPianeti pianetaAttuale;
 public:
-	Universo(int distanza, int x, int y);
-
+	Universo(int distanza, int width, int height);
 	Universo();
 	listaPianeti distruggiPianeta(listaPianeti p);
 	listaPianeti getPianeti();
@@ -37,6 +44,8 @@ public:
 	bool getMatriceSpawn(int i, int j);
 	int getNumeroPianeti();
 	void setVisitato();
+	bool pianetaAttualeRicerca(int x_astronave, int y_astronave);
 	bool getVisitato();
+
 };
 #endif // !UNIVERSO_H
