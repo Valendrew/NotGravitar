@@ -14,8 +14,8 @@ listaPianeti Universo::generaPianeti(listaPianeti p) {
 		{
 			if (matriceSpawn[i][j])
 			{
-				//p->pianeta_ = new Pianeta(idPianeta, spawn_x-25, spawn_y-25, width, height);//25 è il radius del pianeta
-				p->pianeta_ = new Pianeta(idPianeta, spawn_x, spawn_y, width, height);//25 è il radius del pianeta
+				p->pianeta_ = new Pianeta(idPianeta, spawn_x-25, spawn_y-25, width, height);//25 è il radius del pianeta
+				//p->pianeta_ = new Pianeta(idPianeta, spawn_x, spawn_y, width, height);//25 è il radius del pianeta
 				ok = false;
 				matriceSpawn[i][j] = false;
 			}
@@ -159,7 +159,7 @@ bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
 		int y_pianeta = (*app->pianeta_).getPosizione().y;
 		int radius_pianeta = (*app->pianeta_).getRaggio();
 
-		if ((x_pianeta <= x_astronave && x_astronave <= x_pianeta + radius_pianeta) && (y_pianeta <= y_astronave && y_astronave <= y_pianeta + radius_pianeta)) {
+		if ((x_pianeta <= x_astronave && x_astronave <= x_pianeta + radius_pianeta*2) && (y_pianeta <= y_astronave && y_astronave <= y_pianeta + radius_pianeta*2)) {
 			pianetaAttuale = app;
 			found = true;
 		}
