@@ -24,8 +24,8 @@ void Gioco::avviaGioco()
 	while (window.isOpen()) {
 
 		sf::Event event;
-		while (window.pollEvent(event)) {
-			switch (event.type)
+ 		while (window.pollEvent(event)) {
+   			switch (event.type)
 			{
 			case sf::Event::Closed: window.close();
 				break;
@@ -36,15 +36,15 @@ void Gioco::avviaGioco()
 			default:
 				break;
 			}
-		}
+ 		}
 		window.clear(sf::Color::Black);
 
 		gestioneEventi(nave, mappa);
 
 		if (mappa.ricercaPianeta(nave.getPosizione().x, nave.getPosizione().y)) {
-		
+			std::cout << nave.getPosizione().y << "\n";
 		}
-
+		
 		window.draw(mappa);
 		window.draw(nave);
 		window.display();

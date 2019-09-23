@@ -4,7 +4,8 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 	id_ = id;
 	shape_.setRadius(25.0);
 	shape_.setPointCount(100);
-	shape_.setOrigin(0 + 25, 0 + 25);
+	//shape_.setOrigin(0 + 25, 0 + 25);
+	shape_.setOrigin(0 , 0);
 	shape_.setPosition(cord_x, cord_y);
 	shape_.setFillColor(sf::Color(255, 0, 0, 255));
 }
