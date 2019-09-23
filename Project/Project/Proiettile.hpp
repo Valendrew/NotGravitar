@@ -1,5 +1,5 @@
-#ifndef MAPPA_H
-#define MAPPA_H
+#ifndef PROIETTILE_H
+#define PROIETTILE_H
 
 #include <SFML/Graphics.hpp>
 const double PI_G = 3.1416;

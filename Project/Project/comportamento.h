@@ -24,8 +24,8 @@ public:
 	Comportamento();
 	void setPosition(sf::Vector2f pos);
 	sf::Vector2f getPosizione();
-	void setRotation(float rot);
-	float getRotation();
+	void getRotazione(float rot);
+	float getRotazione();
 	void spara(float angolo);
 	void eliminaProiettile(proiettile_ptr p);
 

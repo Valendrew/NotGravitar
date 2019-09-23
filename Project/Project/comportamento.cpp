@@ -6,8 +6,8 @@ void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) con
 	proiettile_ptr p = proiettili_;
 	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili,		forse da spostare in funzione a parte!!
 	{
-		target.draw(p->proiettile.getProiettile());
-		p->proiettile.muovi();
+		target.draw((*p->proiettile).getProiettile());
+		(*p->proiettile).muovi();
 		p = p->next;
 	}
 }
@@ -22,7 +22,7 @@ Comportamento::Comportamento(float vita, const char nomeFile[], sf::IntRect dime
 	entita_.setTexture(&texture_); // impostata la texture
 
 }
-Comportamento::Comportamento() : Comportamento(50, "default.png", sf::IntRect(), 0, 0, 25, 25, 0) {}
+Comportamento::Comportamento() : Comportamento(50, "Texture/default.png", sf::IntRect(), 200, 200, 25, 25, 0) {}
 
 void Comportamento::setPosition(sf::Vector2f pos)
 {
@@ -34,12 +34,12 @@ sf::Vector2f Comportamento::getPosizione()
 	return entita_.getPosition();
 }
 
-void Comportamento::setRotation(float rot)
+void Comportamento::getRotazione(float rot)
 {
 	entita_.setRotation(rot);
 }
 
-float Comportamento::getRotation()
+float Comportamento::getRotazione()
 {
 	return entita_.getRotation();
 }

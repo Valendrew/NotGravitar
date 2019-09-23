@@ -30,9 +30,20 @@ void Gioco::avviaGioco()
 			case sf::Event::Closed: window.close();
 				break;
 			case sf::Event::KeyPressed:
+			{
 				if (event.key.code == sf::Keyboard::Space) {
 					nave.muovi();
-				}; break;
+				}
+				if (event.key.code == sf::Keyboard::A) {
+					nave.ruotaL();
+				}
+				if (event.key.code == sf::Keyboard::D) {
+					nave.ruotaR();
+				}
+				if (event.key.code == sf::Keyboard::F) {
+					nave.spara(nave.getRotazione());
+				}
+			}; break;
 			default:
 				break;
 			}
