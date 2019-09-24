@@ -4,11 +4,14 @@ void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) con
 {
 	target.draw(entita_);
 	proiettile_ptr p = proiettili_;
-	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili,		forse da spostare in funzione a parte!!
-	{
+	int i = 0;
+	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili, forse da spostare in funzione a parte!!
+	{ 
 		target.draw((*p->proiettile).getProiettile());
 		(*p->proiettile).muovi();
 		p = p->next;
+		i++;
+		if (i >= 10 && p != NULL && p->next!=NULL) eliminaProiettile(p);
 	}
 }
 

@@ -27,7 +27,7 @@ public:
 	void getRotazione(float rot);
 	float getRotazione();
 	void spara(float angolo);
-	void eliminaProiettile(proiettile_ptr p);
+	static void eliminaProiettile(proiettile_ptr p);
 
 };
 #endif // !_COMPORTAMENTO_H
