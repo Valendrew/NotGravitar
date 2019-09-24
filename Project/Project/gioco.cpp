@@ -22,8 +22,10 @@ void Gioco::avviaGioco()
 	sf::RenderWindow window(sf::VideoMode(LARGHEZZA, ALTEZZA), "Test", sf::Style::Default, settings);
 	bool tornaUniverso = true;
 	sf::Vector2f f;
-	while (window.isOpen()) {
+	bool flag[3] = { false, false, false };
 
+	sf::Clock clock;
+	while (window.isOpen()) {
 		sf::Event event;
  		while (window.pollEvent(event)) {
    			switch (event.type)
@@ -33,13 +35,34 @@ void Gioco::avviaGioco()
 			case sf::Event::KeyPressed:
 			{
 				if (event.key.code == sf::Keyboard::Space) {
-					nave.muovi();
+					//nave.muovi();
+					flag[0] = true;
 				}
 				if (event.key.code == sf::Keyboard::A) {
-					nave.ruotaL();
+					//nave.ruotaL();
+					flag[1] = true;
 				}
 				if (event.key.code == sf::Keyboard::D) {
-					nave.ruotaR();
+					flag[2] = true;
+					//nave.ruotaR();
+				}
+				if (event.key.code == sf::Keyboard::F) {
+					nave.spara(nave.getRotazione());
+				}
+			}; break;
+			case sf::Event::KeyReleased:
+			{
+				if (event.key.code == sf::Keyboard::Space) {
+					//nave.muovi();
+					flag[0] = false;
+				}
+				if (event.key.code == sf::Keyboard::A) {
+					//nave.ruotaL();
+					flag[1] = false;
+				}
+				if (event.key.code == sf::Keyboard::D) {
+					flag[2] = false;
+					//nave.ruotaR();
 				}
 				if (event.key.code == sf::Keyboard::F) {
 					nave.spara(nave.getRotazione());
@@ -52,6 +75,20 @@ void Gioco::avviaGioco()
 		window.clear(sf::Color::Black);
 
 		gestioneEventi(nave, mappa);
+
+		sf::Int32 elapsedTime = clock.getElapsedTime().asMilliseconds();
+		if (elapsedTime > 40) {
+			if (flag[0]) {
+				nave.muovi();
+			}
+			if (flag[1]) {
+				nave.ruotaL();
+			}
+			if (flag[2]) {
+				nave.ruotaR();
+			}
+			clock.restart();
+		}
 
 		if (tornaUniverso) {
 			if (mappa.ricercaPianeta(nave.getPosizione().x, nave.getPosizione().y)) {

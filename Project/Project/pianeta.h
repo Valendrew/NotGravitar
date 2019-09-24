@@ -1,7 +1,7 @@
 #ifndef PIANETA_H
 #define PIANETA_H
 
-// include
+// includes
 #include "bunker.h"
 #include "superficie_pianeta.h"
 

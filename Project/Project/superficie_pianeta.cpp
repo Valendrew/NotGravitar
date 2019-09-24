@@ -163,7 +163,6 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 }
 
 SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) {
-	srand(time(NULL));
 	larghezza_finestra_ = width;
 	altezza_finestra_ = height;
 

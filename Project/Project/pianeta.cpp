@@ -11,7 +11,7 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 }
 
 int Pianeta::getRaggio() {
-	return shape_.getRadius();
+	return (int) shape_.getRadius();
 }
 
 sf::Vector2f Pianeta::getPosizione()
