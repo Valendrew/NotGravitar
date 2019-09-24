@@ -10,12 +10,11 @@ Mappa::Mappa(int width_, int height_) {
 	*/
 	width = width_;
 	height = height_; 
-	distanza = 2;
 	srand(time(0));
 	list_universi = new nodoMappa;
 	list_universi->c.x = -1;
 	list_universi->c.y = 0;
-	list_universi->u = new Universo(distanza, width_, height_);
+	list_universi->u = new Universo(width_, height_);
 	
 	list_universi->next = NULL;
 	list_universi = addUniverso(0, 1);
@@ -32,7 +31,7 @@ listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_unive
 	listaUniversi tmp = new nodoMappa;
 	tmp->c.x = coordinata_universo_x;
 	tmp->c.y = coordinata_universo_y;
-	tmp->u = new Universo(distanza, width, height);
+	tmp->u = new Universo(width, height);
 	tmp->next = list_universi;
 	list_universi = tmp;
 	return list_universi;

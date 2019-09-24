@@ -34,11 +34,13 @@ private:
 	//Precondizione: la lista p passata è = NULL
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	listaPianeti pianetaAttuale;
+	listaPianeti headInsert(listaPianeti L, Pianeta* p);
 public:
-	Universo(int distanza, int width, int height);
+	Universo(int width, int height);
 	Universo();
 	listaPianeti distruggiPianeta(listaPianeti p);
 	listaPianeti getPianeti();
+	listaPianeti getPianetaAttuale();
 	coordinate getDimensioniCelle();
 	void setDimensioniCelle(int x, int y);
 	bool getMatriceSpawn(int i, int j);

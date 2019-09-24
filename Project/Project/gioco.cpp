@@ -20,7 +20,8 @@ void Gioco::avviaGioco()
 	Mappa mappa = Mappa(LARGHEZZA, ALTEZZA);
 	Nave nave = Nave();
 	sf::RenderWindow window(sf::VideoMode(LARGHEZZA, ALTEZZA), "Test", sf::Style::Default, settings);
-
+	bool tornaUniverso = true;
+	sf::Vector2f f;
 	while (window.isOpen()) {
 
 		sf::Event event;
@@ -52,8 +53,18 @@ void Gioco::avviaGioco()
 
 		gestioneEventi(nave, mappa);
 
-		if (mappa.ricercaPianeta(nave.getPosizione().x, nave.getPosizione().y)) {
-			std::cout << nave.getPosizione().y << "\n";
+		if (tornaUniverso) {
+			if (mappa.ricercaPianeta(nave.getPosizione().x, nave.getPosizione().y)) {
+				tornaUniverso = false;
+				f.x = mappa.getPosizioneAttuale()->u->getPianetaAttuale()->pianeta_->getPosizione().x - 20;
+				f.y = mappa.getPosizioneAttuale()->u->getPianetaAttuale()->pianeta_->getPosizione().y - 25;
+			}
+		}
+		else {
+			if (nave.getPosizione().y <= 0) {
+				tornaUniverso = true;
+				nave.setPosition(f);
+			}
 		}
 		
 		window.draw(mappa);
