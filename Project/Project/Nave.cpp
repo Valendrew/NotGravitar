@@ -11,6 +11,7 @@ Nave::Nave() : Comportamento() {
 	carburante_ = 10;
 	velocita_ = 10;
 	angolodirotazione_ = 7;
+	entita_.setOrigin(sf::Vector2f(12.5, 12.5));
 }
 
 void Nave::ruotaL()
