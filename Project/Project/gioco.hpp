@@ -11,18 +11,42 @@ const int ALTEZZA = 720;
 
 class Gioco {
 private: 
-	struct Eventi {
+	sf::RenderWindow window_;
+	sf::Clock clock_;
+	Nave nave_;
+	Mappa mappa_;
+	bool nave_movimento;
+	bool nave_rotazioneL;
+	bool nave_rotazioneR;
+	bool nave_spara;
+
+	struct Evento {
 		char stato;
 		char tipo[100];
+	};
+
+	struct Eventi {
+		Evento e;
+		sf::Int32 time;
+		Eventi* prev;
 		Eventi* next;
 	};
 	typedef Eventi* eventi_ptr;
 
 	eventi_ptr eventi_H;
 	eventi_ptr eventi_T;
-	static void gestioneEventi(Nave nave, Mappa mappa);
+	char stato_;
+	void inserisciEvento(char stato_, char tipo[], sf::Int32 time);
+	eventi_ptr eliminaEvento();
+	void gestioneEventi(sf::Int32 time);
+	void aggiornaEvento(eventi_ptr evento);
+
+	void processaEventi();
+	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);
+	void update();
+	void render();
 public:
 	Gioco();
-	static void avviaGioco();
+	void avviaGioco();
 };
 #endif // !GIOCO_H

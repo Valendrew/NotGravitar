@@ -12,17 +12,17 @@ void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) con
 	}
 }
 
-Comportamento::Comportamento(float vita, const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione) {
+Comportamento::Comportamento(float vita, const char nomeFile[], float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione) {
 	entita_.setPosition(cord_x, cord_y); // posizione dell'oggetto
 	entita_.setSize(sf::Vector2f(larghezza_e, altezza_e)); // dimensione dell'oggetto
 	entita_.setRotation(angolo_rotazione); // angolo di rotazione dell'oggetto
 	entita_.setFillColor(sf::Color::White); // colore dell'oggetto
 
-	texture_.loadFromFile(nomeFile, dimensione_texture); // texture dell'oggetto
+	texture_.loadFromFile(nomeFile); // texture dell'oggetto
 	entita_.setTexture(&texture_); // impostata la texture
 
 }
-Comportamento::Comportamento() : Comportamento(50, "Texture/default.png", sf::IntRect(), 200, 200, 25, 25, 0) {}
+Comportamento::Comportamento() : Comportamento(50, "Texture/default.png", 200, 200, 25, 25, 0) {}
 
 void Comportamento::setPosition(sf::Vector2f pos)
 {
@@ -47,7 +47,7 @@ float Comportamento::getRotazione()
 void Comportamento::spara(float angolo)
 {
 	proiettile_ptr p = new ProiettileNode;
-	p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, 5.f); //crea una nuovo peroiettile e lo mette in cima alla lista
+	p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .6f); //crea una nuovo proiettile e lo mette in cima alla lista
 	p->next = this->proiettili_;
 	proiettili_ = p;
 }

@@ -8,10 +8,10 @@ class Nave : public Comportamento {
 private:
 	//proiettiliP proiettilil;
 	int carburante_;
-	float velocita_;
-	float angolodirotazione_;
+	float velocita_movimento_;
+	float velocita_rotazione_;
 public:
-	Nave(float vita, const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione, float velocita, int carburante);
+	Nave(float vita, const char nomeFile[], float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione, float velocita_movimento, float velocita_rotazione, int carburante);
 	Nave();
 	void ruotaL();
 	void ruotaR();

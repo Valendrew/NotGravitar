@@ -129,7 +129,7 @@ void SuperficiePianeta::aggiungiBunker(int index)
 
 void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza)
 {
-	Bunker *new_bunker = new Bunker(50, "Texture/dm300.png", sf::IntRect(0, 0, 20, 20), puntiMedi[0], puntiMedi[1], grandezza, grandezza, angolo);
+	Bunker *new_bunker = new Bunker(50, "Texture/dm300.png", puntiMedi[0], puntiMedi[1], grandezza, grandezza, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_ = new BunkerNode();
