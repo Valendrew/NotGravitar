@@ -12,7 +12,7 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	width = width_;
 	height = height_; 
 	srand(time(0));
-	list_universi = new nodoMappa;
+	/*list_universi = new nodoMappa;
 	list_universi->c.x = -1;
 	list_universi->c.y = 0;
 	list_universi->u = new Universo(width_, height_);
@@ -21,7 +21,14 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	list_universi = addUniverso(0, 1);
 	list_universi = addUniverso(1, 0);
 	list_universi = addUniverso(0, -1);
-	list_universi = addUniverso(0, 0);
+	list_universi = addUniverso(0, 0);*/
+
+	list_universi = new nodoMappa;
+	list_universi->c.x = 0;
+	list_universi->c.y = 0;
+	list_universi->u = new Universo(width_, height_);
+	list_universi->next = nullptr;
+
 	//setto a true il "visitato" dell' universo 0,0 dato che è quello di spawn 
 	(*findUniverso(0, 0)->u).setVisitato();
 	universoDiGioco = list_universi;
@@ -55,25 +62,7 @@ listaUniversi Mappa::findUniverso(int x, int y) {
 	}
 	return ritorno;
 }
-void Mappa::addAdiacenti(listaUniversi universi, listaUniversi universoAttuale) {
 
-	if (!(*(universoAttuale->u)).getVisitato())
-	{
-		if (findUniverso(universoAttuale->c.x - 1, universoAttuale->c.y) == nullptr)
-			universi = addUniverso(universoAttuale->c.x - 1, universoAttuale->c.y);
-
-		if (findUniverso(universoAttuale->c.x + 1, universoAttuale->c.y) == nullptr)
-			universi = addUniverso(universoAttuale->c.x + 1, universoAttuale->c.y);
-
-		if (findUniverso(universoAttuale->c.x, universoAttuale->c.y + 1) == nullptr)
-			universi = addUniverso(universoAttuale->c.x, universoAttuale->c.y + 1);
-
-		if (findUniverso(universoAttuale->c.x, universoAttuale->c.y - 1) == nullptr)
-			universi = addUniverso(universoAttuale->c.x, universoAttuale->c.y + 1);
-
-		(*universoAttuale->u).setVisitato();
-	}
-}
 void Mappa::spostamento(int direzione) {
 	/*
 		0 = nord
@@ -84,24 +73,35 @@ void Mappa::spostamento(int direzione) {
 		In base alla posizione in cui la navicella si sposta creo (se non gia presenti) gli universi vicini a quello nel quale
 		mi sono appena spostato
 	*/
+	listaUniversi app = posizioneAttuale;
 	switch (direzione) {
 	case 0:
 		posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1);
-		addAdiacenti(list_universi, posizioneAttuale);
+		if (posizioneAttuale == nullptr) {
+			list_universi = addUniverso(app->c.x, app->c.y + 1);
+			posizioneAttuale = list_universi;
+		}
 		break;
 	case 1:
 		posizioneAttuale = findUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y);
-		addAdiacenti(list_universi, posizioneAttuale);
+		if (posizioneAttuale == nullptr) {
+			list_universi = addUniverso(app->c.x + 1, app->c.y);
+			posizioneAttuale = list_universi;
+		}
 		break;
 	case 2:
 		posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1);
-		addAdiacenti(list_universi, posizioneAttuale);
+		if (posizioneAttuale == nullptr) {
+			list_universi = addUniverso(app->c.x, app->c.y - 1);
+			posizioneAttuale = list_universi;
+		}
 		break;
 	case 3:
 		posizioneAttuale = findUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y);
-		addAdiacenti(list_universi, posizioneAttuale);
-		break;
-	default:
+		if (posizioneAttuale == nullptr) {
+			list_universi = addUniverso(app->c.x - 1, app->c.y);
+			posizioneAttuale = list_universi;
+		}
 		break;
 	}
 }

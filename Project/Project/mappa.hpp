@@ -23,7 +23,6 @@ private:
 	//findUniversi cerca un universo con coordinate x,y all'interno della lista e lo resistuisce (ritorna NULL se non lo trova)
 	listaUniversi findUniverso(int x, int y);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	void addAdiacenti(listaUniversi universi, listaUniversi universoAttuale);
 public:
 	Mappa();
 	Mappa(int dim_x, int dim_y);
