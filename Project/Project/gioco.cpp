@@ -66,8 +66,9 @@ void Gioco::processaEventi()
 		switch (event.type) {
 		case sf::Event::Closed: window_.close();
 			break;
-		case sf::Event::KeyPressed:
+		case sf::Event::KeyPressed: {
 			gestisciMovimentoNave(event.key.code, true);
+		}
 			break;
 		case sf::Event::KeyReleased:
 			gestisciMovimentoNave(event.key.code, false);
@@ -90,11 +91,14 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::Space) {
 		nave_spara = isPressed;
 	}
+	else if (key == sf::Keyboard::G) {
+		debug = isPressed;
+	}
 }
 
 void Gioco::movimentoNavicella()
 {
-	if (nave_movimento) {
+	if (nave_movimento && !collisione_nave_bordo_) {
 		nave_.muovi();
 	}
 	if (nave_rotazioneL) {
@@ -124,32 +128,52 @@ void Gioco::controlloPassaggioUniverso()
 		else if (punti[i].position.y >= ALTEZZA) direzione = 2;
 		else if (punti[i].position.y <= 0) direzione = 0;
 	}
-	
+	float rotazione = nave_.getRotazione();
+	if (debug) {
+		std::cout << "Punto L: " << punti[0].position.x << ", " << punti[0].position.y << ". PUNTO R: " << punti[1].position.x << ", " << punti[1].position.y << std::endl;
+		std::cout << "ROTAZIONE: " << rotazione << std::endl << std::endl;
+	}
+
 	if (direzione != -1) {
-		mappa_.spostamento(direzione);
-		
-		switch (direzione)
-		{
-		case 0: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, ALTEZZA -nave_.getDimensione().y));
-			break;
-		case 1: nave_.setPosizione(sf::Vector2f(nave_.getDimensione().x, nave_.getPosizione().y));
-			break;
-		case 2: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, nave_.getDimensione().y));
-			break;
-		case 3: nave_.setPosizione(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosizione().y));
-		default:
-			break;
+		//mappa_.spostamento(direzione);
+		if (false) {
+			switch (direzione)
+			{
+			case 0: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, ALTEZZA - nave_.getDimensione().y));
+				break;
+			case 1: nave_.setPosizione(sf::Vector2f(nave_.getDimensione().x, nave_.getPosizione().y));
+				break;
+			case 2: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, nave_.getDimensione().y));
+				break;
+			case 3: nave_.setPosizione(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosizione().y));
+			default:
+				break;
+			}
 		}
+		else {
+			//nave_movimento = false;
+			collisione_nave_bordo_ = true;
+			/*float value = 0.1;
+			float delta_x = 0, delta_y = 0;
+			if (direzione == 0) delta_y = value;
+			else if (direzione == 1) delta_x = -value;
+			else if (direzione == 2) delta_y = -value;
+			else if (direzione == 3) delta_x = value;
+
+			//nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x + delta_x, nave_.getPosizione().y + delta_y));*/
+		}
+	}
+	else {
+		collisione_nave_bordo_ = false;
 	}
 }
 
 void Gioco::update()
 {
-	movimentoNavicella();
-
 	if (stato_ == UNIVERSO) {
 		controlloPassaggioUniverso();
 	}
+	movimentoNavicella();
 }
 
 void Gioco::render()
@@ -162,7 +186,7 @@ void Gioco::render()
 
 Gioco::Gioco() : 
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
-	, nave_(100, "Texture/ship3.png", LARGHEZZA/2, ALTEZZA/2, 35, 35, 0, 0.3, 0.15, 10)
+	, nave_(100, "Texture/ship3.png", LARGHEZZA/2, ALTEZZA/2, 35, 35, 0, 0.4, 0.15, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
 {
@@ -170,11 +194,14 @@ Gioco::Gioco() :
 	nave_rotazioneL = false;
 	nave_rotazioneR = false;
 	nave_spara = false;
+	collisione_nave_bordo_ = false;
 
 	stato_ = UNIVERSO;
 
 	eventi_H = nullptr;
 	eventi_T = nullptr;
+
+	debug = false;
 }
 
 void Gioco::avviaGioco()

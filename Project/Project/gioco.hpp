@@ -19,6 +19,8 @@ private:
 	bool nave_rotazioneL;
 	bool nave_rotazioneR;
 	bool nave_spara;
+	bool debug;
+	bool collisione_nave_bordo_;
 
 	struct Evento {
 		char stato;
