@@ -17,6 +17,7 @@ public:
 	void ruotaR();
 	void setCarburante(int carburante_);
 	int getCarburante();
+	sf::VertexArray getPosizioneFrontale();
 	void colpito();
 	void fill(int carburante_);
 	void muovi();

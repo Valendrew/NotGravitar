@@ -113,37 +113,17 @@ void Gioco::movimentoNavicella()
 
 void Gioco::controlloPassaggioUniverso()
 {
-	sf::VertexArray nave_pos(sf::Points, 4);
-
-	
 	bool print = clock_.getElapsedTime().asMilliseconds() >= 2000;
-	/*for (int i = 0; i < 4; i++)
-	{
-		nave_pos[i].position = nave_.getPosizione();
-		if (i == 1 || i == 3) nave_pos[i].position.x += nave_.getDimensione().x;
-		if (i == 2 || i == 3) nave_pos[i].position.y += nave_.getDimensione().y;
-		if (print) {
-			std::cout << "POS " << i << " :" << nave_pos[i].position.x << ", " << nave_pos[i].position.y << std::endl;
-		}
-	}*/
-	sf::FloatRect bordi = nave_.getBordi();
-	if (print) {
-		clock_.restart();
-	}
+	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
 	int direzione = -1;
-	/*for (int i = 0; i < 4; i++)
+	for (int i = 0; i < punti.getVertexCount(); i++)
 	{
-		if (nave_pos[i].position.x >= LARGHEZZA) direzione = 1;
-		else if (nave_pos[i].position.x <= 0) direzione = 3;
-		else if (nave_pos[i].position.y >= ALTEZZA) direzione = 2;
-		else if (nave_pos[i].position.y <= 0) direzione = 0;
-	}*/
-	if (bordi.left >= LARGHEZZA) 
-		direzione = 1;
-	else if (bordi.left <= 0) direzione = 3;
-	else if (bordi.top >= ALTEZZA) direzione = 2;
-	else if (bordi.top <= 0) direzione = 0;
+		if (punti[i].position.x >= LARGHEZZA) direzione = 1;
+		else if (punti[i].position.x <= 0) direzione = 3;
+		else if (punti[i].position.y >= ALTEZZA) direzione = 2;
+		else if (punti[i].position.y <= 0) direzione = 0;
+	}
 	
 	if (direzione != -1) {
 		mappa_.spostamento(direzione);

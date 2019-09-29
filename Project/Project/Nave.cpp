@@ -32,6 +32,20 @@ void Nave::setCarburante(int carburante_) {
 int Nave::getCarburante() {
 	return carburante_;
 }
+sf::VertexArray Nave::getPosizioneFrontale()
+{
+	sf::VertexArray vertex(sf::Points, 2);
+	vertex[0].color = sf::Color::Red;
+	vertex[1].color = sf::Color::Blue;
+
+	vertex[0].position = entita_.getPosition();
+
+	float angolo = entita_.getRotation();
+	vertex[1].position.x = vertex[0].position.x + entita_.getSize().x * cos(angolo);
+	vertex[1].position.y = vertex[0].position.y + entita_.getSize().y * sin(angolo);
+
+	return vertex;
+}
 void Nave::colpito() {
 	if (vita_ <= 0)
 		vita_--;
