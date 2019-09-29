@@ -14,23 +14,22 @@ class Mappa : public sf::Drawable, public sf::Transformable  {
 private:
 	int width;
 	int height;
+	int distanza;
 	listaUniversi list_universi;
 	listaUniversi posizioneAttuale; //puntatore  dove si trova l'astronave
 	listaUniversi universoDiGioco;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
+	listaUniversi addUniverso(int x, int y); //addUniveso aggiunge un universo con coordinate x,y alla lista di universi
 	
 	//findUniversi cerca un universo con coordinate x,y all'interno della lista e lo resistuisce (ritorna NULL se non lo trova)
 	listaUniversi findUniverso(int x, int y);
-	int distanza;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
 	Mappa();
 	Mappa(int dim_x, int dim_y);
-	//addUniveso aggiunge un universo con coordinate x,y alla lista di universi
-	listaUniversi addUniverso(int x, int y);
-	//spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
-	//adiacenti a quello attuale
+
+	/*spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
+	adiacenti a quello attuale */
 	void spostamento(int i);
-	listaUniversi getPosizioneAttuale();
 	bool ricercaPianeta(int x_astronave, int y_astronave);
 };
 

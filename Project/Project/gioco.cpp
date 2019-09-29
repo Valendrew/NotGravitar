@@ -50,28 +50,6 @@ Gioco::eventi_ptr Gioco::eliminaEvento()
 	}
 }
 
-void Gioco::gestioneEventi(sf::Int32 time)
-{
-	sf::Vector2f nave_pos = nave_.getPosizione();
-
-	if (nave_pos.x > LARGHEZZA) {
-		char tipo[100] = "BOUND_WIDTH";
-		inserisciEvento(stato_, tipo, time);
-	}
-	if (nave_pos.x < 0) {
-		char tipo[100] = "BOUND_WIDTH";
-		inserisciEvento(stato_, tipo, time);
-	}
-	if (nave_pos.y > ALTEZZA) {
-		char tipo[100] = "BOUND_HEIGHT";
-		inserisciEvento(stato_, tipo, time);
-	}
-	if (nave_pos.y < 0) {
-		char tipo[100] = "BOUND_HEIGHT";
-		inserisciEvento(stato_, tipo, time);
-	}
-}
-
 void Gioco::aggiornaEvento(eventi_ptr evento)
 {
 	switch (evento->e.stato)
@@ -114,7 +92,7 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 	}
 }
 
-void Gioco::update()
+void Gioco::movimentoNavicella()
 {
 	if (nave_movimento) {
 		nave_.muovi();
@@ -130,6 +108,67 @@ void Gioco::update()
 			nave_.spara(nave_.getRotazione());
 			clock_.restart();
 		}
+	}
+}
+
+void Gioco::controlloPassaggioUniverso()
+{
+	sf::VertexArray nave_pos(sf::Points, 4);
+
+	
+	bool print = clock_.getElapsedTime().asMilliseconds() >= 2000;
+	/*for (int i = 0; i < 4; i++)
+	{
+		nave_pos[i].position = nave_.getPosizione();
+		if (i == 1 || i == 3) nave_pos[i].position.x += nave_.getDimensione().x;
+		if (i == 2 || i == 3) nave_pos[i].position.y += nave_.getDimensione().y;
+		if (print) {
+			std::cout << "POS " << i << " :" << nave_pos[i].position.x << ", " << nave_pos[i].position.y << std::endl;
+		}
+	}*/
+	sf::FloatRect bordi = nave_.getBordi();
+	if (print) {
+		clock_.restart();
+	}
+
+	int direzione = -1;
+	/*for (int i = 0; i < 4; i++)
+	{
+		if (nave_pos[i].position.x >= LARGHEZZA) direzione = 1;
+		else if (nave_pos[i].position.x <= 0) direzione = 3;
+		else if (nave_pos[i].position.y >= ALTEZZA) direzione = 2;
+		else if (nave_pos[i].position.y <= 0) direzione = 0;
+	}*/
+	if (bordi.left >= LARGHEZZA) 
+		direzione = 1;
+	else if (bordi.left <= 0) direzione = 3;
+	else if (bordi.top >= ALTEZZA) direzione = 2;
+	else if (bordi.top <= 0) direzione = 0;
+	
+	if (direzione != -1) {
+		mappa_.spostamento(direzione);
+		
+		switch (direzione)
+		{
+		case 0: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, ALTEZZA -nave_.getDimensione().y));
+			break;
+		case 1: nave_.setPosizione(sf::Vector2f(nave_.getDimensione().x, nave_.getPosizione().y));
+			break;
+		case 2: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, nave_.getDimensione().y));
+			break;
+		case 3: nave_.setPosizione(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosizione().y));
+		default:
+			break;
+		}
+	}
+}
+
+void Gioco::update()
+{
+	movimentoNavicella();
+
+	if (stato_ == UNIVERSO) {
+		controlloPassaggioUniverso();
 	}
 }
 
@@ -152,7 +191,8 @@ Gioco::Gioco() :
 	nave_rotazioneR = false;
 	nave_spara = false;
 
-	stato_ = 'U';
+	stato_ = UNIVERSO;
+
 	eventi_H = nullptr;
 	eventi_T = nullptr;
 }
@@ -161,7 +201,6 @@ void Gioco::avviaGioco()
 {
 	//bool tornaUniverso = true;
 	//sf::Vector2f f;
-	//bool flag[3] = { false, false, false };
 
 	while (window_.isOpen()) {
 		processaEventi();

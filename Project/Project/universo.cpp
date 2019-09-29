@@ -112,39 +112,50 @@ Universo::Universo(int width_, int height_) {
 
 	lista_Pianeti = generaPianeti(p);
 }
-Universo::Universo() :Universo(0, 0)
+
+Universo::Universo() :Universo(1280, 720)
 {
 
 }
+
 listaPianeti Universo::distruggiPianeta(listaPianeti p)
 {
 	return listaPianeti();
 }
+
 void Universo::setDimensioniCelle(int x, int y) {
 	dimensioniCelle.x = x;
 	dimensioniCelle.y = y;
 }
+
 coordinate Universo::getDimensioniCelle() {
 	return dimensioniCelle;
 }
+
 listaPianeti Universo::getPianeti() {
 	return lista_Pianeti;
 }
+
 bool Universo::getMatriceSpawn(int i, int j) {
 	return matriceSpawn[i][j];
 }
+
 int Universo::getNumeroPianeti() {
 	return numeroPianeti;
 }
+
 bool Universo::getVisitato() {
 	return visitato;
 }
+
 void Universo::setVisitato() {
 	visitato = true;
 }
+
 listaPianeti Universo::getPianetaAttuale() {
 	return pianetaAttuale;
 }
+
 bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
 	listaPianeti app = lista_Pianeti;
 	pianetaAttuale = nullptr;

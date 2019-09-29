@@ -6,15 +6,14 @@ Nave::Nave(float vita, const char nomeFile[], float cord_x, float cord_y, float 
 	velocita_movimento_ = velocita_movimento;
 	velocita_rotazione_ = velocita_rotazione;
 
-	
-	entita_.setOrigin(sf::Vector2f(larghezza_e / 2.f, altezza_e / 2.f)); // viene impostato il punto di origine 
+	//entita_.setOrigin(sf::Vector2f(larghezza_e / 2.f, altezza_e / 2.f)); // viene impostato il punto di origine 
 }
 Nave::Nave() : Comportamento() {
 	carburante_ = 10;
 	velocita_movimento_ = .2f;
 	velocita_rotazione_ = .1f;
 
-	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
+	//entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
 }
 
 void Nave::ruotaL()

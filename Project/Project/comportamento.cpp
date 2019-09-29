@@ -17,6 +17,8 @@ Comportamento::Comportamento(float vita, const char nomeFile[], float cord_x, fl
 	entita_.setSize(sf::Vector2f(larghezza_e, altezza_e)); // dimensione dell'oggetto
 	entita_.setRotation(angolo_rotazione); // angolo di rotazione dell'oggetto
 	entita_.setFillColor(sf::Color::White); // colore dell'oggetto
+	entita_.setOutlineColor(sf::Color::White);
+	entita_.setOutlineThickness(1);
 
 	texture_.loadFromFile(nomeFile); // texture dell'oggetto
 	entita_.setTexture(&texture_); // impostata la texture
@@ -24,24 +26,34 @@ Comportamento::Comportamento(float vita, const char nomeFile[], float cord_x, fl
 }
 Comportamento::Comportamento() : Comportamento(50, "Texture/default.png", 200, 200, 25, 25, 0) {}
 
-void Comportamento::setPosition(sf::Vector2f pos)
-{
-	entita_.setPosition(pos);
-}
-
 sf::Vector2f Comportamento::getPosizione()
 {
 	return entita_.getPosition();
 }
 
-void Comportamento::getRotazione(float rot)
+void Comportamento::setPosizione(sf::Vector2f pos)
 {
-	entita_.setRotation(rot);
+	entita_.setPosition(pos);
+}
+
+sf::Vector2f Comportamento::getDimensione()
+{
+	return entita_.getSize();
 }
 
 float Comportamento::getRotazione()
 {
 	return entita_.getRotation();
+}
+
+void Comportamento::setRotazione(float rot)
+{
+	entita_.setRotation(rot);
+}
+
+sf::FloatRect Comportamento::getBordi()
+{
+	return entita_.getGlobalBounds();
 }
 
 void Comportamento::spara(float angolo)

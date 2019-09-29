@@ -35,14 +35,22 @@ private:
 
 	eventi_ptr eventi_H;
 	eventi_ptr eventi_T;
-	char stato_;
+
+	enum Stato
+	{
+		UNIVERSO,
+		PIANETA
+	};
+	Stato stato_;
+
 	void inserisciEvento(char stato_, char tipo[], sf::Int32 time);
 	eventi_ptr eliminaEvento();
-	void gestioneEventi(sf::Int32 time);
 	void aggiornaEvento(eventi_ptr evento);
 
 	void processaEventi();
 	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);
+	void movimentoNavicella();
+	void controlloPassaggioUniverso();
 	void update();
 	void render();
 public:

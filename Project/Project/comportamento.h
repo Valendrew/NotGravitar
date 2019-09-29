@@ -22,10 +22,12 @@ protected:
 public:
 	Comportamento(float vita, const char nomeFile[], float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione);
 	Comportamento();
-	void setPosition(sf::Vector2f pos);
 	sf::Vector2f getPosizione();
-	void getRotazione(float rot);
+	void setPosizione(sf::Vector2f pos);
+	sf::Vector2f getDimensione();
 	float getRotazione();
+	void setRotazione(float rot);
+	sf::FloatRect getBordi();
 	void spara(float angolo);
 	void eliminaProiettile(proiettile_ptr p);
 

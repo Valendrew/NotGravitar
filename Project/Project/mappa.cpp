@@ -5,7 +5,8 @@ Mappa::Mappa() : Mappa(1280, 720) {}
 Mappa::Mappa(int width_, int height_) {
 
 	/*
-	quando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
+	qu
+ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
 	e quelli nelle 4 direzioni possibili che l'astronave potrà visitare
 	*/
 	width = width_;
@@ -26,6 +27,7 @@ Mappa::Mappa(int width_, int height_) {
 	universoDiGioco = list_universi;
 	posizioneAttuale = list_universi;
 }
+
 listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_universo_y) {
 	//quando creo un nuovo universo lo aggiungo in testa alla lista cosi da avere l'inserimento in O(1)
 	listaUniversi tmp = new nodoMappa;
@@ -36,6 +38,7 @@ listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_unive
 	list_universi = tmp;
 	return list_universi;
 }
+
 listaUniversi Mappa::findUniverso(int x, int y) {
 	//Dato che ogni universo è associato ad una coppia di coordinate cosi da distinguelo in modo univoco per sapere se un
 	//universo è gia presente in lista o meno cerco all'interno della lista un universo con le coordinate di interesse
@@ -135,10 +138,6 @@ void Mappa::spostamento(int direzione) {
 	default:
 		break;
 	}
-}
-
-listaUniversi Mappa::getPosizioneAttuale() {
-	return posizioneAttuale;
 }
 
 bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
