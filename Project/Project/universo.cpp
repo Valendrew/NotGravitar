@@ -19,16 +19,16 @@ listaPianeti Universo::headInsert(listaPianeti L, Pianeta* p) {
 
 listaPianeti Universo::generaPianeti(listaPianeti p) {
 	std::cout << numeroPianeti;
-	int spawn_x = -dimensioniCelle.x;
-	int spawn_y = -dimensioniCelle.y;
-	int i = 0, j = 0; 
-	while (i<18)
+	int spawn_x = dimensioniCelle.x;
+	int spawn_y = dimensioniCelle.y;
+	int i = 1, j = 1; 
+	while (i<17)
 	{
-		while (j<24)
+		while (j<23)
 		{
 			if (matriceSpawn[i][j])
 			{
-				Pianeta* pi = new Pianeta(idPianeta, spawn_x+25, spawn_y+25, width, height);//25 è il radius del pianeta
+				Pianeta* pi = new Pianeta(idPianeta, spawn_x, spawn_y, width, height);//25 è il radius del pianeta
 				idPianeta++;
 
 				if (p == nullptr) {
@@ -63,7 +63,7 @@ Universo::Universo(int width_, int height_) {
 	dimensioniCelle.x = width_ / 24;
 	dimensioniCelle.y = height_ / 18;
 	listaPianeti p = nullptr;
-	numeroPianeti = rand() % 3 + 4; //Pianeti da 4 a 6
+	numeroPianeti = rand() % 2 + 4; //Pianeti da 4 a 5
 	visitato = false;
 	idPianeta = 0;
 	//setto tutta la matrice di spawn a false (i pianeti saranno generati dove avro true)

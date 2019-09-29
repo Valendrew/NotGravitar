@@ -17,7 +17,7 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	list_universi->c.y = 0;
 	list_universi->u = new Universo(width_, height_);
 	
-	list_universi->next = NULL;
+	list_universi->next = nullptr;
 	list_universi = addUniverso(0, 1);
 	list_universi = addUniverso(1, 0);
 	list_universi = addUniverso(0, -1);
@@ -43,9 +43,9 @@ listaUniversi Mappa::findUniverso(int x, int y) {
 	//Dato che ogni universo è associato ad una coppia di coordinate cosi da distinguelo in modo univoco per sapere se un
 	//universo è gia presente in lista o meno cerco all'interno della lista un universo con le coordinate di interesse
 	listaUniversi appoggio = list_universi;
-	listaUniversi ritorno = NULL;
+	listaUniversi ritorno = nullptr;
 	bool found = false;
-	while (appoggio != NULL && !found)
+	while (appoggio != nullptr && !found)
 	{
 		if (appoggio->c.x == x && appoggio->c.y == y) {
 			ritorno = appoggio;
@@ -55,7 +55,25 @@ listaUniversi Mappa::findUniverso(int x, int y) {
 	}
 	return ritorno;
 }
+void Mappa::addAdiacenti(listaUniversi universi, listaUniversi universoAttuale) {
 
+	if (!(*(universoAttuale->u)).getVisitato())
+	{
+		if (findUniverso(universoAttuale->c.x - 1, universoAttuale->c.y) == nullptr)
+			universi = addUniverso(universoAttuale->c.x - 1, universoAttuale->c.y);
+
+		if (findUniverso(universoAttuale->c.x + 1, universoAttuale->c.y) == nullptr)
+			universi = addUniverso(universoAttuale->c.x + 1, universoAttuale->c.y);
+
+		if (findUniverso(universoAttuale->c.x, universoAttuale->c.y + 1) == nullptr)
+			universi = addUniverso(universoAttuale->c.x, universoAttuale->c.y + 1);
+
+		if (findUniverso(universoAttuale->c.x, universoAttuale->c.y - 1) == nullptr)
+			universi = addUniverso(universoAttuale->c.x, universoAttuale->c.y + 1);
+
+		(*universoAttuale->u).setVisitato();
+	}
+}
 void Mappa::spostamento(int direzione) {
 	/*
 		0 = nord
@@ -69,71 +87,19 @@ void Mappa::spostamento(int direzione) {
 	switch (direzione) {
 	case 0:
 		posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1);
-
-		if (!(*(posizioneAttuale->u)).getVisitato())
-		{
-			if (findUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y);
-
-			if (findUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y);
-
-			if (findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1);
-		}
-
-		(*posizioneAttuale->u).setVisitato();
+		addAdiacenti(list_universi, posizioneAttuale);
 		break;
 	case 1:
 		posizioneAttuale = findUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y);
-
-		if (!(*(posizioneAttuale->u)).getVisitato())
-		{
-			if (findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1);
-
-			if (findUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y);
-
-			if (findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1);
-		}
-
-		(*posizioneAttuale->u).setVisitato();
+		addAdiacenti(list_universi, posizioneAttuale);
 		break;
 	case 2:
 		posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1);
-
-		if (!(*(posizioneAttuale->u)).getVisitato())
-		{
-			if (findUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y);
-
-			if (findUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y);
-
-			if (findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1);
-		}
-
-		(*posizioneAttuale->u).setVisitato();
+		addAdiacenti(list_universi, posizioneAttuale);
 		break;
 	case 3:
 		posizioneAttuale = findUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y);
-
-		if (!(*(posizioneAttuale->u)).getVisitato())
-		{
-			if (findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1);
-
-			if (findUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y);
-
-			if (findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1) == NULL)
-				list_universi = addUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1);
-		}
-
-		(*posizioneAttuale->u).setVisitato();
+		addAdiacenti(list_universi, posizioneAttuale);
 		break;
 	default:
 		break;
