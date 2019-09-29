@@ -76,8 +76,8 @@ bool Mappa::spostamento(int direzione) {
 	*/
 	bool ritorno = true, setStato = false;
 	//Se nell'universo attuale ho distrutto tutti i pianeti setto lo statoAttacco a false
-	//if (HoDistruttoTuttiIPianeti) statoAttacco = false;
-
+	if ((*universoDiGioco->u).distrutto()) statoAttacco = false;
+		
 		listaUniversi app = posizioneAttuale;
 		switch (direzione) {
 		case 0:

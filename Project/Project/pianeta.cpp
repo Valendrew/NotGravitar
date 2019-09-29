@@ -11,7 +11,9 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 
 	distrutto_ = false;
 }
-
+bool Pianeta::getDistrutto() {
+	return distrutto_;
+}
 int Pianeta::getRaggio() {
 	return (int) shape_.getRadius();
 }

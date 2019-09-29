@@ -18,5 +18,6 @@ public:
 	sf::Vector2f getPosizione();
 	void cambiaColore();
 	void drawSuperficie(sf::RenderTarget& target, sf::RenderStates states);
+	bool getDistrutto();
 };
 #endif // !PIANETA_H

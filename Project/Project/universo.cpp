@@ -155,7 +155,14 @@ void Universo::setVisitato() {
 listaPianeti Universo::getPianetaAttuale() {
 	return pianetaAttuale;
 }
-
+bool Universo::distrutto() {
+	bool ritorno = true;
+	listaPianeti app = lista_Pianeti;
+	while (app!=nullptr && ritorno){
+		if (!(*app->pianeta_).getDistrutto) ritorno = false;
+	}
+	return ritorno;
+}
 bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
 	listaPianeti app = lista_Pianeti;
 	pianetaAttuale = nullptr;

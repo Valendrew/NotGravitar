@@ -36,6 +36,7 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	listaPianeti pianetaAttuale;
 	listaPianeti headInsert(listaPianeti L, Pianeta* p);
+	
 public:
 	Universo(int width, int height);
 	Universo();
@@ -49,6 +50,6 @@ public:
 	void setVisitato();
 	bool pianetaAttualeRicerca(int x_astronave, int y_astronave);
 	bool getVisitato();
-
+	bool distrutto();
 };
 #endif // !UNIVERSO_H
