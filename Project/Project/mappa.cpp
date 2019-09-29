@@ -46,7 +46,16 @@ listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_unive
 	list_universi = tmp;
 	return list_universi;
 }
-
+bool Mappa::controlloCollisioneSuperficie(sf::VertexArray Bordo) {
+	bool ritorno = false;
+	if (posizioneAttuale != nullptr) {
+		ritorno = (*posizioneAttuale->u).controlloCollisioneSuperficie(Bordo);
+	}
+	return ritorno;
+}
+void Mappa::uscitaPianeta() {
+	(*posizioneAttuale->u).uscitaPianeta();
+}
 listaUniversi Mappa::findUniverso(int x, int y) {
 	//Dato che ogni universo è associato ad una coppia di coordinate cosi da distinguelo in modo univoco per sapere se un
 	//universo è gia presente in lista o meno cerco all'interno della lista un universo con le coordinate di interesse

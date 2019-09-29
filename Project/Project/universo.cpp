@@ -163,6 +163,16 @@ bool Universo::distrutto() {
 	}
 	return ritorno;
 }
+bool Universo::controlloCollisioneSuperficie(sf::VertexArray Bordo) {
+	bool ritorno = false;
+	if (pianetaAttuale != nullptr) {
+		ritorno = (*pianetaAttuale->pianeta_).controlloCollisioneSuperficie(Bordo);
+	}
+	return ritorno;
+}
+void Universo::uscitaPianeta() {
+	pianetaAttuale = nullptr;
+}
 bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
 	listaPianeti app = lista_Pianeti;
 	pianetaAttuale = nullptr;

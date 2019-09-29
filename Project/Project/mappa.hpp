@@ -26,7 +26,8 @@ private:
 public:
 	Mappa();
 	Mappa(int dim_x, int dim_y);
-
+	bool controlloCollisioneSuperficie(sf::VertexArray bordo);
+	void uscitaPianeta();
 	/*spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
 	adiacenti a quello attuale */
 	bool spostamento(int i);
