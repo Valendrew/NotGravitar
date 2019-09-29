@@ -22,6 +22,7 @@ private:
 	listaUniversi findUniverso(int x, int y);
 	int distanza;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void addAdiacenti(listaUniversi universi, listaUniversi universoAttuale);
 public:
 	Mappa();
 	Mappa(int dim_x, int dim_y);
