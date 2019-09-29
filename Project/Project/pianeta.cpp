@@ -8,6 +8,8 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 	shape_.setOrigin(0 , 0);
 	shape_.setPosition(cord_x, cord_y);
 	shape_.setFillColor(sf::Color(255, 0, 0, 255));
+
+	distrutto_ = false;
 }
 
 int Pianeta::getRaggio() {

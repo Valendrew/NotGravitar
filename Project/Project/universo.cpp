@@ -18,7 +18,6 @@ listaPianeti Universo::headInsert(listaPianeti L, Pianeta* p) {
 }
 
 listaPianeti Universo::generaPianeti(listaPianeti p) {
-	std::cout << numeroPianeti;
 	int spawn_x = dimensioniCelle.x;
 	int spawn_y = dimensioniCelle.y;
 	int i = 1, j = 1; 
@@ -111,6 +110,7 @@ Universo::Universo(int width_, int height_) {
 	}
 
 	lista_Pianeti = generaPianeti(p);
+	std::cout << numeroPianeti;
 }
 
 Universo::Universo() :Universo(1280, 720)
