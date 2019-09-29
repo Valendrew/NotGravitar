@@ -9,6 +9,7 @@ Mappa::Mappa(int width_, int height_) {
 ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
 	e quelli nelle 4 direzioni possibili che l'astronave potrà visitare
 	*/
+	statoAttacco = true;
 	width = width_;
 	height = height_; 
 	srand(time(0));
@@ -63,7 +64,7 @@ listaUniversi Mappa::findUniverso(int x, int y) {
 	return ritorno;
 }
 
-void Mappa::spostamento(int direzione) {
+bool Mappa::spostamento(int direzione) {
 	/*
 		0 = nord
 		1 = est
@@ -73,37 +74,60 @@ void Mappa::spostamento(int direzione) {
 		In base alla posizione in cui la navicella si sposta creo (se non gia presenti) gli universi vicini a quello nel quale
 		mi sono appena spostato
 	*/
-	listaUniversi app = posizioneAttuale;
-	switch (direzione) {
-	case 0:
-		posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1);
-		if (posizioneAttuale == nullptr) {
-			list_universi = addUniverso(app->c.x, app->c.y + 1);
+	bool ritorno = true, setStato = false;
+	//Se nell'universo attuale ho distrutto tutti i pianeti setto lo statoAttacco a false
+	//if (HoDistruttoTuttiIPianeti) statoAttacco = false;
+
+		listaUniversi app = posizioneAttuale;
+		switch (direzione) {
+		case 0:
+			posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1);
+			//Se lo statoAttacco è false e la posizione cercata è nulla (ovvero sto cercando di andare in un uiverso nuovo) aggiorno la list_universi mettendo in testa il
+			//nuovo universo e setto un bool a true
+			if (posizioneAttuale == nullptr && !statoAttacco) {
+				list_universi = addUniverso(app->c.x, app->c.y + 1);
+				setStato = true;
+			}
+			break;
+		case 1:
+			posizioneAttuale = findUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y);
+			if (posizioneAttuale == nullptr && !statoAttacco) {
+				list_universi = addUniverso(app->c.x + 1, app->c.y);
+				setStato = true;
+			}
+			break;
+		case 2:
+			posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1);
+			if (posizioneAttuale == nullptr && !statoAttacco) {
+				list_universi = addUniverso(app->c.x, app->c.y - 1);
+				setStato = true;
+			}
+			break;
+		case 3:
+			posizioneAttuale = findUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y);
+			if (posizioneAttuale == nullptr && !statoAttacco) {
+				list_universi = addUniverso(app->c.x - 1, app->c.y);
+				setStato = true;
+			}
+			break;
+		}
+		//Se setStato è true significa che mi muovero verso un universo nuovo mai visitato e quindi setto statoAttacco a true, e aggiorno sia l'universo di gioco
+		//sia la posizione attuale
+		if (setStato) {
+			statoAttacco = true;
+			universoDiGioco = posizioneAttuale;
 			posizioneAttuale = list_universi;
 		}
-		break;
-	case 1:
-		posizioneAttuale = findUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y);
-		if (posizioneAttuale == nullptr) {
-			list_universi = addUniverso(app->c.x + 1, app->c.y);
-			posizioneAttuale = list_universi;
+		//Se setStato è false significa che non mi muoverso verso un universo nuovo
+		//se non mi ci muovo perche tanto di andare verso un universo gia es
+		else if (statoAttacco) {
+			if (posizioneAttuale == nullptr) {
+				posizioneAttuale = app;
+				ritorno = false;
+			}
 		}
-		break;
-	case 2:
-		posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1);
-		if (posizioneAttuale == nullptr) {
-			list_universi = addUniverso(app->c.x, app->c.y - 1);
-			posizioneAttuale = list_universi;
-		}
-		break;
-	case 3:
-		posizioneAttuale = findUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y);
-		if (posizioneAttuale == nullptr) {
-			list_universi = addUniverso(app->c.x - 1, app->c.y);
-			posizioneAttuale = list_universi;
-		}
-		break;
-	}
+	
+	return ritorno;
 }
 
 bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
