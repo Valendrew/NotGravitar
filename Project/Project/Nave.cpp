@@ -6,14 +6,14 @@ Nave::Nave(float vita, const char nomeFile[], float cord_x, float cord_y, float 
 	velocita_movimento_ = velocita_movimento;
 	velocita_rotazione_ = velocita_rotazione;
 
-	entita_.setOrigin(sf::Vector2f(larghezza_e / 2.f, altezza_e / 2.f)); // viene impostato il punto di origine 
+	//entita_.setOrigin(sf::Vector2f(larghezza_e / 2.f, altezza_e / 2.f)); // viene impostato il punto di origine 
 }
 Nave::Nave() : Comportamento() {
 	carburante_ = 10;
 	velocita_movimento_ = .2f;
 	velocita_rotazione_ = .1f;
 
-	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
+	//entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
 }
 
 void Nave::ruotaL()
@@ -43,8 +43,8 @@ sf::VertexArray Nave::getPosizioneFrontale()
 	float delta_y = entita_.getPosition().y + (entita_.getSize().y / 2) * sin(angolo);
 
 	//vertex[0].position = sf::Vector2f(delta_x , delta_y);
-	//vertex[0].position = sf::Vector2f(entita_.getPosition().x , entita_.getPosition().y);
-	vertex[0].position = sf::Vector2f(entita_.getGlobalBounds().left, entita_.getGlobalBounds().top);
+	vertex[0].position = sf::Vector2f(entita_.getPosition().x , entita_.getPosition().y);
+	//vertex[0].position = sf::Vector2f(entita_.getGlobalBounds().left, entita_.getGlobalBounds().top);
 	
 	vertex[1].position.x = vertex[0].position.x + entita_.getSize().x * cos(angolo);
 	vertex[1].position.y = vertex[0].position.y + entita_.getSize().y * sin(angolo);

@@ -11,9 +11,7 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 
 	distrutto_ = false;
 }
-bool Pianeta::getDistrutto() {
-	return distrutto_;
-}
+
 int Pianeta::getRaggio() {
 	return (int) shape_.getRadius();
 }
@@ -30,6 +28,15 @@ void Pianeta::cambiaColore() {
 void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)
 {
 	target.draw(superficie_);
+}
+
+bool Pianeta::getDistrutto() {
+	return distrutto_;
+}
+
+bool Pianeta::controlloCollisioneSuperficie()
+{
+	return superficie_.controlloCollisioneSuperficie();
 }
 
 void Pianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const

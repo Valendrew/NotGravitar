@@ -191,3 +191,8 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) {
 }
 
 SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(10, 10){}
+
+bool SuperficiePianeta::controlloCollisioneSuperficie()
+{
+	return false;
+}

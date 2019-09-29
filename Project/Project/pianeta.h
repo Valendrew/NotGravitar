@@ -17,7 +17,8 @@ public:
 	int getRaggio();
 	sf::Vector2f getPosizione();
 	void cambiaColore();
-	void drawSuperficie(sf::RenderTarget& target, sf::RenderStates states);
 	bool getDistrutto();
+	bool controlloCollisioneSuperficie();
+	void drawSuperficie(sf::RenderTarget& target, sf::RenderStates states);
 };
 #endif // !PIANETA_H

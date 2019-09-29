@@ -135,8 +135,7 @@ void Gioco::controlloPassaggioUniverso()
 	}
 
 	if (direzione != -1) {
-		//mappa_.spostamento(direzione);
-		if (false) {
+		if (mappa_.spostamento(direzione)) {
 			switch (direzione)
 			{
 			case 0: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, ALTEZZA - nave_.getDimensione().y));
@@ -168,10 +167,38 @@ void Gioco::controlloPassaggioUniverso()
 	}
 }
 
+void Gioco::controlloPassaggioPianeta()
+{
+	sf::VertexArray punti = nave_.getPosizioneFrontale();
+
+	bool check = mappa_.ricercaPianeta(punti[0].position.x, punti[0].position.y);
+	if (!check) check = mappa_.ricercaPianeta(punti[1].position.x, punti[1].position.y);
+
+	if (check) stato_ = PIANETA;
+}
+
+void Gioco::controlloUscitaPianeta()
+{
+	sf::VertexArray punti = nave_.getPosizioneFrontale();
+
+	int direzione = -1;
+	for (int i = 0; i < punti.getVertexCount(); i++)
+	{
+		//if (punti[i].position.x >= LARGHEZZA) direzione = 1;
+		//else if (punti[i].position.x <= 0) direzione = 3;
+		//else if (punti[i].position.y >= ALTEZZA) direzione = 2;
+		if (punti[i].position.y <= 0) direzione = 0;
+	}
+}
+
 void Gioco::update()
 {
 	if (stato_ == UNIVERSO) {
 		controlloPassaggioUniverso();
+		controlloPassaggioPianeta();
+	}
+	else if (stato_ = PIANETA) {
+
 	}
 	movimentoNavicella();
 }

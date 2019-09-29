@@ -53,6 +53,8 @@ private:
 	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);
 	void movimentoNavicella();
 	void controlloPassaggioUniverso();
+	void controlloPassaggioPianeta();
+	void controlloUscitaPianeta();
 	void update();
 	void render();
 public:
