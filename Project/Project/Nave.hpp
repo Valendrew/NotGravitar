@@ -15,11 +15,12 @@ public:
 	Nave();
 	void ruotaL();
 	void ruotaR();
+	void spara();
 	void setCarburante(int carburante_);
 	int getCarburante();
 	void colpito();
 	void fill(int carburante_);
-	void muovi();
+	void muovi(sf::Time deltaTime);
 };
 
 #endif

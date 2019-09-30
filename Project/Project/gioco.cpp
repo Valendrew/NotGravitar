@@ -5,7 +5,7 @@ void Gioco::gestioneEventi(Nave nave, Mappa mappa)
 {
 	
 }
-
+            
 Gioco::Gioco()
 {
 	eventi_H = nullptr;
@@ -20,8 +20,11 @@ void Gioco::avviaGioco()
 	Mappa mappa = Mappa(LARGHEZZA, ALTEZZA);
 	Nave nave = Nave();
 	sf::RenderWindow window(sf::VideoMode(LARGHEZZA, ALTEZZA), "Test", sf::Style::Default, settings);
+	sf::Clock clock;
+	sf::Time tempoUpdate = sf::Time::Zero;
 
 	while (window.isOpen()) {
+		tempoUpdate = clock.restart();
 
 		sf::Event event;
  		while (window.pollEvent(event)) {
@@ -32,7 +35,7 @@ void Gioco::avviaGioco()
 			case sf::Event::KeyPressed:
 			{
 				if (event.key.code == sf::Keyboard::Space) {
-					nave.muovi();
+					nave.muovi(tempoUpdate);
 				}
 				if (event.key.code == sf::Keyboard::A) {
 					nave.ruotaL();
@@ -41,7 +44,7 @@ void Gioco::avviaGioco()
 					nave.ruotaR();
 				}
 				if (event.key.code == sf::Keyboard::F) {
-					nave.spara(nave.getRotazione());
+					nave.spara();
 				}
 			}; break;
 			default:
