@@ -40,6 +40,6 @@ private:
 public:	
 	SuperficiePianeta(unsigned int width, unsigned int height);
 	SuperficiePianeta();
-	bool controlloCollisioneSuperficie();
+	bool controlloCollisioneSuperficie(sf::VertexArray bordo);
 };
 #endif // !SUPERFICIE_PIANETA_H

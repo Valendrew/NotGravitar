@@ -34,9 +34,9 @@ bool Pianeta::getDistrutto() {
 	return distrutto_;
 }
 
-bool Pianeta::controlloCollisioneSuperficie()
+bool Pianeta::controlloCollisioneSuperficie(sf::VertexArray bordo)
 {
-	return superficie_.controlloCollisioneSuperficie();
+	return superficie_.controlloCollisioneSuperficie(bordo);
 }
 
 void Pianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const

@@ -3,6 +3,7 @@
 void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(entita_);
+
 	proiettile_ptr p = proiettili_;
 	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili,		forse da spostare in funzione a parte!!
 	{
@@ -22,7 +23,6 @@ Comportamento::Comportamento(float vita, const char nomeFile[], float cord_x, fl
 
 	texture_.loadFromFile(nomeFile); // texture dell'oggetto
 	entita_.setTexture(&texture_); // impostata la texture
-
 }
 Comportamento::Comportamento() : Comportamento(50, "Texture/default.png", 200, 200, 25, 25, 0) {}
 

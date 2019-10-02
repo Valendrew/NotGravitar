@@ -20,7 +20,8 @@ private:
 	bool nave_rotazioneR;
 	bool nave_spara;
 	bool debug;
-	bool collisione_nave_bordo_;
+	bool collisione_nave;
+	sf::Vector2f posizione_entrata_pianeta_;
 
 	struct Evento {
 		char stato;
@@ -55,6 +56,7 @@ private:
 	void controlloPassaggioUniverso();
 	void controlloPassaggioPianeta();
 	void controlloUscitaPianeta();
+	void controlloCollisioneSuperficie();
 	void update();
 	void render();
 public:
