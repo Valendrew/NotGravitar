@@ -21,6 +21,8 @@ public:
 	void colpito();
 	void fill(int carburante_);
 	void muovi(sf::Time deltaTime);
+	sf::Vector2f getPosizione();
+	void setPosizione(sf::Vector2f pos);
 };
 
 #endif
