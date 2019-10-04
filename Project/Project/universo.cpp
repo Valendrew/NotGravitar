@@ -58,7 +58,7 @@ listaPianeti Universo::generaPianeti(listaPianeti p) {
 
 Universo::Universo(int width_, int height_) {
 	width = width_;
-	height = height_;aaa
+	height = height_;
 	dimensioniCelle.x = width_ / 24;
 	dimensioniCelle.y = height_ / 18;
 	listaPianeti p = nullptr;
