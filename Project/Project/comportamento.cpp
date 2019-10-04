@@ -64,6 +64,32 @@ void Comportamento::spara(float angolo)
 	proiettili_ = p;
 }
 
+void Comportamento::controlloProiettili(sf::FloatRect bordi, int LARGHEZZA, int ALTEZZA)
+{
+	proiettile_ptr list_ptr = proiettili_;
+
+	while (list_ptr != nullptr) {
+		if ((*list_ptr->proiettile).getBordi().intersects(bordi)) {
+			eliminaProiettile(list_ptr);
+		}
+		else if ((*list_ptr->proiettile).getBordi().left > LARGHEZZA) {
+			eliminaProiettile(list_ptr);
+		}
+		else if ((*list_ptr->proiettile).getBordi().left < 0) {
+			eliminaProiettile(list_ptr);
+		}
+		else if ((*list_ptr->proiettile).getBordi().top > ALTEZZA) {
+			eliminaProiettile(list_ptr);
+		}
+		else if ((*list_ptr->proiettile).getBordi().top < 0) {
+			eliminaProiettile(list_ptr);
+		}
+		else {
+			list_ptr = list_ptr->next;
+		}
+	}
+}
+
 void Comportamento::eliminaProiettile(proiettile_ptr p)
 {
 	if (p->next != NULL) {

@@ -254,6 +254,10 @@ void Gioco::controlloCollisioneSuperficie()
 	}
 }
 
+void Gioco::controlloCollisioneProiettili()
+{
+}
+
 void Gioco::update()
 {
 	if (stato_ == UNIVERSO) {
@@ -263,6 +267,7 @@ void Gioco::update()
 	else if (stato_ = PIANETA) {
 		controlloUscitaPianeta();
 		controlloCollisioneSuperficie();
+		controlloCollisioneProiettili();
 	}
 	else if (stato_ = GAMEOVER) {
 		game_over = true;

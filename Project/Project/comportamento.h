@@ -29,6 +29,7 @@ public:
 	void setRotazione(float rot);
 	sf::FloatRect getBordi();
 	void spara(float angolo);
+	void controlloProiettili(sf::FloatRect bordi, int LARGHEZZA, int ALTEZZA);
 	void eliminaProiettile(proiettile_ptr p);
 
 };
