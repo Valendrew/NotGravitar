@@ -15,12 +15,15 @@ public:
 	Nave();
 	void ruotaL();
 	void ruotaR();
+	void spara();
 	void setCarburante(int carburante_);
 	int getCarburante();
 	sf::VertexArray getPosizioneFrontale();
 	void colpito();
 	void fill(int carburante_);
-	void muovi();
+	void muovi(sf::Time deltaTime);
+	sf::Vector2f getPosizione();
+	void setPosizione(sf::Vector2f pos);
 };
 
 #endif
