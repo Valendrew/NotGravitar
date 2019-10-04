@@ -22,7 +22,6 @@ class Universo : public sf::Drawable, public sf::Transformable {
 private:
 	int width;
 	int height;
-
 	listaPianeti lista_Pianeti;
 	int numeroPianeti;
 	bool matriceSpawn[18][24];
