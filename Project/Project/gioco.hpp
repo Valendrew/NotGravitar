@@ -57,6 +57,7 @@ private:
 	void controlloPassaggioPianeta();
 	void controlloUscitaPianeta();
 	void controlloCollisioneSuperficie();
+	void controlloCollisioneProiettili();
 	void update();
 	void render();
 public:
