@@ -1,7 +1,8 @@
 #include "gioco.hpp"
 
 int main() {
-	Gioco::avviaGioco();
+	Gioco g;
+	g.avviaGioco();
 	
 	return 0;
 }

@@ -8,10 +8,12 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 	shape_.setOrigin(0 , 0);
 	shape_.setPosition(cord_x, cord_y);
 	shape_.setFillColor(sf::Color(255, 0, 0, 255));
+
+	distrutto_ = false;
 }
 
 int Pianeta::getRaggio() {
-	return shape_.getRadius();
+	return (int) shape_.getRadius();
 }
 
 sf::Vector2f Pianeta::getPosizione()
@@ -26,6 +28,15 @@ void Pianeta::cambiaColore() {
 void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)
 {
 	target.draw(superficie_);
+}
+
+bool Pianeta::getDistrutto() {
+	return distrutto_;
+}
+
+bool Pianeta::controlloCollisioneSuperficie(sf::VertexArray bordo)
+{
+	return superficie_.controlloCollisioneSuperficie(bordo);
 }
 
 void Pianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const

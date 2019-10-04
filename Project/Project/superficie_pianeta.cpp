@@ -61,8 +61,8 @@ void SuperficiePianeta::generaSuperficie()
 
 void SuperficiePianeta::generaBunker()
 {
-	// Il numero di bunker sarà compreso tra 2 e 4
-	int numero_di_bunker = (rand() % 3) + 2;
+	// Il numero di bunker sarà compreso tra 2 e 3
+	int numero_di_bunker = (rand() % 2) + 2;
 
 	/* Inizialmente viene scelta casualmente la posizione del bunker
 	tra le linee 0 e (MAX - 1), dopo di che, se nella posizione non è presente
@@ -129,7 +129,7 @@ void SuperficiePianeta::aggiungiBunker(int index)
 
 void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza)
 {
-	Bunker *new_bunker = new Bunker(50, "Texture/dm300.png", sf::IntRect(0, 0, 20, 20), puntiMedi[0], puntiMedi[1], grandezza, grandezza, angolo);
+	Bunker *new_bunker = new Bunker(50, "Texture/dm300.png", puntiMedi[0], puntiMedi[1], grandezza, grandezza, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_ = new BunkerNode();
@@ -143,6 +143,7 @@ void SuperficiePianeta::inserisciNodoBunker(float puntiMedi[], float angolo, int
 		bunker_ = tmp;
 }
 }
+
 
 void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
@@ -163,7 +164,6 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 }
 
 SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) {
-	srand(time(NULL));
 	larghezza_finestra_ = width;
 	altezza_finestra_ = height;
 
@@ -192,3 +192,53 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) {
 }
 
 SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(10, 10){}
+
+bool SuperficiePianeta::controlloCollisioneSuperficie(sf::VertexArray bordo)
+{
+	int ratio = 15;
+	float step_intervallo = (larghezza_finestra_ / NUMERO_DI_LINEE) / ratio;
+	bool collisione = false;
+
+	for (int i = 0; i < bordo.getVertexCount(); i++)
+	{
+		bool found_intervallo = false;
+		int index = 0;
+		
+		while (index < NUMERO_DI_LINEE && !found_intervallo && !collisione)
+		{
+			// Trovato intervallo in cui si trova la nave
+			if (bordo[i].position.x >= linee_[index].position.x && bordo[i].position.x <= linee_[index + 1].position.x) {
+				found_intervallo = true;
+
+				// Calcolo del coefficiente angolare e dell'ordinata all'origine per calcolare la retta
+				float coefficiente_angolare = (linee_[index + 1].position.y - linee_[index].position.y) /
+					(linee_[index + 1].position.x - linee_[index].position.x);
+				float ordinata_origine = linee_[index].position.y - linee_[index].position.x * coefficiente_angolare;
+
+				bool found_sub_intervallo = false;
+				int intervallo = linee_[index].position.x;
+
+				while (intervallo < linee_[index + 1].position.x && !found_sub_intervallo)
+				{
+					if (bordo[i].position.x >= intervallo && bordo[i].position.x <= intervallo + step_intervallo) {
+						found_sub_intervallo = true;
+
+						float y_p1 = intervallo * coefficiente_angolare + ordinata_origine;
+						float y_p2 = (intervallo + step_intervallo) * coefficiente_angolare + ordinata_origine;
+
+						if (coefficiente_angolare > 0) {
+							collisione = (bordo[i].position.y >= y_p1 && bordo[i].position.y <= y_p2);
+						}
+						else {
+							collisione = (bordo[i].position.y <= y_p1 && bordo[i].position.y >= y_p2);
+						}
+					}
+
+					intervallo += step_intervallo;
+				}
+			}
+			index++;
+		}
+	}
+	return collisione;
+}
