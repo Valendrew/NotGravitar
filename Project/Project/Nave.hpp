@@ -6,7 +6,6 @@
 
 class Nave : public Comportamento {
 private:
-	//proiettiliP proiettilil;
 	int carburante_;
 	float velocita_movimento_;
 	float velocita_rotazione_;
@@ -18,7 +17,6 @@ public:
 	void spara();
 	void setCarburante(int carburante_);
 	int getCarburante();
-	sf::VertexArray getPosizioneFrontale();
 	void colpito();
 	void fill(int carburante_);
 	void muovi(sf::Time deltaTime);

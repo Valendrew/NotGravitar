@@ -1,27 +1,25 @@
 #include "nave.hpp"
 #include <iostream>
-Nave::Nave(float vita, const char nomeFile[], sf::IntRect dimensione_texture, float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione, float velocita, int carburante)
-	: Comportamento(vita, nomeFile, dimensione_texture, cord_x, cord_y, larghezza_e, altezza_e, angolo_rotazione) {
+Nave::Nave(float vita, const char nomeFile[], float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione, float velocita_movimento, float velocita_rotazione, int carburante)
+	: Comportamento(vita, nomeFile, cord_x, cord_y, larghezza_e, altezza_e, angolo_rotazione) {
 	carburante_ = carburante;
-	velocita_ = velocita;
-	angolodirotazione_ = 7;
+	velocita_movimento_ = velocita_movimento;
 	entita_.setOrigin(sf::Vector2f(larghezza_e / 2.f, altezza_e / 2.f));
 }
 Nave::Nave() : Comportamento() {
 	carburante_ = 10;
-	velocita_ = 50;
-	angolodirotazione_ = 7;
+	velocita_movimento_ = 50;
 	entita_.setOrigin(sf::Vector2f(12.5, 12.5));
 }
 
 void Nave::ruotaL()
 {
-	entita_.rotate(-angolodirotazione_);
+	entita_.rotate(-velocita_rotazione_);
 }
 
 void Nave::ruotaR()
 {
-	entita_.rotate(angolodirotazione_);
+	entita_.rotate(velocita_rotazione_);
 }
 
 void Nave::spara()
@@ -43,8 +41,8 @@ void Nave::fill(int carburante_) {
 	carburante_ += carburante_;
 }
 void Nave::muovi(sf::Time deltaTime) {
-	float velX = deltaTime.asSeconds() * velocita_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
-	float velY = deltaTime.asSeconds() * (-velocita_) * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
+	float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
+	float velY = deltaTime.asSeconds() * (-velocita_movimento_) * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 
 	entita_.move(velX, velY);
 }
