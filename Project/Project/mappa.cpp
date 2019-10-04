@@ -9,9 +9,14 @@ Mappa::Mappa(int width_, int height_) {
 ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
 	e quelli nelle 4 direzioni possibili che l'astronave potrà visitare
 	*/
+
 	statoAttacco = true;
 	width = width_;
-	height = height_; 
+	height = height_;
+
+	entita_.setSize(sf::Vector2f(width_, height_));
+	texture_.loadFromFile("Texture/universo.png"); // texture dell'oggetto
+	entita_.setTexture(&texture_);
 	srand(time(0));
 	/*list_universi = new nodoMappa;
 	list_universi->c.x = -1;
@@ -145,5 +150,6 @@ bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
 
 void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
+	target.draw(entita_);
 	target.draw(*posizioneAttuale->u);
 }

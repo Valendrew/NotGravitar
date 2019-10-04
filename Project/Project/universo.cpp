@@ -58,10 +58,7 @@ listaPianeti Universo::generaPianeti(listaPianeti p) {
 
 Universo::Universo(int width_, int height_) {
 	width = width_;
-	height = height_;
-	entita_.setSize(sf::Vector2f(width_, height_));
-	texture_.loadFromFile("Texture/universo.png"); // texture dell'oggetto
-	entita_.setTexture(&texture_);
+	height = height_;aaa
 	dimensioniCelle.x = width_ / 24;
 	dimensioniCelle.y = height_ / 18;
 	listaPianeti p = nullptr;
@@ -199,7 +196,6 @@ bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
 void Universo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	listaPianeti pianeti_print = lista_Pianeti;
-	target.draw(entita_);
 
 	if (pianetaAttuale == nullptr) {
 		while (pianeti_print != nullptr) {

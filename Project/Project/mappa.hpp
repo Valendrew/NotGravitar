@@ -12,6 +12,9 @@ typedef nodoMappa *listaUniversi;
 
 class Mappa : public sf::Drawable, public sf::Transformable  {
 private:
+
+	sf::RectangleShape entita_;
+	sf::Texture texture_;
 	int width;
 	int height;
 	int distanza;
