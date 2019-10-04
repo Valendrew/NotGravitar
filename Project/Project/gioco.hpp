@@ -13,8 +13,14 @@ class Gioco {
 private: 
 	sf::RenderWindow window_;
 	sf::Clock clock_;
+	sf::Font font_;
+	sf::Text exit_;
+	sf::Text start_;
+	sf::Text titolo_;
+	sf::Text subtitle_;
 	Nave nave_;
 	Mappa mappa_;
+	bool game_over;
 	bool nave_movimento;
 	bool nave_rotazioneL;
 	bool nave_rotazioneR;
@@ -42,7 +48,8 @@ private:
 	enum Stato
 	{
 		UNIVERSO,
-		PIANETA
+		PIANETA,
+		GAMEOVER
 	};
 	Stato stato_;
 
@@ -59,6 +66,8 @@ private:
 	void controlloCollisioneSuperficie();
 	void update();
 	void render();
+	bool gestisciMouse(sf::Vector2i v);
+	void mouseClick(sf::Mouse::Button b);
 public:
 	Gioco();
 	void avviaGioco();

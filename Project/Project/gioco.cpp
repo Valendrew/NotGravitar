@@ -73,10 +73,61 @@ void Gioco::processaEventi()
 		case sf::Event::KeyReleased:
 			gestisciMovimentoNave(event.key.code, false);
 			break;
+
+		case sf::Event::MouseMoved: {
+
+			sf::Vector2i v;
+			v.x = sf::Mouse::getPosition(window_).x;
+			v.y = sf::Mouse::getPosition(window_).y;
+			gestisciMouse(v);
 		}
+			break;
+		case sf::Event::MouseButtonPressed: {
+
+			mouseClick(sf::Mouse::Button::Left);
+		}
+			break;
+		}
+
+	
 	}
 }
 
+void Gioco::mouseClick(sf::Mouse::Button b) {
+
+	sf::Vector2i v;
+	v.x = sf::Mouse::getPosition(window_).x;
+	v.y = sf::Mouse::getPosition(window_).y;
+	gestisciMouse(v);
+	if (b == sf::Mouse::Button::Left && !gestisciMouse(v)) {
+		window_.close();
+	}
+	else if (b == sf::Mouse::Button::Left && gestisciMouse(v)) {
+		Gioco();
+	}
+}
+bool Gioco::gestisciMouse(sf::Vector2i v) {
+	bool premutoStart = false;
+	float start_x = start_.getPosition().x;
+	float start_y = start_.getPosition().y;
+	float exit_x = exit_.getPosition().x;
+	float exit_y = exit_.getPosition().y;
+	if (v.x >= start_x && v.x <= start_x + start_.getGlobalBounds().width && v.y >= start_y && v.y <= start_y + start_.getGlobalBounds().height) {
+		start_.setCharacterSize(60);
+		premutoStart = true;
+	}
+	else {
+		start_.setCharacterSize(55);
+		if (v.x >= exit_x && v.x <= exit_x + exit_.getGlobalBounds().width && v.y >= exit_y && v.y <= exit_y + exit_.getGlobalBounds().height) {
+			exit_.setCharacterSize(60);
+		}
+		else exit_.setCharacterSize(55);
+	}
+	start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+	exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
+	return premutoStart;
+	 
+}
 void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 {
 	if (key == sf::Keyboard::W) {
@@ -213,14 +264,26 @@ void Gioco::update()
 		controlloUscitaPianeta();
 		controlloCollisioneSuperficie();
 	}
+	else if (stato_ = GAMEOVER) {
+		game_over = true;
+		start_.setString("RESTART");
+	}
 	movimentoNavicella();
 }
 
 void Gioco::render()
 {
 	window_.clear(sf::Color::Black);
-	window_.draw(mappa_);
-	window_.draw(nave_);
+	if (!game_over) {
+		window_.draw(mappa_);
+		window_.draw(nave_);
+	}
+	else {
+		window_.draw(titolo_);
+		window_.draw(start_);
+		window_.draw(exit_);
+		window_.draw(subtitle_);
+	}
 	window_.display();
 }
 
@@ -230,6 +293,46 @@ Gioco::Gioco() :
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
 {
+	font_.loadFromFile("Font/edunline.ttf");
+	exit_.setFont(font_);
+	start_.setFont(font_);
+	titolo_.setFont(font_);
+	subtitle_.setFont(font_);
+
+	titolo_.setString("NON GRAVITAR");
+	exit_.setString("EXIT");
+	start_.setString("START");
+	subtitle_.setString("GAME OVER");
+
+
+	titolo_.setFillColor(sf::Color::Red);
+	titolo_.setStyle(sf::Text::Bold);
+	titolo_.setCharacterSize(120);
+	titolo_.setOutlineThickness(4);
+	titolo_.setLetterSpacing(1.5);
+	titolo_.setPosition(LARGHEZZA / 2 - titolo_.getGlobalBounds().width/2, 10);
+	titolo_.setOutlineColor(sf::Color::Yellow);
+
+	subtitle_.setFillColor(sf::Color::Red);
+	subtitle_.setCharacterSize(60);
+	subtitle_.setLetterSpacing(1.5);
+	subtitle_.setPosition(LARGHEZZA / 2 - subtitle_.getGlobalBounds().width / 2, 140);
+
+	start_.setFillColor(sf::Color::Green);
+	start_.setCharacterSize(55);
+	start_.setLetterSpacing(1.5); 
+	start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+
+	exit_.setFillColor(sf::Color::Magenta);
+	exit_.setCharacterSize(55);
+	exit_.setLetterSpacing(1.5);
+	exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
+	
+	
+	
+	
+
+	game_over = false; //usato nella class render
 	nave_movimento = false;
 	nave_rotazioneL = false;
 	nave_rotazioneR = false;
@@ -247,6 +350,7 @@ Gioco::Gioco() :
 
 void Gioco::avviaGioco()
 {
+
 	while (window_.isOpen()) {
 		processaEventi();
 		update();
