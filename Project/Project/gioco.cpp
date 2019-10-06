@@ -98,12 +98,13 @@ void Gioco::mouseClick(sf::Mouse::Button b) {
 	sf::Vector2i v;
 	v.x = sf::Mouse::getPosition(window_).x;
 	v.y = sf::Mouse::getPosition(window_).y;
-	gestisciMouse(v);
+	
 	if (b == sf::Mouse::Button::Left && !gestisciMouse(v)) {
 		window_.close();
 	}
-	else if (b == sf::Mouse::Button::Left && gestisciMouse(v)) {
-		Gioco();
+	else if(b == sf::Mouse::Button::Left && gestisciMouse(v)) {
+		restart_ = true;
+		window_.close();
 	}
 }
 bool Gioco::gestisciMouse(sf::Vector2i v) {
@@ -264,12 +265,12 @@ void Gioco::update()
 		controlloPassaggioUniverso();
 		controlloPassaggioPianeta();
 	}
-	else if (stato_ = PIANETA) {
+	else if (stato_ == PIANETA) {
 		controlloUscitaPianeta();
 		controlloCollisioneSuperficie();
 		controlloCollisioneProiettili();
 	}
-	else if (stato_ = GAMEOVER) {
+	else if (stato_ == GAMEOVER) {
 		game_over = true;
 		start_.setString("RESTART");
 	}
@@ -290,6 +291,10 @@ void Gioco::render()
 		window_.draw(subtitle_);
 	}
 	window_.display();
+}
+
+bool Gioco::restart() {
+	return restart_;
 }
 
 Gioco::Gioco() : 
@@ -336,7 +341,7 @@ Gioco::Gioco() :
 	
 	
 	
-
+	restart_ = false;
 	game_over = false; //usato nella class render
 	nave_movimento = false;
 	nave_rotazioneL = false;
@@ -355,7 +360,9 @@ Gioco::Gioco() :
 
 void Gioco::avviaGioco()
 {
-
+	if (!window_.isOpen())
+		render();
+	
 	while (window_.isOpen()) {
 		processaEventi();
 		update();

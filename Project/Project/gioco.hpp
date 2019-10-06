@@ -27,6 +27,7 @@ private:
 	bool nave_spara;
 	bool debug;
 	bool collisione_nave;
+	bool restart_;
 	sf::Vector2f posizione_entrata_pianeta_;
 
 	struct Evento {
@@ -72,5 +73,6 @@ private:
 public:
 	Gioco();
 	void avviaGioco();
+	bool restart();
 };
 #endif // !GIOCO_H
