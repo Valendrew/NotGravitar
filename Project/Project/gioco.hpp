@@ -11,6 +11,8 @@ const int ALTEZZA = 720;
 
 class Gioco {
 private: 
+	sf::RectangleShape pausa_;
+	sf::Texture texture_;
 	sf::RenderWindow window_;
 	sf::Clock clock_;
 	sf::Font font_;
@@ -51,9 +53,11 @@ private:
 		UNIVERSO,
 		PIANETA,
 		GAMEOVER,
-		START
+		START,
+		PAUSA
 	};
 	Stato stato_;
+	Stato salva_stato;//serve per la pausa, cosi se ero nel pianeta ci sono di nuovo e se ero nell'universo ci sono di nuovo
 
 	void inserisciEvento(char stato_, char tipo[], sf::Int32 time);
 	eventi_ptr eliminaEvento();
@@ -69,7 +73,7 @@ private:
 	void controlloCollisioneProiettili();
 	void update();
 	void render();
-	bool gestisciMouse(sf::Vector2i v);
+	int gestisciMouse(sf::Vector2i v);
 	void mouseClick(sf::Mouse::Button b);
 public:
 	Gioco();

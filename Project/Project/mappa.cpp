@@ -15,7 +15,7 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	height = height_;
 
 	entita_.setSize(sf::Vector2f(width_, height_));
-	texture_.loadFromFile("Texture/universo.png"); // texture dell'oggetto
+	texture_.loadFromFile("Texture/universo.jpg"); // texture dell'oggetto
 	entita_.setTexture(&texture_);
 	srand(time(0));
 	/*list_universi = new nodoMappa;

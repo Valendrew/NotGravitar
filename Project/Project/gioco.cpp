@@ -67,11 +67,14 @@ void Gioco::processaEventi()
 		case sf::Event::Closed: window_.close();
 			break;
 		case sf::Event::KeyPressed: {
-			gestisciMovimentoNave(event.key.code, true);
+			//L'if serve a non far spostare la navicella se si preme un pulsante di movimento mentre si è nel menù di pausa
+			if(!schermata_scritte) 
+				gestisciMovimentoNave(event.key.code, true);
 		}
 			break;
 		case sf::Event::KeyReleased:
-			gestisciMovimentoNave(event.key.code, false);
+			if (!schermata_scritte)
+				gestisciMovimentoNave(event.key.code, false);
 			break;
 
 		case sf::Event::MouseMoved: {
@@ -95,15 +98,16 @@ void Gioco::processaEventi()
 
 void Gioco::mouseClick(sf::Mouse::Button b) {
 	//L'if è necessario altrimenti la indipendentemente dal fatto di essere o meno nella schermata giusta la finestra si chiuderebbe co un click
-	if (schermata_scritte) {
-		sf::Vector2i v;
-		v.x = sf::Mouse::getPosition(window_).x;
-		v.y = sf::Mouse::getPosition(window_).y;
 
-		if (b == sf::Mouse::Button::Left && !gestisciMouse(v)) {
+	sf::Vector2i v;
+	v.x = sf::Mouse::getPosition(window_).x;
+	v.y = sf::Mouse::getPosition(window_).y;
+	if (schermata_scritte) {
+
+		if (b == sf::Mouse::Button::Left && gestisciMouse(v) == 1) {
 			window_.close();
 		}
-		else if (b == sf::Mouse::Button::Left && gestisciMouse(v)) {
+		else if (b == sf::Mouse::Button::Left && gestisciMouse(v) == 0) {
 
 			std::string app = start_.getString();
 			//compare torna 0 se le due stringhe sono uguali
@@ -114,30 +118,43 @@ void Gioco::mouseClick(sf::Mouse::Button b) {
 			else if (!app.compare("START")) {
 				stato_ = UNIVERSO;
 			}
+			else if (!app.compare("RESUME")) {
+				stato_ = salva_stato;
+			}
 		}
 		schermata_scritte = false;
 	}
+	//se sono nella schermata di gioco e voglio cliccare sulla pausa
+	else {
+		float pausa_x = pausa_.getPosition().x;
+		float pausa_y = pausa_.getPosition().y;
+		if (v.x >= pausa_x && v.x <= pausa_x + pausa_.getSize().x && v.y >= pausa_y && v.y <= pausa_y + pausa_.getSize().y) {
+			salva_stato = stato_;
+			stato_ = PAUSA;
+		}
+	}
 }
-bool Gioco::gestisciMouse(sf::Vector2i v) {
-	bool premutoStart = false;
+int Gioco::gestisciMouse(sf::Vector2i v) {
+	int pulsantePremuto = -1;
 	float start_x = start_.getPosition().x;
 	float start_y = start_.getPosition().y;
 	float exit_x = exit_.getPosition().x;
 	float exit_y = exit_.getPosition().y;
 	if (v.x >= start_x && v.x <= start_x + start_.getGlobalBounds().width && v.y >= start_y && v.y <= start_y + start_.getGlobalBounds().height) {
 		start_.setCharacterSize(60);
-		premutoStart = true;
+		pulsantePremuto = 0;
 	}
 	else {
 		start_.setCharacterSize(55);
 		if (v.x >= exit_x && v.x <= exit_x + exit_.getGlobalBounds().width && v.y >= exit_y && v.y <= exit_y + exit_.getGlobalBounds().height) {
 			exit_.setCharacterSize(60);
+			pulsantePremuto = 1;
 		}
 		else exit_.setCharacterSize(55);
 	}
 	start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
 	exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
-	return premutoStart;
+	return pulsantePremuto;
 	 
 }
 void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
@@ -288,6 +305,12 @@ void Gioco::update()
 		subtitle_.setPosition(LARGHEZZA / 2 - subtitle_.getGlobalBounds().width / 2, 140);
 		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
 	}
+	else if (stato_ == PAUSA) {
+		schermata_scritte = true;
+		start_.setString("RESUME");
+		subtitle_.setString("");
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+	}
 	else if (stato_ == START) {
 		schermata_scritte = true;
 		start_.setString("START");
@@ -303,6 +326,7 @@ void Gioco::render()
 	if (!schermata_scritte) {
 		window_.draw(mappa_);
 		window_.draw(nave_);
+		window_.draw(pausa_);
 	}
 	else {
 		window_.draw(titolo_);
@@ -323,6 +347,11 @@ Gioco::Gioco() :
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
 {
+	pausa_.setSize(sf::Vector2f(61.8, 64.0));
+	texture_.loadFromFile("Texture/pausa2.png");
+	pausa_.setTexture(&texture_);
+	pausa_.setPosition(LARGHEZZA - pausa_.getSize().x, 0);
+
 	font_.loadFromFile("Font/edunline.ttf");
 	exit_.setFont(font_);
 	start_.setFont(font_);
