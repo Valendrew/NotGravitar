@@ -190,14 +190,13 @@ bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
 		}
 		app = app->next;
 	}
-
 	return found;
 }
 
 void Universo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	listaPianeti pianeti_print = lista_Pianeti;
-	
+
 	if (pianetaAttuale == nullptr) {
 		while (pianeti_print != nullptr) {
 			target.draw(*pianeti_print->pianeta_);

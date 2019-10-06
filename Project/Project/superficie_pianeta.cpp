@@ -158,6 +158,10 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_to_print != nullptr) {
+		float angolo_bunker = (*bunker_->bunker_item).getRotazione();
+		
+		(*bunker_->bunker_item).spara(angolo_bunker + 15);
+		(*bunker_->bunker_item).spara(angolo_bunker - 15);
 		target.draw(*bunker_to_print->bunker_item);
 		bunker_to_print = bunker_to_print->next;
 	}

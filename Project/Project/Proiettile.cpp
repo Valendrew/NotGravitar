@@ -40,3 +40,8 @@ void Proiettile::muovi()
 {
 	proiettile_.move(x, y);
 }
+
+sf::FloatRect Proiettile::getBordi()
+{
+	return proiettile_.getGlobalBounds();
+}
