@@ -20,7 +20,7 @@ private:
 	sf::Text subtitle_;
 	Nave nave_;
 	Mappa mappa_;
-	bool game_over;
+	bool schermata_scritte;
 	bool nave_movimento;
 	bool nave_rotazioneL;
 	bool nave_rotazioneR;
@@ -50,7 +50,8 @@ private:
 	{
 		UNIVERSO,
 		PIANETA,
-		GAMEOVER
+		GAMEOVER,
+		START
 	};
 	Stato stato_;
 

@@ -94,17 +94,28 @@ void Gioco::processaEventi()
 }
 
 void Gioco::mouseClick(sf::Mouse::Button b) {
+	//L'if è necessario altrimenti la indipendentemente dal fatto di essere o meno nella schermata giusta la finestra si chiuderebbe co un click
+	if (schermata_scritte) {
+		sf::Vector2i v;
+		v.x = sf::Mouse::getPosition(window_).x;
+		v.y = sf::Mouse::getPosition(window_).y;
 
-	sf::Vector2i v;
-	v.x = sf::Mouse::getPosition(window_).x;
-	v.y = sf::Mouse::getPosition(window_).y;
-	
-	if (b == sf::Mouse::Button::Left && !gestisciMouse(v)) {
-		window_.close();
-	}
-	else if(b == sf::Mouse::Button::Left && gestisciMouse(v)) {
-		restart_ = true;
-		window_.close();
+		if (b == sf::Mouse::Button::Left && !gestisciMouse(v)) {
+			window_.close();
+		}
+		else if (b == sf::Mouse::Button::Left && gestisciMouse(v)) {
+
+			std::string app = start_.getString();
+			//compare torna 0 se le due stringhe sono uguali
+			if (!app.compare("RESTART")) {
+				restart_ = true;
+				window_.close();
+			}
+			else if (!app.compare("START")) {
+				stato_ = UNIVERSO;
+			}
+		}
+		schermata_scritte = false;
 	}
 }
 bool Gioco::gestisciMouse(sf::Vector2i v) {
@@ -218,7 +229,7 @@ void Gioco::controlloPassaggioPianeta()
 	if (!check) check = mappa_.ricercaPianeta(punti[1].position.x, punti[1].position.y);
 
 	if (check) {
-		stato_ = PIANETA;
+		stato_ = GAMEOVER;
 		posizione_entrata_pianeta_ = sf::Vector2f(punti[0].position.x - 50, punti[0].position.y - 50);
 	}
 }
@@ -271,8 +282,17 @@ void Gioco::update()
 		controlloCollisioneProiettili();
 	}
 	else if (stato_ == GAMEOVER) {
-		game_over = true;
+		schermata_scritte = true;
 		start_.setString("RESTART");
+		subtitle_.setString("GAME OVER");
+		subtitle_.setPosition(LARGHEZZA / 2 - subtitle_.getGlobalBounds().width / 2, 140);
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+	}
+	else if (stato_ == START) {
+		schermata_scritte = true;
+		start_.setString("START");
+		subtitle_.setString("");
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
 	}
 	movimentoNavicella();
 }
@@ -280,7 +300,7 @@ void Gioco::update()
 void Gioco::render()
 {
 	window_.clear(sf::Color::Black);
-	if (!game_over) {
+	if (!schermata_scritte) {
 		window_.draw(mappa_);
 		window_.draw(nave_);
 	}
@@ -311,8 +331,6 @@ Gioco::Gioco() :
 
 	titolo_.setString("NON GRAVITAR");
 	exit_.setString("EXIT");
-	start_.setString("START");
-	subtitle_.setString("GAME OVER");
 
 
 	titolo_.setFillColor(sf::Color::Red);
@@ -326,12 +344,11 @@ Gioco::Gioco() :
 	subtitle_.setFillColor(sf::Color::Red);
 	subtitle_.setCharacterSize(60);
 	subtitle_.setLetterSpacing(1.5);
-	subtitle_.setPosition(LARGHEZZA / 2 - subtitle_.getGlobalBounds().width / 2, 140);
 
 	start_.setFillColor(sf::Color::Green);
 	start_.setCharacterSize(55);
 	start_.setLetterSpacing(1.5); 
-	start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+	
 
 	exit_.setFillColor(sf::Color::Magenta);
 	exit_.setCharacterSize(55);
@@ -340,9 +357,8 @@ Gioco::Gioco() :
 	
 	
 	
-	
 	restart_ = false;
-	game_over = false; //usato nella class render
+	schermata_scritte = false; //usato nella class render
 	nave_movimento = false;
 	nave_rotazioneL = false;
 	nave_rotazioneR = false;
@@ -350,7 +366,7 @@ Gioco::Gioco() :
 	collisione_nave = false;
 	posizione_entrata_pianeta_ = sf::Vector2f(0, 0);
 
-	stato_ = UNIVERSO;
+	stato_ = START;
 
 	eventi_H = nullptr;
 	eventi_T = nullptr;
@@ -360,9 +376,6 @@ Gioco::Gioco() :
 
 void Gioco::avviaGioco()
 {
-	if (!window_.isOpen())
-		render();
-	
 	while (window_.isOpen()) {
 		processaEventi();
 		update();
