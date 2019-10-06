@@ -20,6 +20,8 @@ private:
 	sf::Text start_;
 	sf::Text titolo_;
 	sf::Text subtitle_;
+	sf::Text punteggio_text;
+
 	Nave nave_;
 	Mappa mappa_;
 	bool schermata_scritte;
@@ -30,6 +32,7 @@ private:
 	bool debug;
 	bool collisione_nave;
 	bool restart_;
+	int punteggio_;
 	sf::Vector2f posizione_entrata_pianeta_;
 
 	struct Evento {
@@ -75,6 +78,9 @@ private:
 	void render();
 	int gestisciMouse(sf::Vector2i v);
 	void mouseClick(sf::Mouse::Button b);
+	void controlloDistruzioneBunker();
+	void controlloDistruzioneSistemaSolare();
+	void aggiornaPunteggio();
 public:
 	Gioco();
 	void avviaGioco();

@@ -35,6 +35,7 @@ public:
 	adiacenti a quello attuale */
 	bool spostamento(int i);
 	bool ricercaPianeta(int x_astronave, int y_astronave);
+	Universo getUniversoDiGioco();
 };
 
 #endif

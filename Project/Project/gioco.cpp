@@ -1,5 +1,6 @@
 #include "gioco.hpp"
 #include <iostream>
+#include <stdlib.h>
 
 void Gioco::inserisciEvento(char stato_, char tipo[], sf::Int32 time)
 {
@@ -298,10 +299,19 @@ void Gioco::controlloCollisioneSuperficie()
 void Gioco::controlloCollisioneProiettili()
 {
 }
+void Gioco::controlloDistruzioneBunker() {
+	//quando un singolo bunker verra distrutto +10 punti, quando distruggo l'ultimo bunker +50 punti
+}
+void Gioco::controlloDistruzioneSistemaSolare() {
+	if (mappa_.getUniversoDiGioco().distrutto()) {
+		punteggio_ += 100;
+	}
+}
 
 void Gioco::update()
 {
 	if (stato_ == UNIVERSO) {
+		controlloDistruzioneSistemaSolare();
 		controlloPassaggioUniverso();
 		controlloPassaggioPianeta();
 	}
@@ -309,6 +319,7 @@ void Gioco::update()
 		controlloUscitaPianeta();
 		controlloCollisioneSuperficie();
 		controlloCollisioneProiettili();
+		controlloDistruzioneBunker();
 	}
 	else if (stato_ == GAMEOVER) {
 		schermata_scritte = true;
@@ -339,6 +350,9 @@ void Gioco::render()
 		window_.draw(mappa_);
 		window_.draw(nave_);
 		window_.draw(pausa_);
+
+		aggiornaPunteggio();
+		window_.draw(punteggio_text);
 	}
 	else {
 		window_.draw(titolo_);
@@ -351,6 +365,13 @@ void Gioco::render()
 
 bool Gioco::restart() {
 	return restart_;
+}
+void Gioco::aggiornaPunteggio() {
+	char app[30] = "Punteggio: ";
+	char app2[10];
+	_itoa_s(punteggio_, app2, 10, 10);
+	strcat_s(app, app2);
+	punteggio_text.setString(app);
 }
 
 Gioco::Gioco() : 
@@ -372,10 +393,19 @@ Gioco::Gioco() :
 	start_.setFont(font_);
 	titolo_.setFont(font_);
 	subtitle_.setFont(font_);
+	punteggio_text.setFont(font_);
 
 	titolo_.setString("NON GRAVITAR");
 	exit_.setString("EXIT");
 
+	punteggio_text.setFillColor(sf::Color::Blue);
+	punteggio_text.setCharacterSize(32);
+	punteggio_text.setLetterSpacing(1.5);
+	punteggio_ = 0;
+	aggiornaPunteggio();
+	punteggio_text.setPosition(5,0);
+	punteggio_text.setOutlineThickness(1);
+	punteggio_text.setOutlineColor(sf::Color::Magenta);
 
 	titolo_.setFillColor(sf::Color::Red);
 	titolo_.setStyle(sf::Text::Bold);
