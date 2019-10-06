@@ -12,6 +12,7 @@ const int ALTEZZA = 720;
 class Gioco {
 private: 
 	sf::RenderWindow window_;
+	sf::Time time_frame_;
 	sf::Clock clock_;
 	Nave nave_;
 	Mappa mappa_;
@@ -56,6 +57,7 @@ private:
 	void controlloPassaggioUniverso();
 	void controlloPassaggioPianeta();
 	void controlloUscitaPianeta();
+	void controlloPassaggioSuperficie();
 	void controlloCollisioneSuperficie();
 	void controlloCollisioneProiettili();
 	void update();

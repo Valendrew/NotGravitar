@@ -29,12 +29,14 @@ private:
 public:
 	Mappa();
 	Mappa(int dim_x, int dim_y);
-	bool controlloCollisioneSuperficie(sf::VertexArray bordo);
+	int controlloPassaggioSuperficie(sf::Vector2f pos);
+	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	void uscitaPianeta();
 	/*spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
 	adiacenti a quello attuale */
 	bool spostamento(int i);
 	bool ricercaPianeta(int x_astronave, int y_astronave);
+	proiettile_ptr getProiettili();
 };
 
 #endif

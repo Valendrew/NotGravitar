@@ -99,7 +99,7 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 void Gioco::movimentoNavicella()
 {
 	if (nave_movimento && !collisione_nave) {
-		nave_.muovi();
+		nave_.muovi(time_frame_);
 	}
 	if (nave_rotazioneL) {
 		nave_.ruotaL();
@@ -108,10 +108,10 @@ void Gioco::movimentoNavicella()
 		nave_.ruotaR();
 	}
 	if (nave_spara) {
-		if (clock_.getElapsedTime().asMilliseconds() > 200) {
-			nave_.spara(nave_.getRotazione());
-			clock_.restart();
-		}
+		//if (clock_.getElapsedTime().asMilliseconds() > 200) {
+			nave_.spara();
+			//clock_.restart();
+		//}
 	}
 }
 
@@ -128,33 +128,45 @@ void Gioco::controlloPassaggioUniverso()
 		else if (punti[i].position.y >= ALTEZZA) direzione = 2;
 		else if (punti[i].position.y <= 0) direzione = 0;
 	}
-	float rotazione = nave_.getRotazione();
-	if (debug) {
-		std::cout << "Punto L: " << punti[0].position.x << ", " << punti[0].position.y << ". PUNTO R: " << punti[1].position.x << ", " << punti[1].position.y << std::endl;
-		std::cout << "ROTAZIONE: " << rotazione << std::endl << std::endl;
-	}
 
 	if (direzione != -1) {
 		if (mappa_.spostamento(direzione)) {
 			switch (direzione)
 			{
-			case 0: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, ALTEZZA - nave_.getDimensione().y));
+			case 0: nave_.setPosition(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getDimensione().y));
 				break;
-			case 1: nave_.setPosizione(sf::Vector2f(nave_.getDimensione().x, nave_.getPosizione().y));
+			case 1: nave_.setPosition(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
 				break;
-			case 2: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, nave_.getDimensione().y));
+			case 2: nave_.setPosition(sf::Vector2f(nave_.getPosition().x, nave_.getDimensione().y));
 				break;
-			case 3: nave_.setPosizione(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosizione().y));
+			case 3: nave_.setPosition(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
 			default:
 				break;
 			}
 		}
 		else {
-			collisione_nave = true;
+			float deg_angolo = nave_.getRotation();
+			float angolo = nave_.getRotation() * PI / 180;
+			float s_x = cos(angolo);
+			float s_y = sin(angolo);
+
+			float new_angolo;
+			if (direzione == 1 || direzione == 3) {
+				new_angolo = asin(s_y * -1) * 180 / PI;
+				if (s_x < 0) {
+					new_angolo = 180 - (new_angolo);
+				}
+			}
+			else {
+				new_angolo = acos(s_x * -1) * 180 / PI;
+				if (s_y < 0) {
+					new_angolo = 270 - (new_angolo - 90);
+				}
+				
+			}
+
+			nave_.setRotation(new_angolo);
 		}
-	}
-	else {
-		collisione_nave = false;
 	}
 }
 
@@ -168,6 +180,9 @@ void Gioco::controlloPassaggioPianeta()
 	if (check) {
 		stato_ = PIANETA;
 		posizione_entrata_pianeta_ = sf::Vector2f(punti[0].position.x - 50, punti[0].position.y - 50);
+		
+		nave_.setRotation(180);
+		nave_.setPosition(sf::Vector2f(LARGHEZZA / 2, 40));
 	}
 }
 
@@ -184,27 +199,67 @@ void Gioco::controlloUscitaPianeta()
 	if (cambia_stato) {
 		stato_ = UNIVERSO;
 
-		nave_.setPosizione(posizione_entrata_pianeta_);
+		nave_.setPosition(posizione_entrata_pianeta_);
 		posizione_entrata_pianeta_ = sf::Vector2f(0, 0);
 
 		mappa_.uscitaPianeta();
 	}
 }
 
-void Gioco::controlloCollisioneSuperficie()
+void Gioco::controlloPassaggioSuperficie()
 {
+	int direzione = -1;
 	sf::VertexArray bordo = nave_.getPosizioneFrontale();
 
-	if (mappa_.controlloCollisioneSuperficie(bordo)) {
-		collisione_nave = true;
+	int i = 0;
+
+	while (i < bordo.getVertexCount() && direzione == -1)
+	{
+		direzione = mappa_.controlloPassaggioSuperficie(bordo[i].position);
+		i++;
 	}
-	else {
-		collisione_nave = false;
+
+	if (direzione != -1) {
+		if (direzione == 0) {
+			nave_.setPosition(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
+		}
+		else {
+			nave_.setPosition(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
+		}
+	}
+}
+
+void Gioco::controlloCollisioneSuperficie()
+{
+	bool collisione_superficie = false;
+	sf::VertexArray bordo = nave_.getPosizioneFrontale();
+
+	if (mappa_.controlloCollisioneSuperficie(bordo[0].position)) {
+		collisione_superficie = true;
+	}
+	else if (mappa_.controlloCollisioneSuperficie(bordo[1].position)) {
+		collisione_superficie = true;
+	}
+
+	if (collisione_superficie) {
+		float deg_angolo = nave_.getRotation();
+		float angolo = nave_.getRotation() * PI / 180;
+		float s_x = cos(angolo);
+		float s_y = sin(angolo);
+
+		float new_angolo = acos(s_x * -1) * 180 / PI;
+
+		if (s_y < 0) {
+			new_angolo = 270 - (new_angolo - 90);
+		}
+
+		nave_.setRotation(new_angolo);
 	}
 }
 
 void Gioco::controlloCollisioneProiettili()
 {
+	nave_.controlloProiettili(mappa_.getProiettili());
 }
 
 void Gioco::update()
@@ -215,9 +270,10 @@ void Gioco::update()
 	}
 	else if (stato_ = PIANETA) {
 		controlloUscitaPianeta();
+		controlloPassaggioSuperficie();
 		controlloCollisioneSuperficie();
-		controlloCollisioneProiettili();
 	}
+	//controlloCollisioneProiettili();
 	movimentoNavicella();
 }
 
@@ -231,10 +287,11 @@ void Gioco::render()
 
 Gioco::Gioco() : 
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
-	, nave_(100, "Texture/ship3.png", LARGHEZZA/2, ALTEZZA/2, 35, 35, 0, 0.5, 0.3, 10)
+	, nave_(LARGHEZZA, ALTEZZA, 100, "Texture/ship3.png", sf::Vector2f(40, 40), sf::Vector2f(40, 40), 0, 450, 1.2f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
 {
+	time_frame_ = sf::seconds(1.f / 240.f);
 	nave_movimento = false;
 	nave_rotazioneL = false;
 	nave_rotazioneR = false;
@@ -252,9 +309,19 @@ Gioco::Gioco() :
 
 void Gioco::avviaGioco()
 {
+	sf::Clock refresh_;
+	sf::Time timeSinceLastUpdate = sf::Time::Zero;
+
 	while (window_.isOpen()) {
-		processaEventi();
-		update();
-		render();
+			processaEventi();
+
+			timeSinceLastUpdate += refresh_.restart();
+			if (timeSinceLastUpdate > time_frame_) {
+				timeSinceLastUpdate -= time_frame_;
+				processaEventi();
+				update();
+			}
+			
+			render();
 	}
 }

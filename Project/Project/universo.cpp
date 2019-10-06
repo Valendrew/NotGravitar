@@ -163,12 +163,24 @@ bool Universo::distrutto() {
 	}
 	return ritorno;
 }
-bool Universo::controlloCollisioneSuperficie(sf::VertexArray Bordo) {
+int Universo::controlloPassaggioSuperficie(sf::Vector2f pos)
+{
+	int direzione = -1;
+	if (pianetaAttuale != nullptr) {
+		direzione = (*pianetaAttuale->pianeta_).controlloPassaggioSuperficie(pos);
+	}
+	return direzione;
+}
+bool Universo::controlloCollisioneSuperficie(sf::Vector2f pos) {
 	bool ritorno = false;
 	if (pianetaAttuale != nullptr) {
-		ritorno = (*pianetaAttuale->pianeta_).controlloCollisioneSuperficie(Bordo);
+		ritorno = (*pianetaAttuale->pianeta_).controlloCollisioneSuperficie(pos);
 	}
 	return ritorno;
+}
+proiettile_ptr Universo::getProiettili()
+{
+	return (*pianetaAttuale->pianeta_).getProiettili();
 }
 void Universo::uscitaPianeta() {
 	pianetaAttuale = nullptr;
