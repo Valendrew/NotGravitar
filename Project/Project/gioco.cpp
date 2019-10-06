@@ -67,16 +67,108 @@ void Gioco::processaEventi()
 		case sf::Event::Closed: window_.close();
 			break;
 		case sf::Event::KeyPressed: {
-			gestisciMovimentoNave(event.key.code, true);
+			//L'if serve a non far spostare la navicella se si preme un pulsante di movimento mentre si è nel menù di pausa
+			if(!schermata_scritte) 
+				gestisciMovimentoNave(event.key.code, true);
 		}
 			break;
 		case sf::Event::KeyReleased:
-			gestisciMovimentoNave(event.key.code, false);
+			if (!schermata_scritte)
+				gestisciMovimentoNave(event.key.code, false);
+			break;
+
+		case sf::Event::MouseMoved: {
+
+			sf::Vector2i v;
+			v.x = sf::Mouse::getPosition(window_).x;
+			v.y = sf::Mouse::getPosition(window_).y;
+			gestisciMouse(v);
+		}
+			break;
+		case sf::Event::MouseButtonPressed: {
+
+			mouseClick(sf::Mouse::Button::Left);
+		}
 			break;
 		}
+
+	
 	}
 }
 
+void Gioco::mouseClick(sf::Mouse::Button b) {
+	
+	sf::Vector2i v;
+	v.x = sf::Mouse::getPosition(window_).x;
+	v.y = sf::Mouse::getPosition(window_).y;
+	int gestioneMouse = gestisciMouse(v);
+	if (b == sf::Mouse::Button::Left && gestioneMouse == 1) {
+		window_.close();
+		schermata_scritte = false;
+	}
+	else if (b == sf::Mouse::Button::Left && gestioneMouse == 0) {
+
+		std::string app = start_.getString();
+		//compare torna 0 se le due stringhe sono uguali
+		if (!app.compare("RESTART")) {
+			restart_ = true;
+			window_.close();
+		}
+		else if (!app.compare("START")) {
+			stato_ = UNIVERSO;
+		}
+		else if (!app.compare("RESUME")) {
+			stato_ = salva_stato;
+		}
+		schermata_scritte = false;
+	}
+	else if (gestioneMouse == 2) { 
+		stato_ = PAUSA;
+	}
+	
+	
+}
+int Gioco::gestisciMouse(sf::Vector2i v) {
+
+	int pulsantePremuto = -1;
+
+	/*Grazie a questo booleano posso verificare che l'astronave non stia compiando azioni. Senza di esso se tengo premuto un pulsante di movimento
+	mentre premo pausa, l'astronave continuerà comunque a muoversi*/
+	bool nave_ferma = !(nave_movimento || nave_rotazioneL || nave_rotazioneR || nave_spara);
+
+	if (schermata_scritte) {
+		float start_x = start_.getPosition().x;
+		float start_y = start_.getPosition().y;
+		float exit_x = exit_.getPosition().x;
+		float exit_y = exit_.getPosition().y;
+		if (v.x >= start_x && v.x <= start_x + start_.getGlobalBounds().width && v.y >= start_y && v.y <= start_y + start_.getGlobalBounds().height) {
+			start_.setCharacterSize(60);
+			pulsantePremuto = 0;
+		}
+		else {
+			start_.setCharacterSize(55);
+			if (v.x >= exit_x && v.x <= exit_x + exit_.getGlobalBounds().width && v.y >= exit_y && v.y <= exit_y + exit_.getGlobalBounds().height) {
+				exit_.setCharacterSize(60);
+				pulsantePremuto = 1;
+			}
+			else exit_.setCharacterSize(55);
+		}
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+		exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
+	}
+	else {
+		float pausa_x = pausa_.getPosition().x;
+		float pausa_y = pausa_.getPosition().y;
+		if (v.x >= pausa_x && v.x <= pausa_x + pausa_.getSize().x && v.y >= pausa_y && v.y <= pausa_y + pausa_.getSize().y && nave_ferma) {
+			pulsantePremuto = 2;
+			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 255));
+		}
+		else 
+			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 160));
+	}
+	return pulsantePremuto;
+	 
+}
 void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 {
 	if (key == sf::Keyboard::W) {
@@ -268,21 +360,52 @@ void Gioco::update()
 		controlloPassaggioUniverso();
 		controlloPassaggioPianeta();
 	}
-	else if (stato_ = PIANETA) {
+	else if (stato_ == PIANETA) {
 		controlloUscitaPianeta();
 		controlloPassaggioSuperficie();
 		controlloCollisioneSuperficie();
 	}
-	//controlloCollisioneProiettili();
+	else if (stato_ == GAMEOVER) {
+		schermata_scritte = true;
+		start_.setString("RESTART");
+		subtitle_.setString("GAME OVER");
+		subtitle_.setPosition(LARGHEZZA / 2 - subtitle_.getGlobalBounds().width / 2, 140);
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+	}
+	else if (stato_ == PAUSA) {
+		schermata_scritte = true;
+		start_.setString("RESUME");
+		subtitle_.setString("");
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+	}
+	else if (stato_ == START) {
+		schermata_scritte = true;
+		start_.setString("START");
+		subtitle_.setString("");
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+	}
 	movimentoNavicella();
 }
 
 void Gioco::render()
 {
 	window_.clear(sf::Color::Black);
-	window_.draw(mappa_);
-	window_.draw(nave_);
+	if (!schermata_scritte) {
+		window_.draw(mappa_);
+		window_.draw(nave_);
+		window_.draw(pausa_);
+	}
+	else {
+		window_.draw(titolo_);
+		window_.draw(start_);
+		window_.draw(exit_);
+		window_.draw(subtitle_);
+	}
 	window_.display();
+}
+
+bool Gioco::restart() {
+	return restart_;
 }
 
 Gioco::Gioco() : 
@@ -291,6 +414,50 @@ Gioco::Gioco() :
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
 {
+	pausa_.setSize(sf::Vector2f(61.8, 64.0));
+	texture_.loadFromFile("Texture/pausa2.png");
+	texture_.setSmooth(true);
+	pausa_.setFillColor(sf::Color::Color(255,255,255,160));
+	pausa_.setTexture(&texture_);
+	
+	pausa_.setPosition(LARGHEZZA - pausa_.getSize().x, 0);
+
+	font_.loadFromFile("Font/edunline.ttf");
+	exit_.setFont(font_);
+	start_.setFont(font_);
+	titolo_.setFont(font_);
+	subtitle_.setFont(font_);
+
+	titolo_.setString("NON GRAVITAR");
+	exit_.setString("EXIT");
+
+
+	titolo_.setFillColor(sf::Color::Red);
+	titolo_.setStyle(sf::Text::Bold);
+	titolo_.setCharacterSize(120);
+	titolo_.setOutlineThickness(4);
+	titolo_.setLetterSpacing(1.5);
+	titolo_.setPosition(LARGHEZZA / 2 - titolo_.getGlobalBounds().width/2, 10);
+	titolo_.setOutlineColor(sf::Color::Yellow);
+
+	subtitle_.setFillColor(sf::Color::Red);
+	subtitle_.setCharacterSize(60);
+	subtitle_.setLetterSpacing(1.5);
+
+	start_.setFillColor(sf::Color::Green);
+	start_.setCharacterSize(55);
+	start_.setLetterSpacing(1.5); 
+	
+
+	exit_.setFillColor(sf::Color::Magenta);
+	exit_.setCharacterSize(55);
+	exit_.setLetterSpacing(1.5);
+	exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
+	
+	
+	
+	restart_ = false;
+	schermata_scritte = false; //usato nella class render
 	time_frame_ = sf::seconds(1.f / 240.f);
 	nave_movimento = false;
 	nave_rotazioneL = false;
@@ -299,7 +466,7 @@ Gioco::Gioco() :
 	collisione_nave = false;
 	posizione_entrata_pianeta_ = sf::Vector2f(0, 0);
 
-	stato_ = UNIVERSO;
+	stato_ = START;
 
 	eventi_H = nullptr;
 	eventi_T = nullptr;
