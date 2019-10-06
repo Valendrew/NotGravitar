@@ -229,7 +229,7 @@ void Gioco::controlloPassaggioPianeta()
 	if (!check) check = mappa_.ricercaPianeta(punti[1].position.x, punti[1].position.y);
 
 	if (check) {
-		stato_ = GAMEOVER;
+		stato_ = PIANETA;
 		posizione_entrata_pianeta_ = sf::Vector2f(punti[0].position.x - 50, punti[0].position.y - 50);
 	}
 }
