@@ -147,8 +147,17 @@ bool Mappa::spostamento(int direzione) {
 bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
 	return (posizioneAttuale->u)->pianetaAttualeRicerca(x_astronave, y_astronave);
 }
+
 Universo Mappa::getUniversoDiGioco() {
 	return *(universoDiGioco->u);
+}
+
+coordinate Mappa::getPosizioneDiGioco() {
+	return universoDiGioco->c;
+}
+
+coordinate Mappa::getPosizioneAttuale() {
+	return (posizioneAttuale->c);
 }
 void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {

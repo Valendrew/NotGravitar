@@ -32,6 +32,8 @@ private:
 	bool debug;
 	bool collisione_nave;
 	bool restart_;
+	bool nuovo_universo;
+
 	int punteggio_;
 	sf::Vector2f posizione_entrata_pianeta_;
 

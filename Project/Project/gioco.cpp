@@ -229,6 +229,12 @@ void Gioco::controlloPassaggioUniverso()
 
 	if (direzione != -1) {
 		if (mappa_.spostamento(direzione)) {
+
+			//se sposto mi sposto in un altro sistema solare ed è nuovo (non ci sono mai stato) allora setto nuovo_universo a true cosi da aggiornare
+			//correttamente il punteggio quando lo avro distrutto
+			if (mappa_.getPosizioneAttuale().x == mappa_.getPosizioneDiGioco().x && mappa_.getPosizioneAttuale().y == mappa_.getPosizioneDiGioco().y)
+				nuovo_universo = true;
+
 			switch (direzione)
 			{
 			case 0: nave_.setPosizione(sf::Vector2f(nave_.getPosizione().x, ALTEZZA - nave_.getDimensione().y));
@@ -303,8 +309,9 @@ void Gioco::controlloDistruzioneBunker() {
 	//quando un singolo bunker verra distrutto +10 punti, quando distruggo l'ultimo bunker +50 punti
 }
 void Gioco::controlloDistruzioneSistemaSolare() {
-	if (mappa_.getUniversoDiGioco().distrutto()) {
+	if (mappa_.getUniversoDiGioco().distrutto() && nuovo_universo) {
 		punteggio_ += 100;
+		nuovo_universo = false;
 	}
 }
 
@@ -327,6 +334,7 @@ void Gioco::update()
 		subtitle_.setString("GAME OVER");
 		subtitle_.setPosition(LARGHEZZA / 2 - subtitle_.getGlobalBounds().width / 2, 140);
 		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+		punteggio_text.setPosition(LARGHEZZA / 2 - punteggio_text.getGlobalBounds().width / 2, 210);
 	}
 	else if (stato_ == PAUSA) {
 		schermata_scritte = true;
@@ -350,7 +358,6 @@ void Gioco::render()
 		window_.draw(mappa_);
 		window_.draw(nave_);
 		window_.draw(pausa_);
-
 		aggiornaPunteggio();
 		window_.draw(punteggio_text);
 	}
@@ -359,7 +366,10 @@ void Gioco::render()
 		window_.draw(start_);
 		window_.draw(exit_);
 		window_.draw(subtitle_);
+		if (stato_ == GAMEOVER)
+			window_.draw(punteggio_text);
 	}
+	
 	window_.display();
 }
 
@@ -430,7 +440,7 @@ Gioco::Gioco() :
 	exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
 	
 	
-	
+	nuovo_universo = true;
 	restart_ = false;
 	schermata_scritte = false; //usato nella class render
 	nave_movimento = false;

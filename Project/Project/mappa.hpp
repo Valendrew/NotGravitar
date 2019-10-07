@@ -36,6 +36,8 @@ public:
 	bool spostamento(int i);
 	bool ricercaPianeta(int x_astronave, int y_astronave);
 	Universo getUniversoDiGioco();
+	coordinate getPosizioneAttuale();
+	coordinate getPosizioneDiGioco();
 };
 
 #endif
