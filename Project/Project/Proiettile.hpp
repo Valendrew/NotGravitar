@@ -18,7 +18,7 @@ public:
 	void setVelocita(float velocita_);
 	float getVelocita();
 	void muovi();
-	sf::FloatRect getBordi();
+	sf::FloatRect getGlobalBounds();
 };
 
 #endif

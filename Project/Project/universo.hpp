@@ -50,7 +50,9 @@ public:
 	bool pianetaAttualeRicerca(int x_astronave, int y_astronave);
 	bool getVisitato();
 	bool distrutto();
-	bool controlloCollisioneSuperficie(sf::VertexArray bordo);
+	int controlloPassaggioSuperficie(sf::Vector2f pos);
+	bool controlloCollisioneSuperficie(sf::Vector2f pos);
+	proiettile_ptr getProiettili();
 	void uscitaPianeta();
 };
 #endif // !UNIVERSO_H

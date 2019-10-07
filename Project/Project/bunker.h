@@ -6,9 +6,13 @@
 #include <SFML/Graphics.hpp>
 
 class Bunker : public Comportamento {
-private: 
+private:
+	float angolo_sparo;
+	bool distrutto = false;
 public: 
-	Bunker(float vita, const char nomeFile[], float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione);
+	void spara();
+	proiettile_ptr getProiettili();
+	Bunker(unsigned int width, unsigned int height, float vita, const char nomeFile[], sf::Vector2f pos, sf::Vector2f size, float angolo_rotazione);
 	Bunker();
 };
 #endif // !BUNKER_H

@@ -7,7 +7,7 @@
 // Pi greco
 const double PI = 3.14159265;
 // numero di linee
-const int NUMERO_DI_LINEE = 16;
+const int NUMERO_DI_LINEE = 20;
 
 class SuperficiePianeta : public sf::Drawable {
 private:	
@@ -16,9 +16,10 @@ private:
 	int altezza_finestra_;
 
 	int altezza_massima_; // altezza massima di generazione della superficie
-	sf::VertexArray linee_;
+
+	sf::VertexArray vertici_superficie_;
 	sf::ConvexShape superficie_[NUMERO_DI_LINEE];
-	void generaVertici();
+	void generaVertici(sf::Vector2f first_point, sf::Vector2f last_point);
 	void generaSuperficie();
 
 	// lista dei Bunker presenti nel pianeta
@@ -34,12 +35,16 @@ private:
 	void generaBunker();
 	bool controllaBunkerVicinanze(int posizione);
 	void aggiungiBunker(int index);
-	void inserisciNodoBunker(float puntiMedi[], float angolo, int grandezza);
+	void inserisciNodoBunker(sf::Vector2f coordinate, float angolo, sf::Vector2f grandezza);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
+	SuperficiePianeta(unsigned int width, unsigned height, sf::Vector2f first_point, sf::Vector2f last_point);
 	SuperficiePianeta(unsigned int width, unsigned int height);
 	SuperficiePianeta();
-	bool controlloCollisioneSuperficie(sf::VertexArray bordo);
+	sf::Vector2f getLastVertex();
+	sf::Vector2f getFirstVertex();
+	proiettile_ptr getProiettili();
+	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 };
 #endif // !SUPERFICIE_PIANETA_H

@@ -1,8 +1,12 @@
 #include "gioco.hpp"
 
 int main() {
-	Gioco g;
-	g.avviaGioco();
-	
+
+	bool restart = false;
+	do{   
+		Gioco g;
+		g.avviaGioco();
+		restart = g.restart();
+	} while (restart);
 	return 0;
 }
