@@ -159,7 +159,7 @@ bool Universo::distrutto() {
 	bool ritorno = true;
 	listaPianeti app = lista_Pianeti;
 	while (app!=nullptr && ritorno){
-		if (!((*app->pianeta_).getDistrutto())) ritorno = false;
+		if (!((*app->pianeta_).distrutto())) ritorno = false;
 	}
 	return ritorno;
 }

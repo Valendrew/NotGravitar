@@ -1,6 +1,7 @@
 #include "pianeta.h"
 
 Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigned int height) {
+	bunker_precedenti = 0;
 	id_ = id;
 	shape_.setRadius(25.0);
 	shape_.setPointCount(100);
@@ -16,7 +17,6 @@ Pianeta::Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigne
 	generaSuperficie();
 
 	superficie_attuale_ = superficie_tail;
-	distrutto_ = false;
 }
 
 int Pianeta::getRaggio() {
@@ -32,9 +32,22 @@ void Pianeta::cambiaColore() {
 	shape_.setFillColor(sf::Color(255, 0, 0, shape_.getFillColor().a - 25));
 }
 
-bool Pianeta::getDistrutto() {
-	return distrutto_;
+bool Pianeta::distrutto() {
+	return bunker_rimanenti() == 0;
 }
+
+bool Pianeta::distruzioneSingoloBunker()
+{
+	bool ritorno = false;
+	//il controllo != 0 è presente poiche se il numero di bunker rimanenti è 0 siamo nel caso in cui l'intero pianeta è distrutto
+	if (bunker_rimanenti() != 0 && bunker_rimanenti() < bunker_precedenti) {
+		ritorno = true;
+		bunker_precedenti--;
+	}
+	return ritorno;
+}
+
+
 
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f pos)
 {
@@ -129,9 +142,21 @@ void Pianeta::generaSuperficie()
 
 			superficie_head = tmp_sup;
 		}
-
+		//all'inizio bunker_precedenti conterra il valore dei bunker totali
+		bunker_precedenti += (*superficie_head->superficie_item).getNumeroBunker();
 		superfici_generate++;
 	}
+}
+
+int Pianeta::bunker_rimanenti() {
+	int ritorno = 0;
+	superficie_ptr app = superficie_head;
+	while (app != nullptr)
+	{
+		ritorno += (*app->superficie_item).getNumeroBunker();
+		app = app->next;
+	}
+	return ritorno;
 }
 
 void Pianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const

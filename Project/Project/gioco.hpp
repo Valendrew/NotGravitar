@@ -80,9 +80,8 @@ protected:
 	void render();
 	int gestisciMouse(sf::Vector2i v);
 	void mouseClick(sf::Mouse::Button b);
-	void controlloDistruzioneBunker();
-	void controlloDistruzioneSistemaSolare();
 	void aggiornaPunteggio();
+	void controlloAggiornamentoPunteggio();
 public:
 	Gioco();
 	void avviaGioco();

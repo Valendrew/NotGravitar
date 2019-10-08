@@ -15,7 +15,6 @@ protected:
 	// larghezza e altezza della finestra
 	int larghezza_finestra_;
 	int altezza_finestra_;
-
 	int altezza_massima_; // altezza massima di generazione della superficie
 
 	sf::VertexArray vertici_superficie_;
@@ -49,6 +48,7 @@ protected:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
+	
 	SuperficiePianeta(unsigned int width, unsigned height, sf::Vector2f first_point, sf::Vector2f last_point);
 	SuperficiePianeta(unsigned int width, unsigned int height);
 	SuperficiePianeta();
@@ -57,5 +57,6 @@ public:
 	proiettile_ptr getProiettili();
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	void controlloProiettili(proiettile_ptr lista_proiettili);
+	int getNumeroBunker();
 };
 #endif // !SUPERFICIE_PIANETA_H

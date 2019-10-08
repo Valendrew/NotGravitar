@@ -75,8 +75,8 @@ void SuperficiePianeta::generaBunker()
 {
 	// Il numero di bunker sarà compreso tra 2 e 3
 	int numero_di_bunker = (rand() % 2) + 2;
+	
 	int bunker_stronger = 1;
-
 	/* Inizialmente viene scelta casualmente la posizione del bunker
 	tra le linee 0 e (MAX - 1), dopo di che, se nella posizione non è presente
 	nessun bunker (controllando il vettore di booleani), il bunker verrà generato
@@ -220,6 +220,24 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	}
 }
 
+int SuperficiePianeta::getNumeroBunker()
+{
+	int ritorno;
+	bunker_ptr app = bunker_;
+	bunker_stronger_ptr app2 = bunker_stronger_;
+	while (app!=nullptr)
+	{
+		ritorno++;
+		app = app->next;
+	}
+	while (app2 != nullptr)
+	{
+		ritorno++;
+		app2 = app2->next;
+	}
+	return ritorno;
+}
+
 SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned height, sf::Vector2f first_point, sf::Vector2f last_point)
 {
 	larghezza_finestra_ = width;
@@ -245,6 +263,8 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned height, sf::Ve
 	viene impostato tutto a false */
 	for (int i = 0; i < NUMERO_DI_LINEE; i++) bunker_presenti_[i] = false;
 	bunker_ = nullptr;
+
+	numero_bunker = 0;
 	/* Metodo per generare i Bunker presenti sulla superficie */
 	generaBunker();
 }

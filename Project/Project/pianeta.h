@@ -24,16 +24,18 @@ protected:
 	superficie_ptr superficie_tail;
 	superficie_ptr superficie_attuale_;
 	int numero_superfici_;
+	int bunker_precedenti;
 
-	bool distrutto_;
 	void generaSuperficie();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	int bunker_rimanenti();
 public: 
 	Pianeta(int id, float cord_x, float cord_y, unsigned int width, unsigned int height);
 	int getRaggio();
 	sf::Vector2f getPosizione();
 	void cambiaColore();
-	bool getDistrutto();
+	bool distrutto();
+	bool distruzioneSingoloBunker();
 	int controlloPassaggioSuperficie(sf::Vector2f pos);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	proiettile_ptr getProiettili();

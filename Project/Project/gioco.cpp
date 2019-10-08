@@ -128,6 +128,7 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 	
 	
 }
+
 int Gioco::gestisciMouse(sf::Vector2i posizioneMouse) {
 
 	int pulsantePremuto = -1;
@@ -185,7 +186,7 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 
 void Gioco::movimentoNavicella()
 {
-	if (nave_movimento && !collisione_nave) {
+	if (nave_movimento) {
 		nave_.muovi(time_frame_);
 	}
 	if (nave_rotazioneL) {
@@ -356,32 +357,37 @@ void Gioco::controlloCollisioneProiettili()
 	mappa_.controlloProiettili(nave_.getProiettili());
 }
 
-void Gioco::controlloDistruzioneBunker() {
-	//quando un singolo bunker verra distrutto +10 punti, quando distruggo l'ultimo bunker +50 punti
-}
+void Gioco::controlloAggiornamentoPunteggio() {
 
-void Gioco::controlloDistruzioneSistemaSolare() {
+	listaPianeti p_attuale = mappa_.getUniversoDiGioco().getPianetaAttuale();
+
 	if (mappa_.getUniversoDiGioco().distrutto() && nuovo_universo) {
 		punteggio_ += 100;
 		nuovo_universo = false;
 	}
+	else if ((*p_attuale->pianeta_).distrutto()) {
+		punteggio_ += 50;
+	}
+	else if ((*p_attuale->pianeta_).distruzioneSingoloBunker()) {
+		punteggio_ += 10;
+	}
+	
+
 }
 
 void Gioco::update()
 {
 	if (stato_ == UNIVERSO) {
-		controlloDistruzioneSistemaSolare();
 		controlloPassaggioUniverso();
 		controlloPassaggioPianeta();
 		movimentoNavicella();
 	}
 	else if (stato_ == PIANETA) {
+		controlloAggiornamentoPunteggio();
 		controlloUscitaPianeta();
 		controlloPassaggioSuperficie();
 		controlloCollisioneSuperficie();
-
 		controlloCollisioneProiettili();
-		controlloDistruzioneBunker();
 		movimentoNavicella();
 	}
 	else if (stato_ == GAMEOVER) {
@@ -475,8 +481,8 @@ Gioco::Gioco() :
 	collisione_nave = false;
 	posizione_entrata_pianeta_ = sf::Vector2f(0, 0);
 
-	//stato_ = START;
-	stato_ = UNIVERSO;
+	stato_ = START;
+	//stato_ = UNIVERSO;
 
 	eventi_H = nullptr;
 	eventi_T = nullptr;
