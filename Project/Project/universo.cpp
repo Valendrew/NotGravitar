@@ -180,10 +180,19 @@ bool Universo::controlloCollisioneSuperficie(sf::Vector2f pos) {
 }
 proiettile_ptr Universo::getProiettili()
 {
-	return (*pianetaAttuale->pianeta_).getProiettili();
+	if (pianetaAttuale != nullptr) {
+		return (*pianetaAttuale->pianeta_).getProiettili();
+	}
+	else return nullptr;
 }
 void Universo::uscitaPianeta() {
 	pianetaAttuale = nullptr;
+}
+void Universo::controlloProiettili(proiettile_ptr lista_proiettili)
+{
+	if (pianetaAttuale != nullptr) {
+		(*pianetaAttuale->pianeta_).controlloProiettili(lista_proiettili);
+	}
 }
 bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
 	listaPianeti app = lista_Pianeti;

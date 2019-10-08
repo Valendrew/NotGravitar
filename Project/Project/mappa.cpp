@@ -15,7 +15,7 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	height = height_;
 
 	entita_.setSize(sf::Vector2f(width_, height_));
-	texture_.loadFromFile("Texture/universo.jpg"); // texture dell'oggetto
+	texture_.loadFromFile("Texture/universo.png"); // texture dell'oggetto
 	entita_.setTexture(&texture_);
 	srand(time(0));
 	/*list_universi = new nodoMappa;
@@ -159,11 +159,16 @@ bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
 
 proiettile_ptr Mappa::getProiettili()
 {
-	return (posizioneAttuale->u)->getProiettili();
+	return (*posizioneAttuale->u).getProiettili();
+}
+
+void Mappa::controlloProiettili(proiettile_ptr lista_proiettili)
+{
+	(*posizioneAttuale->u).controlloProiettili(lista_proiettili);
 }
 
 void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(entita_);
-	target.draw(*posizioneAttuale->u);
+	target.draw((*posizioneAttuale->u));
 }

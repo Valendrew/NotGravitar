@@ -5,7 +5,7 @@
 #include "proiettile.hpp"
 
 class Nave : public Comportamento {
-private:
+protected:
 	//proiettiliP proiettilil;
 	int carburante_;
 	float velocita_movimento_;
@@ -24,6 +24,7 @@ public:
 	void muovi(sf::Time deltaTime);
 	sf::Vector2f getPosition();
 	void setPosition(sf::Vector2f pos);
+	proiettile_ptr getProiettili();
 };
 
 #endif

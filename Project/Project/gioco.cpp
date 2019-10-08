@@ -63,18 +63,16 @@ void Gioco::processaEventi()
 {
 	sf::Event event;
 	while (window_.pollEvent(event)) {
+
 		switch (event.type) {
 		case sf::Event::Closed: window_.close();
 			break;
 		case sf::Event::KeyPressed: {
-			//L'if serve a non far spostare la navicella se si preme un pulsante di movimento mentre si è nel menù di pausa
-			if(!schermata_scritte) 
-				gestisciMovimentoNave(event.key.code, true);
+			gestisciMovimentoNave(event.key.code, true);
 		}
 			break;
 		case sf::Event::KeyReleased:
-			if (!schermata_scritte)
-				gestisciMovimentoNave(event.key.code, false);
+			gestisciMovimentoNave(event.key.code, false);
 			break;
 
 		case sf::Event::MouseMoved: {
@@ -85,14 +83,10 @@ void Gioco::processaEventi()
 			gestisciMouse(v);
 		}
 			break;
-		case sf::Event::MouseButtonPressed: {
-
+		case sf::Event::MouseButtonPressed:
 			mouseClick(sf::Mouse::Button::Left);
-		}
 			break;
 		}
-
-	
 	}
 }
 
@@ -128,6 +122,7 @@ void Gioco::mouseClick(sf::Mouse::Button b) {
 	
 	
 }
+
 int Gioco::gestisciMouse(sf::Vector2i v) {
 
 	int pulsantePremuto = -1;
@@ -169,6 +164,7 @@ int Gioco::gestisciMouse(sf::Vector2i v) {
 	return pulsantePremuto;
 	 
 }
+
 void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 {
 	if (key == sf::Keyboard::W) {
@@ -209,7 +205,6 @@ void Gioco::movimentoNavicella()
 
 void Gioco::controlloPassaggioUniverso()
 {
-	bool print = clock_.getElapsedTime().asMilliseconds() >= 2000;
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
 	int direzione = -1;
@@ -256,7 +251,6 @@ void Gioco::controlloPassaggioUniverso()
 				}
 				
 			}
-
 			nave_.setRotation(new_angolo);
 		}
 	}
@@ -284,10 +278,12 @@ void Gioco::controlloUscitaPianeta()
 
 	int direzione = -1;
 	bool cambia_stato = false;
+
 	for (int i = 0; i < punti.getVertexCount(); i++)
 	{
 		if (punti[i].position.y <= 0) cambia_stato = true;
 	}
+
 	if (cambia_stato) {
 		stato_ = UNIVERSO;
 
@@ -304,7 +300,6 @@ void Gioco::controlloPassaggioSuperficie()
 	sf::VertexArray bordo = nave_.getPosizioneFrontale();
 
 	int i = 0;
-
 	while (i < bordo.getVertexCount() && direzione == -1)
 	{
 		direzione = mappa_.controlloPassaggioSuperficie(bordo[i].position);
@@ -352,6 +347,8 @@ void Gioco::controlloCollisioneSuperficie()
 void Gioco::controlloCollisioneProiettili()
 {
 	nave_.controlloProiettili(mappa_.getProiettili());
+
+	mappa_.controlloProiettili(nave_.getProiettili());
 }
 
 void Gioco::update()
@@ -359,11 +356,15 @@ void Gioco::update()
 	if (stato_ == UNIVERSO) {
 		controlloPassaggioUniverso();
 		controlloPassaggioPianeta();
+		movimentoNavicella();
 	}
 	else if (stato_ == PIANETA) {
 		controlloUscitaPianeta();
 		controlloPassaggioSuperficie();
 		controlloCollisioneSuperficie();
+
+		controlloCollisioneProiettili();
+		movimentoNavicella();
 	}
 	else if (stato_ == GAMEOVER) {
 		schermata_scritte = true;
@@ -384,16 +385,15 @@ void Gioco::update()
 		subtitle_.setString("");
 		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
 	}
-	movimentoNavicella();
 }
 
 void Gioco::render()
 {
 	window_.clear(sf::Color::Black);
-	if (!schermata_scritte) {
+	if (stato_ == PIANETA || stato_ == UNIVERSO) {
 		window_.draw(mappa_);
 		window_.draw(nave_);
-		window_.draw(pausa_);
+		//window_.draw(pausa_);
 	}
 	else {
 		window_.draw(titolo_);
@@ -401,6 +401,7 @@ void Gioco::render()
 		window_.draw(exit_);
 		window_.draw(subtitle_);
 	}
+
 	window_.display();
 }
 
@@ -410,7 +411,7 @@ bool Gioco::restart() {
 
 Gioco::Gioco() : 
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
-	, nave_(LARGHEZZA, ALTEZZA, 100, "Texture/ship3.png", sf::Vector2f(40, 40), sf::Vector2f(40, 40), 0, 450, 1.2f, 10)
+	, nave_(LARGHEZZA, ALTEZZA, 100, "Texture/ship3.png", sf::Vector2f(40, 40), sf::Vector2f(40, 40), 0, 220, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
 {
@@ -431,7 +432,6 @@ Gioco::Gioco() :
 	titolo_.setString("NON GRAVITAR");
 	exit_.setString("EXIT");
 
-
 	titolo_.setFillColor(sf::Color::Red);
 	titolo_.setStyle(sf::Text::Bold);
 	titolo_.setCharacterSize(120);
@@ -447,18 +447,16 @@ Gioco::Gioco() :
 	start_.setFillColor(sf::Color::Green);
 	start_.setCharacterSize(55);
 	start_.setLetterSpacing(1.5); 
-	
 
 	exit_.setFillColor(sf::Color::Magenta);
 	exit_.setCharacterSize(55);
 	exit_.setLetterSpacing(1.5);
 	exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
-	
-	
-	
+
 	restart_ = false;
 	schermata_scritte = false; //usato nella class render
-	time_frame_ = sf::seconds(1.f / 240.f);
+
+	time_frame_ = sf::seconds(1.f / 144.f);
 	nave_movimento = false;
 	nave_rotazioneL = false;
 	nave_rotazioneR = false;
@@ -466,7 +464,8 @@ Gioco::Gioco() :
 	collisione_nave = false;
 	posizione_entrata_pianeta_ = sf::Vector2f(0, 0);
 
-	stato_ = START;
+	//stato_ = START;
+	stato_ = UNIVERSO;
 
 	eventi_H = nullptr;
 	eventi_T = nullptr;
@@ -485,7 +484,7 @@ void Gioco::avviaGioco()
 			timeSinceLastUpdate += refresh_.restart();
 			if (timeSinceLastUpdate > time_frame_) {
 				timeSinceLastUpdate -= time_frame_;
-				processaEventi();
+				//processaEventi();
 				update();
 			}
 			

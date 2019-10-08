@@ -16,6 +16,7 @@ protected:
 	float vita_;
 	unsigned int larghezza_finestra;
 	unsigned int altezza_finestra;
+	char nomeFile_[50];
 
 	sf::RectangleShape entita_;
 	sf::Texture texture_;
@@ -31,7 +32,7 @@ public:
 	sf::Vector2f getDimensione();
 	float getRotation();
 	void setRotation(float rot);
-	sf::FloatRect getBordi();
+	sf::FloatRect getGlobalBounds();
 	void spara(float angolo);
 	void controlloProiettili(proiettile_ptr lista_proiettili);
 	void eliminaProiettile(proiettile_ptr p);

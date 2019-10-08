@@ -19,6 +19,7 @@ public:
 	float getVelocita();
 	void muovi();
 	sf::FloatRect getGlobalBounds();
+	void setColor(sf::Color color);
 };
 
 #endif

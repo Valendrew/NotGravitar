@@ -19,7 +19,7 @@ struct coordinate {
 };
 
 class Universo : public sf::Drawable, public sf::Transformable {
-private:
+protected:
 	int width;
 	int height;
 	listaPianeti lista_Pianeti;
@@ -54,5 +54,6 @@ public:
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	proiettile_ptr getProiettili();
 	void uscitaPianeta();
+	void controlloProiettili(proiettile_ptr lista_proiettili);
 };
 #endif // !UNIVERSO_H

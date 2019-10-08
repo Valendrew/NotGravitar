@@ -11,7 +11,7 @@ struct nodoMappa {
 typedef nodoMappa *listaUniversi;
 
 class Mappa : public sf::Drawable, public sf::Transformable  {
-private:
+protected:
 
 	sf::RectangleShape entita_;
 	sf::Texture texture_;
@@ -37,6 +37,7 @@ public:
 	bool spostamento(int i);
 	bool ricercaPianeta(int x_astronave, int y_astronave);
 	proiettile_ptr getProiettili();
+	void controlloProiettili(proiettile_ptr lista_proiettili);
 };
 
 #endif

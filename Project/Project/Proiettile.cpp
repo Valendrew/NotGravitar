@@ -45,3 +45,8 @@ sf::FloatRect Proiettile::getGlobalBounds()
 {
 	return proiettile_.getGlobalBounds();
 }
+
+void Proiettile::setColor(sf::Color color)
+{
+	proiettile_.setFillColor(color);
+}
