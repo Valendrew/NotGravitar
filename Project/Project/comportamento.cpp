@@ -5,26 +5,40 @@ void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) con
 	target.draw(entita_);
 
 	proiettile_ptr p = proiettili_;
-	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili,		forse da spostare in funzione a parte!!
-	{
+	int i = 0;
+	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili, forse da spostare in funzione a parte!!
+	{ 
 		target.draw((*p->proiettile).getProiettile());
 		(*p->proiettile).muovi();
 		p = p->next;
+		//i++;
+		//if (i >= 10 && p != NULL && p->next!=NULL) eliminaProiettile(p);
 	}
 }
 
-Comportamento::Comportamento(float vita, const char nomeFile[], float cord_x, float cord_y, float larghezza_e, float altezza_e, float angolo_rotazione) {
-	entita_.setPosition(cord_x, cord_y); // posizione dell'oggetto
-	entita_.setSize(sf::Vector2f(larghezza_e, altezza_e)); // dimensione dell'oggetto
+Comportamento::Comportamento(unsigned int width, unsigned int height, float vita, const char nomeFile[], sf::Vector2f pos, sf::Vector2f size, float angolo_rotazione) : clock_() {
+	larghezza_finestra = width;
+	altezza_finestra = height;
+
+	entita_.setPosition(pos); // posizione dell'oggetto
+	entita_.setSize(size); // dimensione dell'oggetto
 	entita_.setRotation(angolo_rotazione); // angolo di rotazione dell'oggetto
 	entita_.setFillColor(sf::Color::White); // colore dell'oggetto
-	entita_.setOutlineColor(sf::Color::White);
-	entita_.setOutlineThickness(1);
 
-	texture_.loadFromFile(nomeFile); // texture dell'oggetto
+	//entita_.setOutlineColor(sf::Color::White);
+	//entita_.setOutlineThickness(.5f);
+
+	int i = 0;
+	while (nomeFile[i] != '\0')
+	{
+		nomeFile_[i] = nomeFile[i];
+		i++;
+	}
+
+	texture_.loadFromFile(nomeFile_); // texture dell'oggetto
 	entita_.setTexture(&texture_); // impostata la texture
 }
-Comportamento::Comportamento() : Comportamento(50, "Texture/default.png", 200, 200, 25, 25, 0) {}
+Comportamento::Comportamento() : Comportamento(1280, 720, 50, "Texture/default.png", sf::Vector2f(), sf::Vector2f(), 0) {}
 
 sf::Vector2f Comportamento::getPosizione()
 {
@@ -41,52 +55,43 @@ sf::Vector2f Comportamento::getDimensione()
 	return entita_.getSize();
 }
 
-float Comportamento::getRotazione()
+float Comportamento::getRotation()
 {
 	return entita_.getRotation();
 }
 
-void Comportamento::setRotazione(float rot)
+void Comportamento::setRotation(float rot)
 {
 	entita_.setRotation(rot);
 }
 
-sf::FloatRect Comportamento::getBordi()
+sf::FloatRect Comportamento::getGlobalBounds()
 {
 	return entita_.getGlobalBounds();
 }
 
 void Comportamento::spara(float angolo)
 {
-	proiettile_ptr p = new ProiettileNode;
-	p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .6f); //crea una nuovo proiettile e lo mette in cima alla lista
-	p->next = this->proiettili_;
-	proiettili_ = p;
+	if (clock_.getElapsedTime().asMilliseconds() > 800) {
+		clock_.restart();
+
+		proiettile_ptr p = new ProiettileNode;
+		p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .6f); //crea una nuovo proiettile e lo mette in cima alla lista
+		p->next = proiettili_;
+		proiettili_ = p;
+	}
 }
 
-void Comportamento::controlloProiettili(sf::FloatRect bordi, int LARGHEZZA, int ALTEZZA)
+void Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 {
-	proiettile_ptr list_ptr = proiettili_;
+	while (lista_proiettili != nullptr)
+	{
+		sf::FloatRect rect_proiettile = (*lista_proiettili->proiettile).getGlobalBounds();
 
-	while (list_ptr != nullptr) {
-		if ((*list_ptr->proiettile).getBordi().intersects(bordi)) {
-			eliminaProiettile(list_ptr);
+		if (entita_.getGlobalBounds().intersects(rect_proiettile)) {
+			(*lista_proiettili->proiettile).setColor(sf::Color::Red);
 		}
-		else if ((*list_ptr->proiettile).getBordi().left > LARGHEZZA) {
-			eliminaProiettile(list_ptr);
-		}
-		else if ((*list_ptr->proiettile).getBordi().left < 0) {
-			eliminaProiettile(list_ptr);
-		}
-		else if ((*list_ptr->proiettile).getBordi().top > ALTEZZA) {
-			eliminaProiettile(list_ptr);
-		}
-		else if ((*list_ptr->proiettile).getBordi().top < 0) {
-			eliminaProiettile(list_ptr);
-		}
-		else {
-			list_ptr = list_ptr->next;
-		}
+		lista_proiettili = lista_proiettili->next;
 	}
 }
 
