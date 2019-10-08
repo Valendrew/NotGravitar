@@ -41,7 +41,12 @@ void Proiettile::muovi()
 	proiettile_.move(x, y);
 }
 
-sf::FloatRect Proiettile::getBordi()
+sf::FloatRect Proiettile::getGlobalBounds()
 {
 	return proiettile_.getGlobalBounds();
+}
+
+void Proiettile::setColor(sf::Color color)
+{
+	proiettile_.setFillColor(color);
 }

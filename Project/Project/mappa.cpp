@@ -17,7 +17,7 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	height = height_;
 
 	entita_.setSize(sf::Vector2f(width_, height_));
-	texture_.loadFromFile("Texture/universo.jpg"); // texture dell'oggetto
+	texture_.loadFromFile("Texture/universo.png"); // texture dell'oggetto
 	entita_.setTexture(&texture_);
 	srand(time(0));
 	/*list_universi = new nodoMappa;
@@ -41,6 +41,14 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	(*findUniverso(0, 0)->u).setVisitato();
 	universoDiGioco = list_universi;
 	posizioneAttuale = list_universi;
+}
+int Mappa::controlloPassaggioSuperficie(sf::Vector2f pos)
+{
+	int direzione = -1;
+	if (posizioneAttuale != nullptr) {
+		direzione = (*posizioneAttuale->u).controlloPassaggioSuperficie(pos);
+	}
+	return direzione;
 }
 void Mappa::restart(int width_, int height_) {
 
@@ -71,10 +79,10 @@ listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_unive
 	return list_universi;
 }
 
-bool Mappa::controlloCollisioneSuperficie(sf::VertexArray Bordo) {
+bool Mappa::controlloCollisioneSuperficie(sf::Vector2f pos) {
 	bool ritorno = false;
 	if (posizioneAttuale != nullptr) {
-		ritorno = (*posizioneAttuale->u).controlloCollisioneSuperficie(Bordo);
+		ritorno = (*posizioneAttuale->u).controlloCollisioneSuperficie(pos);
 	}
 	return ritorno;
 }
@@ -170,6 +178,16 @@ bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
 	return (posizioneAttuale->u)->pianetaAttualeRicerca(x_astronave, y_astronave);
 }
 
+proiettile_ptr Mappa::getProiettili()
+{
+	return (*posizioneAttuale->u).getProiettili();
+}
+
+void Mappa::controlloProiettili(proiettile_ptr lista_proiettili)
+{
+	(*posizioneAttuale->u).controlloProiettili(lista_proiettili);
+}
+
 Universo Mappa::getUniversoDiGioco() {
 	return *(universoDiGioco->u);
 }
@@ -185,5 +203,5 @@ coordinate Mappa::getPosizioneAttuale() {
 void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(entita_);
-	target.draw(*posizioneAttuale->u);
+	target.draw((*posizioneAttuale->u));
 }

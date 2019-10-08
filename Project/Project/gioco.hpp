@@ -11,10 +11,11 @@ const int ALTEZZA = 720;
 
 
 class Gioco {
-private: 
+protected: 
 	sf::RectangleShape pausa_;
 	sf::Texture texture_;
 	sf::RenderWindow window_;
+	sf::Time time_frame_;
 	sf::Clock clock_;
 	Testo exit_;
 	Testo start_;
@@ -28,7 +29,6 @@ private:
 	bool nave_rotazioneL;
 	bool nave_rotazioneR;
 	bool nave_spara;
-	bool debug;
 	bool collisione_nave;
 	bool nuovo_universo;
 
@@ -72,8 +72,10 @@ private:
 	void controlloPassaggioUniverso();
 	void controlloPassaggioPianeta();
 	void controlloUscitaPianeta();
+	void controlloPassaggioSuperficie();
 	void controlloCollisioneSuperficie();
 	void controlloCollisioneProiettili();
+	bool debug;
 	void update();
 	void render();
 	int gestisciMouse(sf::Vector2i v);
