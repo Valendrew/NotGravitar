@@ -2,6 +2,8 @@
 
 Mappa::Mappa() : Mappa(1280, 720) {}
 
+
+
 Mappa::Mappa(int width_, int height_) {
 
 	/*
@@ -40,6 +42,23 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	universoDiGioco = list_universi;
 	posizioneAttuale = list_universi;
 }
+void Mappa::restart(int width_, int height_) {
+
+	statoAttacco = true;
+	universoDiGioco = nullptr;
+	posizioneAttuale = nullptr;
+	delete list_universi;
+	list_universi = new nodoMappa;
+	list_universi->c.x = 0;
+	list_universi->c.y = 0;
+	list_universi->u = new Universo(width_, height_);
+	list_universi->next = nullptr;
+
+	//setto a true il "visitato" dell' universo 0,0 dato che è quello di spawn 
+	(*findUniverso(0, 0)->u).setVisitato();
+	universoDiGioco = list_universi;
+	posizioneAttuale = list_universi;
+}
 
 listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_universo_y) {
 	//quando creo un nuovo universo lo aggiungo in testa alla lista cosi da avere l'inserimento in O(1)
@@ -51,6 +70,7 @@ listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_unive
 	list_universi = tmp;
 	return list_universi;
 }
+
 bool Mappa::controlloCollisioneSuperficie(sf::VertexArray Bordo) {
 	bool ritorno = false;
 	if (posizioneAttuale != nullptr) {
@@ -58,9 +78,11 @@ bool Mappa::controlloCollisioneSuperficie(sf::VertexArray Bordo) {
 	}
 	return ritorno;
 }
+
 void Mappa::uscitaPianeta() {
 	(*posizioneAttuale->u).uscitaPianeta();
 }
+
 listaUniversi Mappa::findUniverso(int x, int y) {
 	//Dato che ogni universo è associato ad una coppia di coordinate cosi da distinguelo in modo univoco per sapere se un
 	//universo è gia presente in lista o meno cerco all'interno della lista un universo con le coordinate di interesse
@@ -159,6 +181,7 @@ coordinate Mappa::getPosizioneDiGioco() {
 coordinate Mappa::getPosizioneAttuale() {
 	return (posizioneAttuale->c);
 }
+
 void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(entita_);

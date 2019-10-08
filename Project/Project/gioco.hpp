@@ -4,6 +4,7 @@
 #include <SFML\Graphics.hpp>
 #include "mappa.hpp"
 #include "nave.hpp"
+#include "Testo.h"
 
 const int LARGHEZZA = 1280;
 const int ALTEZZA = 720;
@@ -15,23 +16,20 @@ private:
 	sf::Texture texture_;
 	sf::RenderWindow window_;
 	sf::Clock clock_;
-	sf::Font font_;
-	sf::Text exit_;
-	sf::Text start_;
-	sf::Text titolo_;
-	sf::Text subtitle_;
-	sf::Text punteggio_text;
+	Testo exit_;
+	Testo start_;
+	Testo titolo_;
+	Testo subtitle_;
+	Testo punteggio_text;
 
 	Nave nave_;
 	Mappa mappa_;
-	bool schermata_scritte;
 	bool nave_movimento;
 	bool nave_rotazioneL;
 	bool nave_rotazioneR;
 	bool nave_spara;
 	bool debug;
 	bool collisione_nave;
-	bool restart_;
 	bool nuovo_universo;
 
 	int punteggio_;
@@ -86,6 +84,5 @@ private:
 public:
 	Gioco();
 	void avviaGioco();
-	bool restart();
 };
 #endif // !GIOCO_H

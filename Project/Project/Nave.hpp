@@ -21,6 +21,7 @@ public:
 	void colpito();
 	void fill(int carburante_);
 	void muovi();
+	void restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante);
 };
 
 #endif

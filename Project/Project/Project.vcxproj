@@ -134,6 +134,7 @@
     <ClCompile Include="pianeta.cpp" />
     <ClCompile Include="proiettile.cpp" />
     <ClCompile Include="superficie_pianeta.cpp" />
+    <ClCompile Include="Testo.cpp" />
     <ClCompile Include="universo.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +146,7 @@
     <ClInclude Include="pianeta.h" />
     <ClInclude Include="proiettile.hpp" />
     <ClInclude Include="superficie_pianeta.h" />
+    <ClInclude Include="Testo.h" />
     <ClInclude Include="universo.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -45,6 +45,9 @@
     <ClCompile Include="gioco.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Testo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mappa.hpp">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gioco.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

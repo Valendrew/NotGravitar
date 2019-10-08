@@ -8,6 +8,13 @@ Nave::Nave(float vita, const char nomeFile[], float cord_x, float cord_y, float 
 
 	//entita_.setOrigin(sf::Vector2f(larghezza_e / 2.f, altezza_e / 2.f)); // viene impostato il punto di origine 
 }
+void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante) {
+	vita_ = vita;
+	entita_.setPosition(cord_x, cord_y);
+	entita_.setRotation(angolo_rotazione);
+	carburante_ = carburante;
+	
+}
 Nave::Nave() : Comportamento() {
 	carburante_ = 10;
 	velocita_movimento_ = .2f;

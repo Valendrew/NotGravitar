@@ -2,11 +2,8 @@
 
 int main() {
 
-	bool restart = false;
-	do{   
-		Gioco g;
-		g.avviaGioco();
-		restart = g.restart();
-	} while (restart);
+	Gioco g;
+	g.avviaGioco();
+
 	return 0;
 }
