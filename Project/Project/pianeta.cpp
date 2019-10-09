@@ -76,10 +76,16 @@ proiettile_ptr Pianeta::getProiettili()
 	return (*superficie_attuale_->superficie_item).getProiettili();
 }
 
+void Pianeta::controlloProiettili(proiettile_ptr lista_proiettili)
+{
+	(*superficie_attuale_->superficie_item).controlloProiettili(lista_proiettili);
+}
+
 void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)
 {
 	//target.draw(superficie_1_);
-	if (superficie_attuale_ != nullptr)	target.draw((*superficie_attuale_->superficie_item));
+	if (superficie_attuale_ != nullptr)	
+		target.draw((*superficie_attuale_->superficie_item));
 }
 
 void Pianeta::generaSuperficie()

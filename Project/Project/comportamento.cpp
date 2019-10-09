@@ -25,10 +25,17 @@ Comportamento::Comportamento(unsigned int width, unsigned int height, float vita
 	entita_.setRotation(angolo_rotazione); // angolo di rotazione dell'oggetto
 	entita_.setFillColor(sf::Color::White); // colore dell'oggetto
 
-	entita_.setOutlineColor(sf::Color::White);
-	entita_.setOutlineThickness(.5f);
+	//entita_.setOutlineColor(sf::Color::White);
+	//entita_.setOutlineThickness(.5f);
 
-	texture_.loadFromFile(nomeFile); // texture dell'oggetto
+	int i = 0;
+	while (nomeFile[i] != '\0')
+	{
+		nomeFile_[i] = nomeFile[i];
+		i++;
+	}
+
+	texture_.loadFromFile(nomeFile_); // texture dell'oggetto
 	entita_.setTexture(&texture_); // impostata la texture
 }
 Comportamento::Comportamento() : Comportamento(1280, 720, 50, "Texture/default.png", sf::Vector2f(), sf::Vector2f(), 0) {}
@@ -58,14 +65,14 @@ void Comportamento::setRotation(float rot)
 	entita_.setRotation(rot);
 }
 
-sf::FloatRect Comportamento::getBordi()
+sf::FloatRect Comportamento::getGlobalBounds()
 {
 	return entita_.getGlobalBounds();
 }
 
 void Comportamento::spara(float angolo)
 {
-	if (clock_.getElapsedTime().asMilliseconds() > 500) {
+	if (clock_.getElapsedTime().asMilliseconds() > 800) {
 		clock_.restart();
 
 		proiettile_ptr p = new ProiettileNode;
@@ -77,7 +84,15 @@ void Comportamento::spara(float angolo)
 
 void Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 {
-	
+	while (lista_proiettili != nullptr)
+	{
+		sf::FloatRect rect_proiettile = (*lista_proiettili->proiettile).getGlobalBounds();
+
+		if (entita_.getGlobalBounds().intersects(rect_proiettile)) {
+			(*lista_proiettili->proiettile).setColor(sf::Color::Red);
+		}
+		lista_proiettili = lista_proiettili->next;
+	}
 }
 
 void Comportamento::eliminaProiettile(proiettile_ptr p)

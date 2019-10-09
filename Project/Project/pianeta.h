@@ -6,7 +6,7 @@
 #include "superficie_pianeta.h"
 
 class Pianeta : public sf::Drawable, public sf::Transformable {
-private: 
+protected: 
 	int larghezza_finestra;
 	int altezza_finestra;
 	int id_;
@@ -37,6 +37,7 @@ public:
 	int controlloPassaggioSuperficie(sf::Vector2f pos);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	proiettile_ptr getProiettili();
+	void controlloProiettili(proiettile_ptr lista_proiettili);
 	void drawSuperficie(sf::RenderTarget& target, sf::RenderStates states);
 };
 #endif // !PIANETA_H

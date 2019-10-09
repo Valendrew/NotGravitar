@@ -96,3 +96,8 @@ void Nave::setPosition(sf::Vector2f pos) { //non testata
 	float y2 = y1 + cos(entita_.getRotation()*PI_G / 180.f)*coeff_y;
 	entita_.setPosition(x2, y2);
 }
+
+proiettile_ptr Nave::getProiettili()
+{
+	return proiettili_;
+}
