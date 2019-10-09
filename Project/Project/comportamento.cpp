@@ -7,7 +7,7 @@ void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) con
 	proiettile_ptr p = proiettili_;
 	int i = 0;
 	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili, forse da spostare in funzione a parte!!
-	{ 
+	{
 		target.draw((*p->proiettile).getProiettile());
 		(*p->proiettile).muovi();
 		p = p->next;
@@ -97,12 +97,18 @@ void Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 
 void Comportamento::eliminaProiettile(proiettile_ptr p)
 {
-	if (p->next != NULL) {
-		proiettile_ptr tmp = p->next;
-		p->proiettile = p->next->proiettile;
-		p->next = p->next->next;
-		delete tmp;
+	proiettile_ptr i = proiettili_;
+	if (i != NULL && p != proiettili_) {
+		while (i->next != NULL) {
+			if (i->next == p) {
+				i->next = p->next;
+				delete p;
+			}
+			if (i->next != NULL)	i = i->next;
+		}
 	}
-	else
+	if (p == proiettili_) {
+		proiettili_ = proiettili_->next;
 		delete p;
+	}
 }

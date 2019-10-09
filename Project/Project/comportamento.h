@@ -36,6 +36,5 @@ public:
 	void spara(float angolo);
 	void controlloProiettili(proiettile_ptr lista_proiettili);
 	void eliminaProiettile(proiettile_ptr p);
-
 };
 #endif // !_COMPORTAMENTO_H
