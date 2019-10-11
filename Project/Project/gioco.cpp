@@ -195,11 +195,12 @@ void Gioco::movimentoNavicella()
 	if (nave_rotazioneR) {
 		nave_.ruotaR();
 	}
+}
+
+void Gioco::controlloSparo()
+{
 	if (nave_spara) {
-		//if (clock_.getElapsedTime().asMilliseconds() > 200) {
-			nave_.spara();
-			//clock_.restart();
-		//}
+		nave_.spara();
 	}
 }
 
@@ -314,10 +315,10 @@ void Gioco::controlloPassaggioSuperficie()
 
 	if (direzione != -1) {
 		if (direzione == 0) {
-			nave_.setPosition(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.setPosition(sf::Vector2f(LARGHEZZA - 2 * nave_.getDimensione().x, nave_.getPosition().y));
 		}
 		else {
-			nave_.setPosition(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.setPosition(sf::Vector2f(2 * nave_.getDimensione().x, nave_.getPosition().y));
 		}
 	}
 }
@@ -389,6 +390,9 @@ void Gioco::update()
 		controlloCollisioneSuperficie();
 		controlloCollisioneProiettili();
 		movimentoNavicella();
+		controlloSparo();
+
+		aggiornaPunteggio();
 	}
 	else if (stato_ == GAMEOVER) {
 		start_.setString("RESTART");
@@ -410,13 +414,6 @@ void Gioco::update()
 		titolo_.setPosition(LARGHEZZA / 2 - titolo_.getGlobalBounds().width / 2, 10);
 		exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
 	}
-	//grazie a questo controllo la nave   smette di/non puo iniziare a   muoversi 
-	if (stato_ == START || stato_ == PAUSA) {
-		nave_movimento = false;
-		nave_rotazioneL = false;
-		nave_rotazioneR = false;
-		nave_spara = false;
-	}
 }
 
 void Gioco::render()
@@ -426,7 +423,6 @@ void Gioco::render()
 		window_.draw(mappa_);
 		window_.draw(nave_);
 		window_.draw(pausa_);
-		aggiornaPunteggio();
 		window_.draw(punteggio_text);
 	}
 	else {
@@ -459,33 +455,36 @@ Gioco::Gioco() :
 	,subtitle_("",60, sf::Color::Red, sf::Color::Transparent, 1.5, 0, 0, 0)
 	,start_("",55, sf::Color::Green, sf::Color::Transparent, 1.5, 0, 0, 0)
 	,exit_("EXIT", 55, sf::Color::Magenta, sf::Color::Transparent, 1.5, 0, 0, 0)
-
 {
+	// Pulsante pausa
 	pausa_.setSize(sf::Vector2f(61.8, 64.0));
 	texture_.loadFromFile("Texture/pausa2.png");
 	texture_.setSmooth(true);
 	pausa_.setFillColor(sf::Color::Color(255,255,255,160));
 	pausa_.setTexture(&texture_);
 	pausa_.setPosition(LARGHEZZA - pausa_.getSize().x, 0);
-
+	
 	punteggio_ = 0;
-	aggiornaPunteggio();
-	
-	
-	
-	nuovo_universo = true;
+	//aggiornaPunteggio();
+
+	//nuovo_universo = true;
+
+	// Booleani per gestire i movimenti e i comportamento della nave
 	nave_movimento = false;
 	nave_rotazioneL = false;
 	nave_rotazioneR = false;
 	nave_spara = false;
 	collisione_nave = false;
-	posizione_entrata_pianeta_ = sf::Vector2f(0, 0);
 
-	stato_ = START;
-	//stato_ = UNIVERSO;
+	posizione_entrata_pianeta_ = sf::Vector2f(0, 0); // posizione della nave prima di entrare nel pianeta
 
-	eventi_H = nullptr;
-	eventi_T = nullptr;
+	time_frame_ = sf::seconds(1.f / 144.f);
+
+	//stato_ = START;
+	stato_ = UNIVERSO;
+
+	//eventi_H = nullptr;
+	//eventi_T = nullptr;
 
 	debug = false;
 }

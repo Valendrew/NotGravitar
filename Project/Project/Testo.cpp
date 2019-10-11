@@ -16,9 +16,8 @@ Testo::Testo(std::string testo, int CharacterSize,
 	testo_.setOutlineThickness(OutlineThickness);
 	testo_.setPosition(pos_x, pos_y);
 }
-Testo::Testo() {
+Testo::Testo() : Testo("404", 25, sf::Color::Red, sf::Color::Red, 20, 0, 0, 5) {}
 
-}
 void Testo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(testo_);

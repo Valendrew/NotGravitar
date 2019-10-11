@@ -204,7 +204,7 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_to_print != nullptr) {
-		//(*bunker_to_print->bunker_item).spara();
+		(*bunker_to_print->bunker_item).spara();
 		target.draw(*bunker_to_print->bunker_item);
 		bunker_to_print = bunker_to_print->next;
 	}
@@ -214,7 +214,7 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_stronger_to_print != nullptr) {
-		//(*bunker_stronger_to_print->bunker_item).spara();
+		(*bunker_stronger_to_print->bunker_item).spara();
 		target.draw(*bunker_stronger_to_print->bunker_item);
 		bunker_stronger_to_print = bunker_stronger_to_print->next;
 	}
@@ -222,18 +222,20 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 
 int SuperficiePianeta::getNumeroBunker()
 {
-	int ritorno;
-	bunker_ptr app = bunker_;
-	bunker_stronger_ptr app2 = bunker_stronger_;
-	while (app!=nullptr)
+	int ritorno = 0;
+	bunker_ptr tmp_bunker = bunker_;
+	bunker_stronger_ptr tmp_bunker_stronger = bunker_stronger_;
+
+	while (tmp_bunker!=nullptr)
 	{
 		ritorno++;
-		app = app->next;
+		tmp_bunker = tmp_bunker->next;
 	}
-	while (app2 != nullptr)
+
+	while (tmp_bunker_stronger != nullptr)
 	{
 		ritorno++;
-		app2 = app2->next;
+		tmp_bunker_stronger = tmp_bunker_stronger->next;
 	}
 	return ritorno;
 }
@@ -264,7 +266,6 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned height, sf::Ve
 	for (int i = 0; i < NUMERO_DI_LINEE; i++) bunker_presenti_[i] = false;
 	bunker_ = nullptr;
 
-	numero_bunker = 0;
 	/* Metodo per generare i Bunker presenti sulla superficie */
 	generaBunker();
 }
@@ -332,18 +333,30 @@ proiettile_ptr SuperficiePianeta::getProiettili()
 
 bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
 {
-	int index = pos.x / (larghezza_finestra_ / NUMERO_DI_LINEE);
-
-	/*bool collisione = false;
-
-	for (int i = 0; i < NUMERO_DI_LINEE; i++)
+	//int index = pos.x / (larghezza_finestra_ / NUMERO_DI_LINEE);
+	bool found = false;
+	int index = 0;
+	int i = 0;
+	while (!found && i < (vertici_superficie_.getVertexCount() - 1))
 	{
-		if (superficie_[i].getLocalBounds().contains(pos)) {
-			collisione = true;
+		if (vertici_superficie_[i].position.x >= pos.x) {
+			found = true;
+			index = i;
 		}
+		i++;
 	}
-	return collisione;*/
-	return superficie_[index].getGlobalBounds().contains(pos);
+
+	sf::Vector2f point_1 = vertici_superficie_[index].position;
+	sf::Vector2f point_2 = vertici_superficie_[index + 1].position;
+
+	float coefficiente_angolare = (point_2.y - point_1.y) /
+		(point_2.x - point_1.x);
+
+	float ordinata_origine = point_1.y - point_1.x * coefficiente_angolare;
+
+	float nave_y_retta = pos.x * coefficiente_angolare + ordinata_origine;
+
+	return (nave_y_retta < pos.y);
 }
 
 void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)

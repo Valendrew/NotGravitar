@@ -69,6 +69,7 @@ protected:
 	void processaEventi();
 	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);
 	void movimentoNavicella();
+	void controlloSparo();
 	void controlloPassaggioUniverso();
 	void controlloPassaggioPianeta();
 	void controlloUscitaPianeta();

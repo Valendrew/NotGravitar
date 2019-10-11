@@ -23,6 +23,7 @@ protected:
 	superficie_ptr superficie_head;
 	superficie_ptr superficie_tail;
 	superficie_ptr superficie_attuale_;
+
 	int numero_superfici_;
 	int bunker_precedenti;
 
