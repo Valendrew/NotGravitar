@@ -17,7 +17,7 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	height = height_;
 
 	entita_.setSize(sf::Vector2f(width_, height_));
-	texture_.loadFromFile("Texture/universo.png"); // texture dell'oggetto
+	texture_.loadFromFile("Texture/universo.jpg"); // texture dell'oggetto
 	entita_.setTexture(&texture_);
 	srand(time(0));
 	/*list_universi = new nodoMappa;
@@ -66,6 +66,15 @@ void Mappa::restart(int width_, int height_) {
 	(*findUniverso(0, 0)->u).setVisitato();
 	universoDiGioco = list_universi;
 	posizioneAttuale = list_universi;
+}
+
+bool Mappa::isNuovoUniverso()
+{
+	return (*universoDiGioco->u).getVisitato();
+}
+
+void Mappa::setVecchioUniverso(){
+	(*universoDiGioco->u).setVisitato();
 }
 
 listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_universo_y) {

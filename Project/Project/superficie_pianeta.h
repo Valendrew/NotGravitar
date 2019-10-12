@@ -4,6 +4,7 @@
 // includes
 #include "bunker.h"
 #include "bunker_stronger.h"
+#include "oggetto.h"
 
 // Pi greco
 const double PI = 3.14159265;
@@ -16,6 +17,7 @@ protected:
 	int larghezza_finestra_;
 	int altezza_finestra_;
 	int altezza_massima_; // altezza massima di generazione della superficie
+	oggetto *benzina_;
 
 	sf::VertexArray vertici_superficie_;
 	sf::ConvexShape superficie_[NUMERO_DI_LINEE];
@@ -41,6 +43,7 @@ protected:
 	bunker_stronger_ptr bunker_stronger_;
 	bool bunker_presenti_[NUMERO_DI_LINEE];
 	void generaBunker();
+	void generaBenzina();
 	bool controllaBunkerVicinanze(int posizione);
 	void aggiungiBunker(int index, bool bunker_stronger_);
 	void inserisciNodoBunker(sf::Vector2f coordinate, float angolo);

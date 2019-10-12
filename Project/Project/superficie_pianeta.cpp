@@ -67,7 +67,7 @@ void SuperficiePianeta::generaSuperficie()
 			superficie_[i].setPoint(3, sf::Vector2f(vertici_superficie_[i].position.x, altezza_finestra_));
 
 			// Impostazione del colore della superficie
-			superficie_[i].setFillColor(sf::Color::Blue);
+			superficie_[i].setFillColor(sf::Color::Color(0,100,0));
 		}
 }
 
@@ -156,9 +156,9 @@ void SuperficiePianeta::aggiungiBunker(int index, bool bunker_stronger)
 
 void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo)
 {
-	sf::Vector2f grandezza(40, 40);
+	sf::Vector2f grandezza(60, 60);
 
-	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, 50, "Texture/bunker_2.png", "Texture/bunker_2d.png", coordinate, grandezza, angolo);
+	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, 50, "Texture/2.png", "Texture/2_d.png", coordinate, grandezza, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_stronger_ = new BunkerStrongerNode();
@@ -175,9 +175,9 @@ void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, flo
 
 void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angolo)
 {
-	sf::Vector2f grandezza(30, 30);
+	sf::Vector2f grandezza(60, 60);
 
-	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, 50, "Texture/bunker_3.png", "Texture/bunker_3d.png", coordinate, grandezza, angolo);
+	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, 50, "Texture/1.png", "Texture/1_d.png", coordinate, grandezza, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_ = new BunkerNode();
@@ -222,7 +222,7 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 
 int SuperficiePianeta::getNumeroBunker()
 {
-	int ritorno;
+	int ritorno=0;
 	bunker_ptr app = bunker_;
 	bunker_stronger_ptr app2 = bunker_stronger_;
 	while (app!=nullptr)
@@ -264,10 +264,29 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned height, sf::Ve
 	for (int i = 0; i < NUMERO_DI_LINEE; i++) bunker_presenti_[i] = false;
 	bunker_ = nullptr;
 
-	numero_bunker = 0;
 	/* Metodo per generare i Bunker presenti sulla superficie */
 	generaBunker();
+	generaBenzina();
 }
+
+void SuperficiePianeta::generaBenzina() {
+	int tipologia_benzina = rand() % 100 + 1;
+	sf::Vector2f pos;
+	float angolo_rotazione = 0;
+	sf::Vector2f size(40,40);
+
+	//da calcolare posizione e angolo
+	
+	if (tipologia_benzina >= 50 && tipologia_benzina <= 74) {
+		benzina_ = new oggetto(BENZINA,"Textuer/benzina.png",pos,angolo_rotazione,size);
+	}
+	else if (tipologia_benzina >= 75 && tipologia_benzina <= 90) {
+		benzina_ = new oggetto(BENZINA_BEST, "Textuer/benzina_best.png", pos, angolo_rotazione, size);
+	}
+	else if (tipologia_benzina >= 91) {
+		benzina_ = new oggetto(CUORE, "Texture/cuore.png", pos, angolo_rotazione, size);
+	}
+ }
 
 SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) : SuperficiePianeta(width, height, sf::Vector2f(), sf::Vector2f()) {}
 

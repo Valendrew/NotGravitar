@@ -123,6 +123,7 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 
 	}
 	else if (gestioneMouse == 2) { 
+		salva_stato = stato_;
 		stato_ = PAUSA;
 	}
 	
@@ -218,12 +219,6 @@ void Gioco::controlloPassaggioUniverso()
 
 	if (direzione != -1) {
 		if (mappa_.spostamento(direzione)) {
-
-			//se sposto mi sposto in un altro sistema solare ed è nuovo (non ci sono mai stato) allora setto nuovo_universo a true cosi da aggiornare
-			//correttamente il punteggio quando lo avro distrutto
-			if (mappa_.getPosizioneAttuale().x == mappa_.getPosizioneDiGioco().x && mappa_.getPosizioneAttuale().y == mappa_.getPosizioneDiGioco().y)
-				nuovo_universo = true;
-
 			switch (direzione)
 			{
 			case 0: nave_.setPosition(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getDimensione().y));
@@ -361,9 +356,10 @@ void Gioco::controlloAggiornamentoPunteggio() {
 
 	listaPianeti p_attuale = mappa_.getUniversoDiGioco().getPianetaAttuale();
 
-	if (mappa_.getUniversoDiGioco().distrutto() && nuovo_universo) {
+	//Il controllo mappa_.isNuovoUniverso() serve per far aumentare il punteggio di 100 una sola volta per ugni sestema solare
+	if (mappa_.getUniversoDiGioco().distrutto() && mappa_.isNuovoUniverso()) {
 		punteggio_ += 100;
-		nuovo_universo = false;
+		mappa_.setVecchioUniverso();
 	}
 	else if ((*p_attuale->pianeta_).distrutto()) {
 		punteggio_ += 50;
@@ -372,6 +368,7 @@ void Gioco::controlloAggiornamentoPunteggio() {
 		punteggio_ += 10;
 	}
 	
+	aggiornaTestoNumeri("PUNTEGGIO: ",punteggio_, punteggio_text);
 
 }
 
@@ -394,28 +391,20 @@ void Gioco::update()
 		start_.setString("RESTART");
 		subtitle_.setString("GAME OVER");
 		subtitle_.setPosition(LARGHEZZA / 2 - subtitle_.getGlobalBounds().width / 2, 140);
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
 		punteggio_text.setPosition(LARGHEZZA / 2 - punteggio_text.getGlobalBounds().width / 2, 210);
 	}
 	else if (stato_ == PAUSA) {
 		start_.setString("RESUME");
-		subtitle_.setString("");
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-
 	}
 	else if (stato_ == START) {
 		start_.setString("START");
-		subtitle_.setString("");
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
 		titolo_.setPosition(LARGHEZZA / 2 - titolo_.getGlobalBounds().width / 2, 10);
 		exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
 	}
 	//grazie a questo controllo la nave   smette di/non puo iniziare a   muoversi 
-	if (stato_ == START || stato_ == PAUSA) {
-		nave_movimento = false;
-		nave_rotazioneL = false;
-		nave_rotazioneR = false;
-		nave_spara = false;
+	if (stato_ == START || stato_ == PAUSA || stato_ == GAMEOVER) {
+
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
 	}
 }
 
@@ -423,11 +412,14 @@ void Gioco::render()
 {
 	window_.clear(sf::Color::Black);
 	if (stato_ == UNIVERSO || stato_ == PIANETA) {
+		aggiornaTestoNumeri("VITA: ", nave_.getVita(), vita_text);
+		aggiornaTestoNumeri("CARBURANTE: ", nave_.getCarburante(), carburante_text);
 		window_.draw(mappa_);
 		window_.draw(nave_);
 		window_.draw(pausa_);
-		aggiornaPunteggio();
 		window_.draw(punteggio_text);
+		window_.draw(vita_text);
+		window_.draw(carburante_text);
 	}
 	else {
 		window_.draw(titolo_);
@@ -441,39 +433,49 @@ void Gioco::render()
 	window_.display();
 }
 
-void Gioco::aggiornaPunteggio() {
-	char app[30] = "Punteggio: ";
-	char app2[10];
-	_itoa_s(punteggio_, app2, 10, 10);
-	strcat_s(app, app2);
-	punteggio_text.setString(app);
+void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
+
+	char valoreToString[10];
+	char stringaCompleta[100];
+	_itoa_s(valore, valoreToString, 10, 10);
+	strcpy_s(stringaCompleta, stringa);
+	strcat_s(stringaCompleta, valoreToString);
+	t.setString(stringaCompleta);
 }
 
 Gioco::Gioco() :
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
-	, nave_(LARGHEZZA, ALTEZZA, 100, "Texture/ship3.png", sf::Vector2f(40, 40), sf::Vector2f(40, 40), 0, 220, 2.f, 10)
+	, nave_(LARGHEZZA, ALTEZZA, 100, "Texture/6.png", sf::Vector2f(40, 40), sf::Vector2f(60, 60), 0, 220, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
-	, punteggio_text("",32, sf::Color::Blue, sf::Color::Magenta, 1.5 ,5 ,0 ,1)
-	,titolo_("NON GRAVITAR", 120, sf::Color::Red, sf::Color::Yellow, 1.5,0 , 0, 4)
-	,subtitle_("",60, sf::Color::Red, sf::Color::Transparent, 1.5, 0, 0, 0)
-	,start_("",55, sf::Color::Green, sf::Color::Transparent, 1.5, 0, 0, 0)
-	,exit_("EXIT", 55, sf::Color::Magenta, sf::Color::Transparent, 1.5, 0, 0, 0)
-
+	, punteggio_text("PUNTEGGIO: 100",32, sf::Color::Blue, sf::Color::Magenta, 1.5, 1)
+	,titolo_("NON GRAVITAR", 120, sf::Color::Red, sf::Color::Yellow, 1.5, 4)
+	,subtitle_("",60, sf::Color::Red, sf::Color::Transparent, 1.5, 0)
+	,start_("",55, sf::Color::Green, sf::Color::Transparent, 1.5, 0)
+	,exit_("EXIT", 55, sf::Color::Magenta, sf::Color::Transparent, 1.5, 0)
+	,vita_text("VITA: 100", 32, sf::Color::Green, sf::Color::Yellow, 1.5, 1)
+	,carburante_text("", 32, sf::Color::Red, sf::Color::Blue, 1.5, 1)
 {
+	punteggio_text.setPosition(5, 0);
+	vita_text.setPosition(LARGHEZZA / 2 - 300, 0);
+	float distanzaPunteggioVita = vita_text.getPosition().x - (punteggio_text.getPosition().x + punteggio_text.getGlobalBounds().width);
+	carburante_text.setPosition(vita_text.getPosition().x + vita_text.getGlobalBounds().width + distanzaPunteggioVita, 0);
+
 	pausa_.setSize(sf::Vector2f(61.8, 64.0));
 	texture_.loadFromFile("Texture/pausa2.png");
 	texture_.setSmooth(true);
 	pausa_.setFillColor(sf::Color::Color(255,255,255,160));
 	pausa_.setTexture(&texture_);
-	pausa_.setPosition(LARGHEZZA - pausa_.getSize().x, 0);
 
 	punteggio_ = 0;
-	aggiornaPunteggio();
+	aggiornaTestoNumeri("PUNTEGGIO: ", punteggio_, punteggio_text);
+
+	float pausa_size = punteggio_text.getGlobalBounds().height + 15;
+	pausa_.setSize(sf::Vector2f(pausa_size, pausa_size));
+	pausa_.setPosition(LARGHEZZA - pausa_.getSize().x, 0);
+
+	time_frame_ = sf::microseconds(10000);
 	
-	
-	
-	nuovo_universo = true;
 	nave_movimento = false;
 	nave_rotazioneL = false;
 	nave_rotazioneR = false;

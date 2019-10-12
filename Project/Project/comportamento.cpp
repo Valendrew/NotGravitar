@@ -19,7 +19,7 @@ void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) con
 Comportamento::Comportamento(unsigned int width, unsigned int height, float vita, const char nomeFile[], sf::Vector2f pos, sf::Vector2f size, float angolo_rotazione) : clock_() {
 	larghezza_finestra = width;
 	altezza_finestra = height;
-
+	vita_ = vita;
 	entita_.setPosition(pos); // posizione dell'oggetto
 	entita_.setSize(size); // dimensione dell'oggetto
 	entita_.setRotation(angolo_rotazione); // angolo di rotazione dell'oggetto

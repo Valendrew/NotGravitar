@@ -108,3 +108,8 @@ proiettile_ptr Nave::getProiettili()
 {
 	return proiettili_;
 }
+
+float Nave::getVita()
+{
+	return vita_;
+}
