@@ -7,14 +7,17 @@
 
 class Bunker : public Comportamento {
 protected:
-	char nomeFileDistrutto_[50];
-	float angolo_sparo;
-	bool distrutto = false;
+	float angolo_sparo_;
+	bool distrutto_;
 public: 
-	void spara();
-	void setDistrutto();
-	proiettile_ptr getProiettili();
-	Bunker(unsigned int width, unsigned int height, float vita, const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f pos, sf::Vector2f size, float angolo_rotazione);
+	Bunker(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno, 
+		const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, float angolo_rotazione);
 	Bunker();
+
+	void spara();
+
+	void setDistrutto();
+
+	proiettile_ptr getProiettili();
 };
 #endif // !BUNKER_H

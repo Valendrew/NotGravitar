@@ -5,13 +5,15 @@ void Bunker::spara()
 	if (clock_.getElapsedTime().asMilliseconds() > 2000) {
 		clock_.restart();
 
+		//crea una nuovo proiettile e lo mette in cima alla lista
 		proiettile_ptr p = new ProiettileNode;
-		p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), entita_.getRotation() + angolo_sparo, .2f); //crea una nuovo proiettile e lo mette in cima alla lista
+		p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), entita_.getRotation() + angolo_sparo_, .2f, danno_);
 		p->next = proiettili_;
 		proiettili_ = p;
 
+		//crea una nuovo proiettile e lo mette in cima alla lista
 		proiettile_ptr p2 = new ProiettileNode;
-		p2->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), entita_.getRotation() - angolo_sparo, .2f); //crea una nuovo proiettile e lo mette in cima alla lista
+		p2->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), entita_.getRotation() - angolo_sparo_, .2f, danno_);
 		p2->next = proiettili_;
 		proiettili_ = p2;
 	}
@@ -19,7 +21,7 @@ void Bunker::spara()
 
 void Bunker::setDistrutto()
 {
-	distrutto = true;
+	distrutto_ = true;
 	
 	texture_.loadFromFile(nomeFileDistrutto_); // texture dell'oggetto
 	entita_.setTexture(&texture_); // impostata la texture
@@ -52,22 +54,18 @@ proiettile_ptr Bunker::getProiettili()
 	return list_proiettili;
 }
 
-Bunker::Bunker(unsigned int width, unsigned int height, float vita, const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f pos, sf::Vector2f size, float angolo_rotazione)
-: Comportamento(width, height, vita, nomeFile, pos, size, angolo_rotazione) {
-	int i = 0;
-	while (nomeFileDistrutto[i] != '\0')
-	{
-		nomeFileDistrutto_[i] = nomeFileDistrutto[i];
-		i++;
-	}
+Bunker::Bunker(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno, 
+	const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, float angolo_rotazione)
+: Comportamento(larghezza_finestra, altezza_finestra, vita, danno, nomeFile, 
+	nomeFileDistrutto, posizione, dimensione, angolo_rotazione) {
+	distrutto_ = false;
+	angolo_sparo_ = 25;
 
-	distrutto = false;
-	angolo_sparo = 25;
-	entita_.setOrigin(0, 0 + size.y);
+	entita_.setOrigin(0, 0 + dimensione.y);
 }
 
 Bunker::Bunker() : Comportamento() {
-	distrutto = false;
-	angolo_sparo = 45;
+	distrutto_ = false;
+	angolo_sparo_ = 25;
 	entita_.setOrigin(0, 0 + 25);
 }

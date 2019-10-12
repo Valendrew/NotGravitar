@@ -16,9 +16,11 @@ protected:
 	int larghezza_finestra_;
 	int altezza_finestra_;
 	int altezza_massima_; // altezza massima di generazione della superficie
+	int altezza_minima_;
 
 	sf::VertexArray vertici_superficie_;
 	sf::ConvexShape superficie_[NUMERO_DI_LINEE];
+
 	void generaVertici(sf::Vector2f first_point, sf::Vector2f last_point);
 	void generaSuperficie();
 
@@ -40,6 +42,7 @@ protected:
 	bunker_ptr bunker_;
 	bunker_stronger_ptr bunker_stronger_;
 	bool bunker_presenti_[NUMERO_DI_LINEE];
+
 	void generaBunker();
 	bool controllaBunkerVicinanze(int posizione);
 	void aggiungiBunker(int index, bool bunker_stronger_);
@@ -49,12 +52,15 @@ protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
 	
-	SuperficiePianeta(unsigned int width, unsigned height, sf::Vector2f first_point, sf::Vector2f last_point);
-	SuperficiePianeta(unsigned int width, unsigned int height);
+	SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto);
+	SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra);
 	SuperficiePianeta();
-	sf::Vector2f getLastVertex();
+
 	sf::Vector2f getFirstVertex();
+	sf::Vector2f getLastVertex();
+
 	proiettile_ptr getProiettili();
+
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	void controlloProiettili(proiettile_ptr lista_proiettili);
 	int getNumeroBunker();

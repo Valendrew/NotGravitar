@@ -5,30 +5,27 @@ void Proiettile::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	target.draw(proiettile_);
 }
 
-sf::RectangleShape Proiettile::getProiettile()
+Proiettile::Proiettile(sf::Vector2f dimensione, sf::Vector2f posizione, float angolo, float velocita, float danno)
 {
-	return proiettile_;
-}
-
-Proiettile::Proiettile() : Proiettile(sf::Vector2f(0, 0), sf::Vector2f(0, 0), 0.f, 0.f) {}
-
-Proiettile::Proiettile(sf::Vector2f dim, sf::Vector2f pos, float angolo, float velocita)
-{
-	proiettile_.setSize(dim);
-	proiettile_.setPosition(pos);
+	proiettile_.setSize(dimensione);
+	proiettile_.setPosition(posizione);
 	proiettile_.setRotation(angolo);
 	proiettile_.setFillColor(sf::Color::Green);
 
 	double radianti = angolo * PI_G / 180.0;
 
 	velocita_ = velocita;
-	x = velocita_ * sin(radianti);
-	y = -1 * velocita_ * cos(radianti);
+	x_ = velocita_ * sin(radianti);
+	y_ = -1 * velocita_ * cos(radianti);
+
+	danno_ = danno;
 }
 
-void Proiettile::setVelocita(float velocita)
+Proiettile::Proiettile() : Proiettile(sf::Vector2f(), sf::Vector2f(), 0.f, 0.f, 0.f) {}
+
+sf::RectangleShape Proiettile::getProiettile()
 {
-	velocita_ = velocita;
+	return proiettile_;
 }
 
 float Proiettile::getVelocita()
@@ -36,9 +33,9 @@ float Proiettile::getVelocita()
 	return velocita_;
 }
 
-void Proiettile::muovi()
+void Proiettile::setVelocita(float velocita)
 {
-	proiettile_.move(x, y);
+	velocita_ = velocita;
 }
 
 sf::FloatRect Proiettile::getGlobalBounds()
@@ -46,7 +43,17 @@ sf::FloatRect Proiettile::getGlobalBounds()
 	return proiettile_.getGlobalBounds();
 }
 
+sf::Vector2f Proiettile::getPosition()
+{
+	return proiettile_.getPosition();
+}
+
 void Proiettile::setColor(sf::Color color)
 {
 	proiettile_.setFillColor(color);
+}
+
+void Proiettile::muovi()
+{
+	proiettile_.move(x_, y_);
 }

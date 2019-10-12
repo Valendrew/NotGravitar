@@ -3,7 +3,6 @@
 void SuperficiePianeta::generaVertici(sf::Vector2f first_point, sf::Vector2f last_point)
 {
 	int range = 30;
-	int altezza_minima = altezza_finestra_ - 100;
 		
 	for (int i = 0; i < vertici_superficie_.getVertexCount(); i++) {
 		/* Calcolo della coppia di coordinate (x,y).
@@ -18,7 +17,7 @@ void SuperficiePianeta::generaVertici(sf::Vector2f first_point, sf::Vector2f las
 			}
 			else {
 				vertici_superficie_[i].position = sf::Vector2f(i * larghezza_finestra_ / NUMERO_DI_LINEE
-					, altezza_minima - (rand() % (altezza_minima - altezza_massima_)));
+					, altezza_minima_ - (rand() % (altezza_minima_ - altezza_massima_)));
 			}
 		}
 
@@ -35,14 +34,14 @@ void SuperficiePianeta::generaVertici(sf::Vector2f first_point, sf::Vector2f las
 					// In questo caso lo scarto sarà negativo
 					scarto = altezza_massima_ - vertici_superficie_[i - 1].position.y;
 				}
-				else if (altezza_minima - range < vertici_superficie_[i - 1].position.y) {
+				else if (altezza_minima_ - range < vertici_superficie_[i - 1].position.y) {
 					// In questo caso lo scarto sarà positivo
-					scarto = altezza_minima - vertici_superficie_[i - 1].position.y;
+					scarto = altezza_minima_ - vertici_superficie_[i - 1].position.y;
 				}
 
 				int altezza_random = ((rand() % (range * 2 + 1)) - (range + scarto)) + vertici_superficie_[i - 1].position.y;
 
-				if (altezza_random > altezza_minima) altezza_random = altezza_minima;
+				if (altezza_random > altezza_minima_) altezza_random = altezza_minima_;
 				else if (altezza_random < altezza_massima_) altezza_random = altezza_massima_;
 
 				vertici_superficie_[i].position = sf::Vector2f(i * larghezza_finestra_ / NUMERO_DI_LINEE
@@ -154,30 +153,13 @@ void SuperficiePianeta::aggiungiBunker(int index, bool bunker_stronger)
 		inserisciNodoBunker(new_coordinate_bunker, angolo);
 }
 
-void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo)
-{
-	sf::Vector2f grandezza(40, 40);
-
-	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, 50, "Texture/bunker_2.png", "Texture/bunker_2d.png", coordinate, grandezza, angolo);
-
-	if (bunker_ == nullptr) {
-		bunker_stronger_ = new BunkerStrongerNode();
-		bunker_stronger_->bunker_item = new_bunker;
-		bunker_stronger_->next = nullptr;
-	}
-	else {
-		bunker_stronger_ptr tmp = new BunkerStrongerNode();
-		tmp->bunker_item = new_bunker;
-		tmp->next = bunker_stronger_;
-		bunker_stronger_ = tmp;
-	}
-}
-
 void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angolo)
 {
 	sf::Vector2f grandezza(30, 30);
+	float vita = 50;
+	float danno = 10;
 
-	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, 50, "Texture/bunker_3.png", "Texture/bunker_3d.png", coordinate, grandezza, angolo);
+	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_3.png", "Texture/bunker_3d.png", coordinate, grandezza, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_ = new BunkerNode();
@@ -189,6 +171,27 @@ void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angol
 		tmp->bunker_item = new_bunker;
 		tmp->next = bunker_;
 		bunker_ = tmp;
+	}
+}
+
+void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo)
+{
+	sf::Vector2f grandezza(40, 40);
+	float vita = 70;
+	float danno = 8;
+
+	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_2.png", "Texture/bunker_2d.png", coordinate, grandezza, angolo);
+
+	if (bunker_ == nullptr) {
+		bunker_stronger_ = new BunkerStrongerNode();
+		bunker_stronger_->bunker_item = new_bunker;
+		bunker_stronger_->next = nullptr;
+	}
+	else {
+		bunker_stronger_ptr tmp = new BunkerStrongerNode();
+		tmp->bunker_item = new_bunker;
+		tmp->next = bunker_stronger_;
+		bunker_stronger_ = tmp;
 	}
 }
 
@@ -204,8 +207,9 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_to_print != nullptr) {
-		(*bunker_to_print->bunker_item).spara();
-		target.draw(*bunker_to_print->bunker_item);
+		//(*bunker_to_print->bunker_item).spara();
+		//target.draw(*bunker_to_print->bunker_item);
+		(*bunker_to_print->bunker_item).drawComportamento(target, states);
 		bunker_to_print = bunker_to_print->next;
 	}
 
@@ -214,40 +218,23 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_stronger_to_print != nullptr) {
-		(*bunker_stronger_to_print->bunker_item).spara();
-		target.draw(*bunker_stronger_to_print->bunker_item);
+		//(*bunker_stronger_to_print->bunker_item).spara();
+		//target.draw(*bunker_stronger_to_print->bunker_item);
+		(*bunker_stronger_to_print->bunker_item).drawComportamento(target, states);
 		bunker_stronger_to_print = bunker_stronger_to_print->next;
 	}
 }
 
-int SuperficiePianeta::getNumeroBunker()
+SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto)
 {
-	int ritorno = 0;
-	bunker_ptr tmp_bunker = bunker_;
-	bunker_stronger_ptr tmp_bunker_stronger = bunker_stronger_;
-
-	while (tmp_bunker!=nullptr)
-	{
-		ritorno++;
-		tmp_bunker = tmp_bunker->next;
-	}
-
-	while (tmp_bunker_stronger != nullptr)
-	{
-		ritorno++;
-		tmp_bunker_stronger = tmp_bunker_stronger->next;
-	}
-	return ritorno;
-}
-
-SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned height, sf::Vector2f first_point, sf::Vector2f last_point)
-{
-	larghezza_finestra_ = width;
-	altezza_finestra_ = height;
+	larghezza_finestra_ = larghezza_finestra;
+	altezza_finestra_ = altezza_finestra;
 
 	/* L'altezza massima della superficie può essere
 	il 30% dell'altezza della finestra*/
-	altezza_massima_ = altezza_finestra_ * 0.75;
+	altezza_massima_ = altezza_finestra_ * 0.70;
+
+	altezza_minima_ = altezza_finestra * 0.90;
 
 	/* Vengono impostate le proprietà relative
 	al VertexArray delle linee della superficie,
@@ -255,7 +242,7 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned height, sf::Ve
 	dei punti delle linee */
 	vertici_superficie_.setPrimitiveType(sf::LineStrip); // il tipo di primitiva che deve essere rappresentata
 	vertici_superficie_.resize(NUMERO_DI_LINEE + 1); // il numero dei punti totali delle linee (num_linee + 1)
-	generaVertici(first_point, last_point);
+	generaVertici(primo_punto, ultimo_punto);
 
 	/* Generazione della superficie a partire dai punti delle linee
 	del VertexArray generate precedentemente */
@@ -270,18 +257,19 @@ SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned height, sf::Ve
 	generaBunker();
 }
 
-SuperficiePianeta::SuperficiePianeta(unsigned int width, unsigned int height) : SuperficiePianeta(width, height, sf::Vector2f(), sf::Vector2f()) {}
+SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra) : 
+	SuperficiePianeta(larghezza_finestra, altezza_finestra, sf::Vector2f(), sf::Vector2f()) {}
 
-SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(10, 10){}
-
-sf::Vector2f SuperficiePianeta::getLastVertex()
-{
-	return vertici_superficie_[vertici_superficie_.getVertexCount() - 1].position;
-}
+SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(1280, 720){}
 
 sf::Vector2f SuperficiePianeta::getFirstVertex()
 {
 	return vertici_superficie_[0].position;
+}
+
+sf::Vector2f SuperficiePianeta::getLastVertex()
+{
+	return vertici_superficie_[vertici_superficie_.getVertexCount() - 1].position;
 }
 
 proiettile_ptr SuperficiePianeta::getProiettili()
@@ -333,7 +321,6 @@ proiettile_ptr SuperficiePianeta::getProiettili()
 
 bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
 {
-	//int index = pos.x / (larghezza_finestra_ / NUMERO_DI_LINEE);
 	bool found = false;
 	int index = 0;
 	int i = 0;
@@ -393,4 +380,25 @@ void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 		tmp_stronger_bunker = tmp_stronger_bunker->next;
 	}
 
+}
+
+int SuperficiePianeta::getNumeroBunker()
+{
+	int numero_bunker = 0;
+
+	bunker_ptr tmp_bunker = bunker_;
+	bunker_stronger_ptr tmp_bunker_stronger = bunker_stronger_;
+
+	while (tmp_bunker != nullptr)
+	{
+		numero_bunker++;
+		tmp_bunker = tmp_bunker->next;
+	}
+
+	while (tmp_bunker_stronger != nullptr)
+	{
+		numero_bunker++;
+		tmp_bunker_stronger = tmp_bunker_stronger->next;
+	}
+	return numero_bunker;
 }

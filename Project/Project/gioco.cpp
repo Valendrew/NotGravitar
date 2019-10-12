@@ -2,64 +2,6 @@
 #include <iostream>
 #include <stdlib.h>
 
-void Gioco::inserisciEvento(char stato_, char tipo[], sf::Int32 time)
-{
-	if (eventi_H == nullptr) {
-		eventi_H = new Eventi;
-		eventi_H->time = time;
-		eventi_H->e.stato = stato_;
-	
-		int i = 0;
-		while (tipo[i] != '\0' && i < 100) {
-			eventi_H->e.tipo[i] = tipo[i];
-			i++;
-		}
-
-		eventi_H->prev = nullptr;
-		eventi_H->next = nullptr;
-
-		eventi_T = eventi_H;
-	}
-	else {
-		eventi_ptr tmp_e = new Eventi;
-		tmp_e->time = time;
-		tmp_e->e.stato = stato_;
-
-		int i = 0;
-		while (tipo[i] != '\0' && i < 100) {
-			tmp_e->e.tipo[i] = tipo[i];
-			i++;
-		}
-
-		tmp_e->next = eventi_H;
-		tmp_e->prev = nullptr;
-		eventi_H->prev = tmp_e;
-		eventi_H = tmp_e;
-		//delete tmp_e;
-	}
-}
-
-Gioco::eventi_ptr Gioco::eliminaEvento()
-{
-	if (eventi_T != nullptr) {
-		eventi_ptr e = eventi_T;
-		eventi_T = eventi_T->prev;
-		return e;
-	}
-	else {
-		return nullptr;
-	}
-}
-
-void Gioco::aggiornaEvento(eventi_ptr evento)
-{
-	switch (evento->e.stato)
-	{
-	default:
-		break;
-	}
-}
-
 void Gioco::processaEventi()
 {
 	sf::Event event;
@@ -190,10 +132,10 @@ void Gioco::movimentoNavicella()
 		nave_.muovi(time_frame_);
 	}
 	if (nave_rotazioneL) {
-		nave_.ruotaL();
+		nave_.ruotaSinistra();
 	}
 	if (nave_rotazioneR) {
-		nave_.ruotaR();
+		nave_.ruotaDestra();
 	}
 }
 
@@ -421,7 +363,8 @@ void Gioco::render()
 	window_.clear(sf::Color::Black);
 	if (stato_ == UNIVERSO || stato_ == PIANETA) {
 		window_.draw(mappa_);
-		window_.draw(nave_);
+		//window_.draw(nave_);
+		nave_.drawComportamento(window_, sf::RenderStates());
 		window_.draw(pausa_);
 		window_.draw(punteggio_text);
 	}
@@ -447,7 +390,8 @@ void Gioco::aggiornaPunteggio() {
 
 Gioco::Gioco() :
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
-	, nave_(LARGHEZZA, ALTEZZA, 100, "Texture/ship3.png", sf::Vector2f(40, 40), sf::Vector2f(40, 40), 0, 220, 2.f, 10)
+	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship3.png", "Texture/ship3.png",
+		sf::Vector2f(40, 40), sf::Vector2f(40, 40), 0, 220, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
 	, punteggio_text("",32, sf::Color::Blue, sf::Color::Magenta, 1.5 ,5 ,0 ,1)
@@ -488,7 +432,6 @@ Gioco::Gioco() :
 
 	debug = false;
 }
-
 
 void Gioco::avviaGioco()
 {

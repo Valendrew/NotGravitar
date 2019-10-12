@@ -3,42 +3,44 @@
 void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(entita_);
-
-	proiettile_ptr p = proiettili_;
-	int i = 0;
-	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili, forse da spostare in funzione a parte!!
-	{ 
-		target.draw((*p->proiettile).getProiettile());
-		(*p->proiettile).muovi();
-		p = p->next;
-		//i++;
-		//if (i >= 10 && p != NULL && p->next!=NULL) eliminaProiettile(p);
-	}
 }
 
-Comportamento::Comportamento(unsigned int width, unsigned int height, float vita, const char nomeFile[], sf::Vector2f pos, sf::Vector2f size, float angolo_rotazione) : clock_() {
-	larghezza_finestra = width;
-	altezza_finestra = height;
+Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno, 
+	const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, float angolo_rotazione) :
+	clock_() 
+{
+	larghezza_finestra_ = larghezza_finestra;
+	altezza_finestra_ = altezza_finestra;
 
-	entita_.setPosition(pos); // posizione dell'oggetto
-	entita_.setSize(size); // dimensione dell'oggetto
+	entita_.setPosition(posizione); // posizione dell'oggetto
+	entita_.setSize(dimensione); // dimensione dell'oggetto
 	entita_.setRotation(angolo_rotazione); // angolo di rotazione dell'oggetto
 	entita_.setFillColor(sf::Color::White); // colore dell'oggetto
 
-	//entita_.setOutlineColor(sf::Color::White);
-	//entita_.setOutlineThickness(.5f);
+	texture_.loadFromFile(nomeFile); // texture dell'oggetto
+	entita_.setTexture(&texture_); // impostata la texture
+
+	vita_ = vita;
+	danno_ = danno;
+
+	proiettili_ = nullptr;
 
 	int i = 0;
+	while (nomeFileDistrutto[i] != '\0')
+	{
+		nomeFileDistrutto_[i] = nomeFileDistrutto[i];
+		i++;
+	}
+	i = 0;
 	while (nomeFile[i] != '\0')
 	{
 		nomeFile_[i] = nomeFile[i];
 		i++;
 	}
-
-	texture_.loadFromFile(nomeFile_); // texture dell'oggetto
-	entita_.setTexture(&texture_); // impostata la texture
 }
-Comportamento::Comportamento() : Comportamento(1280, 720, 50, "Texture/default.png", sf::Vector2f(), sf::Vector2f(), 0) {}
+
+Comportamento::Comportamento() : Comportamento(1280, 720, 50, 10, 
+	"Texture/default.png", "Texture/default_d.png", sf::Vector2f(), sf::Vector2f(), 0) {}
 
 sf::Vector2f Comportamento::getPosizione()
 {
@@ -48,6 +50,11 @@ sf::Vector2f Comportamento::getPosizione()
 void Comportamento::setPosizione(sf::Vector2f pos)
 {
 	entita_.setPosition(pos);
+}
+
+sf::FloatRect Comportamento::getGlobalBounds()
+{
+	return entita_.getGlobalBounds();
 }
 
 sf::Vector2f Comportamento::getDimensione()
@@ -65,23 +72,6 @@ void Comportamento::setRotation(float rot)
 	entita_.setRotation(rot);
 }
 
-sf::FloatRect Comportamento::getGlobalBounds()
-{
-	return entita_.getGlobalBounds();
-}
-
-void Comportamento::spara(float angolo)
-{
-	if (clock_.getElapsedTime().asMilliseconds() > 800) {
-		clock_.restart();
-
-		proiettile_ptr p = new ProiettileNode;
-		p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .6f); //crea una nuovo proiettile e lo mette in cima alla lista
-		p->next = proiettili_;
-		proiettili_ = p;
-	}
-}
-
 void Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 {
 	while (lista_proiettili != nullptr)
@@ -95,14 +85,67 @@ void Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 	}
 }
 
-void Comportamento::eliminaProiettile(proiettile_ptr p)
+proiettile_ptr Comportamento::eliminaProiettile(proiettile_ptr p)
 {
-	if (p->next != NULL) {
-		proiettile_ptr tmp = p->next;
-		p->proiettile = p->next->proiettile;
-		p->next = p->next->next;
-		delete tmp;
+	proiettile_ptr i = proiettili_;
+	if (i != NULL && p != proiettili_) {
+		while (i->next != NULL) {
+			if (i->next == p) {
+				i->next = p->next;
+				delete p;
+			}
+			if (i->next != NULL)	
+				i = i->next;
+		}
 	}
-	else
+	if (p == proiettili_) {
+		proiettili_ = proiettili_->next;
+		i = proiettili_;
 		delete p;
+	}
+
+	return i;
+}
+
+void Comportamento::eliminaProiettiliBordo()
+{
+	proiettile_ptr tmp_proiettili = proiettili_;
+
+	while (tmp_proiettili != nullptr)
+	{
+		sf::Vector2f pos_proiettile = (*tmp_proiettili->proiettile).getPosition();
+
+		if (pos_proiettile.x > larghezza_finestra_ - 100) {
+			tmp_proiettili = eliminaProiettile(tmp_proiettili);
+		}
+		else if (pos_proiettile.x < 0 + 100)
+		{
+			tmp_proiettili = eliminaProiettile(tmp_proiettili);
+		}
+		else if (pos_proiettile.y > altezza_finestra_ - 100) {
+			tmp_proiettili = eliminaProiettile(tmp_proiettili);
+		}
+		else if (pos_proiettile.y < 0 + 100) {
+			tmp_proiettili = eliminaProiettile(tmp_proiettili);
+		}
+		else tmp_proiettili = tmp_proiettili->next;
+	}
+}
+
+void Comportamento::drawComportamento(sf::RenderTarget & target, sf::RenderStates states)
+{
+	target.draw(entita_);
+
+	eliminaProiettiliBordo();
+
+	proiettile_ptr p = proiettili_;
+	int i = 0;
+	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili, forse da spostare in funzione a parte!!
+	{
+		target.draw((*p->proiettile).getProiettile());
+		(*p->proiettile).muovi();
+		p = p->next;
+		//i++;
+		//if (i >= 10 && p != NULL && p->next!=NULL) eliminaProiettile(p);
+	}
 }

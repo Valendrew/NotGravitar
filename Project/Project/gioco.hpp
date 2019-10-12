@@ -9,14 +9,16 @@
 const int LARGHEZZA = 1280;
 const int ALTEZZA = 720;
 
-
 class Gioco {
 protected: 
-	sf::RectangleShape pausa_;
-	sf::Texture texture_;
 	sf::RenderWindow window_;
+
 	sf::Time time_frame_;
 	sf::Clock clock_;
+
+	sf::RectangleShape pausa_;
+	sf::Texture texture_;
+
 	Testo exit_;
 	Testo start_;
 	Testo titolo_;
@@ -35,22 +37,6 @@ protected:
 	int punteggio_;
 	sf::Vector2f posizione_entrata_pianeta_;
 
-	struct Evento {
-		char stato;
-		char tipo[100];
-	};
-
-	struct Eventi {
-		Evento e;
-		sf::Int32 time;
-		Eventi* prev;
-		Eventi* next;
-	};
-	typedef Eventi* eventi_ptr;
-
-	eventi_ptr eventi_H;
-	eventi_ptr eventi_T;
-
 	enum Stato
 	{
 		UNIVERSO,
@@ -61,10 +47,6 @@ protected:
 	};
 	Stato stato_;
 	Stato salva_stato;//serve per la pausa, cosi se ero nel pianeta ci sono di nuovo e se ero nell'universo ci sono di nuovo
-
-	void inserisciEvento(char stato_, char tipo[], sf::Int32 time);
-	eventi_ptr eliminaEvento();
-	void aggiornaEvento(eventi_ptr evento);
 
 	void processaEventi();
 	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);

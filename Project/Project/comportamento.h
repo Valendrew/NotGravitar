@@ -12,30 +12,41 @@ typedef ProiettileNode *proiettile_ptr;
 
 class Comportamento : public sf::Drawable, public sf::Transformable {
 protected:
-	sf::Clock clock_;
+	unsigned int larghezza_finestra_;
+	unsigned int altezza_finestra_;
+
 	float vita_;
-	unsigned int larghezza_finestra;
-	unsigned int altezza_finestra;
+	float danno_;
+
 	char nomeFile_[50];
+	char nomeFileDistrutto_[50];
 
 	sf::RectangleShape entita_;
 	sf::Texture texture_;
 
+	sf::Clock clock_;
 	proiettile_ptr proiettili_;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
-	Comportamento(unsigned int width, unsigned int height, float vita, const char nomeFile[], sf::Vector2f pos, sf::Vector2f size, float angolo_rotazione);
+	Comportamento(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno, 
+		const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, float angolo_rotazione);
 	Comportamento();
+
 	sf::Vector2f getPosizione();
 	void setPosizione(sf::Vector2f pos);
-	sf::Vector2f getDimensione();
-	float getRotation();
-	void setRotation(float rot);
-	sf::FloatRect getGlobalBounds();
-	void spara(float angolo);
-	void controlloProiettili(proiettile_ptr lista_proiettili);
-	void eliminaProiettile(proiettile_ptr p);
 
+	sf::FloatRect getGlobalBounds();
+
+	sf::Vector2f getDimensione();
+
+	float getRotation();
+	void setRotation(float rotazione);
+
+	void controlloProiettili(proiettile_ptr lista_proiettili);
+	proiettile_ptr eliminaProiettile(proiettile_ptr p);
+	void eliminaProiettiliBordo();
+
+	void drawComportamento(sf::RenderTarget& target, sf::RenderStates states);
 };
 #endif // !_COMPORTAMENTO_H
