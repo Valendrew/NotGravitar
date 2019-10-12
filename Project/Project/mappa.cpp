@@ -90,6 +90,15 @@ int Mappa::controlloPassaggioSuperficie(sf::Vector2f pos)
 	return direzione;
 }
 
+bool Mappa::isNuovoUniverso()
+{
+	return (*universoDiGioco->u).getVisitato();
+}
+
+void Mappa::setVecchioUniverso(){
+	(*universoDiGioco->u).setVisitato();
+}
+
 bool Mappa::controlloCollisioneSuperficie(sf::Vector2f pos) {
 	bool ritorno = false;
 	if (posizioneAttuale_ != nullptr) {

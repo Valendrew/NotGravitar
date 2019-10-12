@@ -125,6 +125,11 @@ proiettile_ptr Nave::getProiettili()
 	return proiettili_;
 }
 
+float Nave::getVita()
+{
+	return vita_;
+}
+
 void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante) {
 	vita_ = vita;
 	entita_.setPosition(cord_x, cord_y);

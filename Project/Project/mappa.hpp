@@ -49,6 +49,8 @@ public:
 	coordinate getPosizioneDiGioco();
 
 	void restart(int width_, int height_);
+	bool isNuovoUniverso();
+	void setVecchioUniverso();
 };
 
 #endif

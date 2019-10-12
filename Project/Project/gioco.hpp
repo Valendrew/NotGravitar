@@ -24,6 +24,8 @@ protected:
 	Testo titolo_;
 	Testo subtitle_;
 	Testo punteggio_text;
+	Testo vita_text;
+	Testo carburante_text;
 
 	Nave nave_;
 	Mappa mappa_;
@@ -32,7 +34,6 @@ protected:
 	bool nave_rotazioneR;
 	bool nave_spara;
 	bool collisione_nave;
-	bool nuovo_universo;
 
 	int punteggio_;
 	sf::Vector2f posizione_entrata_pianeta_;
@@ -63,7 +64,7 @@ protected:
 	void render();
 	int gestisciMouse(sf::Vector2i v);
 	void mouseClick(sf::Mouse::Button b);
-	void aggiornaPunteggio();
+	void aggiornaTestoNumeri(const char stringa[], int valore, Testo &t);
 	void controlloAggiornamentoPunteggio();
 public:
 	Gioco();

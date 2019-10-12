@@ -132,6 +132,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mappa.cpp" />
     <ClCompile Include="nave.cpp" />
+    <ClCompile Include="oggetto.cpp" />
     <ClCompile Include="pianeta.cpp" />
     <ClCompile Include="proiettile.cpp" />
     <ClCompile Include="superficie_pianeta.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="gioco.hpp" />
     <ClInclude Include="mappa.hpp" />
     <ClInclude Include="nave.hpp" />
+    <ClInclude Include="oggetto.h" />
     <ClInclude Include="pianeta.h" />
     <ClInclude Include="proiettile.hpp" />
     <ClInclude Include="superficie_pianeta.h" />

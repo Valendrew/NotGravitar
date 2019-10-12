@@ -2,8 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 
-Testo::Testo(std::string testo, int CharacterSize,  
-	sf::Color FillColor, sf::Color OutlineColor, double LetterSpacing, float pos_x, float pos_y, int OutlineThickness)
+Testo::Testo(std::string testo, int CharacterSize, sf::Color FillColor, sf::Color OutlineColor, double LetterSpacing, int OutlineThickness)
  
 {
 	font_.loadFromFile("Font/edunline.ttf");
@@ -14,7 +13,6 @@ Testo::Testo(std::string testo, int CharacterSize,
 	testo_.setOutlineColor(OutlineColor);
 	testo_.setLetterSpacing(LetterSpacing);
 	testo_.setOutlineThickness(OutlineThickness);
-	testo_.setPosition(pos_x, pos_y);
 }
 Testo::Testo() : Testo("404", 25, sf::Color::Red, sf::Color::Red, 20, 0, 0, 5) {}
 
@@ -37,4 +35,9 @@ void Testo::setCharacterSize(int size) {
 }
 void Testo::setPosition(float x, float y) {
 	testo_.setPosition(x, y);
+}
+
+sf::Vector2f Testo::getPosition()
+{
+	return testo_.getPosition();
 }

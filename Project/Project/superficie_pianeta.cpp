@@ -66,7 +66,7 @@ void SuperficiePianeta::generaSuperficie()
 			superficie_[i].setPoint(3, sf::Vector2f(vertici_superficie_[i].position.x, altezza_finestra_));
 
 			// Impostazione del colore della superficie
-			superficie_[i].setFillColor(sf::Color::Blue);
+			superficie_[i].setFillColor(sf::Color::Color(0,100,0));
 		}
 }
 
@@ -155,7 +155,7 @@ void SuperficiePianeta::aggiungiBunker(int index, bool bunker_stronger)
 
 void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angolo)
 {
-	sf::Vector2f grandezza(30, 30);
+	sf::Vector2f grandezza(60, 60);
 	float vita = 50;
 	float danno = 10;
 
@@ -176,7 +176,7 @@ void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angol
 
 void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo)
 {
-	sf::Vector2f grandezza(40, 40);
+	sf::Vector2f grandezza(60, 60);
 	float vita = 70;
 	float danno = 8;
 
@@ -225,10 +225,23 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	}
 }
 
-SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto)
+int SuperficiePianeta::getNumeroBunker()
 {
-	larghezza_finestra_ = larghezza_finestra;
-	altezza_finestra_ = altezza_finestra;
+	int ritorno;
+	bunker_ptr app = bunker_;
+	bunker_stronger_ptr app2 = bunker_stronger_;
+	while (app!=nullptr)
+	{
+		ritorno++;
+		app = app->next;
+	}
+	while (app2 != nullptr)
+	{
+		ritorno++;
+		app2 = app2->next;
+	}
+	return ritorno;
+}
 
 	/* L'altezza massima della superficie può essere
 	il 30% dell'altezza della finestra*/
@@ -255,7 +268,27 @@ SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned a
 
 	/* Metodo per generare i Bunker presenti sulla superficie */
 	generaBunker();
+	generaBenzina();
 }
+
+void SuperficiePianeta::generaBenzina() {
+	int tipologia_benzina = rand() % 100 + 1;
+	sf::Vector2f pos;
+	float angolo_rotazione = 0;
+	sf::Vector2f size(40,40);
+
+	//da calcolare posizione e angolo
+	
+	if (tipologia_benzina >= 50 && tipologia_benzina <= 74) {
+		benzina_ = new oggetto(BENZINA,"Textuer/benzina.png",pos,angolo_rotazione,size);
+	}
+	else if (tipologia_benzina >= 75 && tipologia_benzina <= 90) {
+		benzina_ = new oggetto(BENZINA_BEST, "Textuer/benzina_best.png", pos, angolo_rotazione, size);
+	}
+	else if (tipologia_benzina >= 91) {
+		benzina_ = new oggetto(CUORE, "Texture/cuore.png", pos, angolo_rotazione, size);
+	}
+ }
 
 SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra) : 
 	SuperficiePianeta(larghezza_finestra, altezza_finestra, sf::Vector2f(), sf::Vector2f()) {}
