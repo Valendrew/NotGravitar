@@ -2,18 +2,20 @@
 
 void Bunker::spara()
 {
-	if (clock_.getElapsedTime().asMilliseconds() > 2000) {
+	if (clock_.getElapsedTime().asMilliseconds() > 1000) {
 		clock_.restart();
+		
+		sf::Vector2f posizione(entita_.getPosition().x, entita_.getPosition().y - entita_.getSize().y);
 
 		//crea una nuovo proiettile e lo mette in cima alla lista
 		proiettile_ptr p = new ProiettileNode;
-		p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), entita_.getRotation() + angolo_sparo_, .2f, danno_);
+		p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), posizione, entita_.getRotation() + angolo_sparo_, .8f, danno_);
 		p->next = proiettili_;
 		proiettili_ = p;
 
 		//crea una nuovo proiettile e lo mette in cima alla lista
 		proiettile_ptr p2 = new ProiettileNode;
-		p2->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), entita_.getRotation() - angolo_sparo_, .2f, danno_);
+		p2->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), posizione, entita_.getRotation() - angolo_sparo_, .8f, danno_);
 		p2->next = proiettili_;
 		proiettili_ = p2;
 	}

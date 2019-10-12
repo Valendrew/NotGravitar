@@ -21,8 +21,8 @@ protected:
 	typedef nodoMappa *listaUniversi;
 
 	listaUniversi list_universi_;
-	listaUniversi posizioneAttuale_; //puntatore  dove si trova l'astronave
-	listaUniversi universoDiGioco_;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
+	listaUniversi posizione_attuale_; //puntatore  dove si trova l'astronave
+	listaUniversi universo_di_gioco_;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
 
 	listaUniversi addUniverso(int x, int y); //addUniveso aggiunge un universo con coordinate x,y alla lista di universi
 	bool statoAttacco;

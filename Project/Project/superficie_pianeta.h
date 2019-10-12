@@ -17,6 +17,7 @@ protected:
 	int larghezza_finestra_;
 	int altezza_finestra_;
 	int altezza_massima_; // altezza massima di generazione della superficie
+	int altezza_minima_;
 	oggetto *benzina_;
 
 	sf::VertexArray vertici_superficie_;

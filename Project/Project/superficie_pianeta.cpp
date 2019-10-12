@@ -155,7 +155,7 @@ void SuperficiePianeta::aggiungiBunker(int index, bool bunker_stronger)
 
 void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angolo)
 {
-	sf::Vector2f grandezza(60, 60);
+	sf::Vector2f grandezza(50, 50);
 	float vita = 50;
 	float danno = 10;
 
@@ -176,7 +176,7 @@ void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angol
 
 void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo)
 {
-	sf::Vector2f grandezza(60, 60);
+	sf::Vector2f grandezza(50, 50);
 	float vita = 70;
 	float danno = 8;
 
@@ -207,8 +207,7 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_to_print != nullptr) {
-		//(*bunker_to_print->bunker_item).spara();
-		//target.draw(*bunker_to_print->bunker_item);
+		(*bunker_to_print->bunker_item).spara();
 		(*bunker_to_print->bunker_item).drawComportamento(target, states);
 		bunker_to_print = bunker_to_print->next;
 	}
@@ -218,30 +217,35 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_stronger_to_print != nullptr) {
-		//(*bunker_stronger_to_print->bunker_item).spara();
-		//target.draw(*bunker_stronger_to_print->bunker_item);
+		(*bunker_stronger_to_print->bunker_item).spara();
 		(*bunker_stronger_to_print->bunker_item).drawComportamento(target, states);
 		bunker_stronger_to_print = bunker_stronger_to_print->next;
 	}
 }
 
-int SuperficiePianeta::getNumeroBunker()
+void SuperficiePianeta::generaBenzina() {
+	int tipologia_benzina = rand() % 100 + 1;
+	sf::Vector2f pos;
+	float angolo_rotazione = 0;
+	sf::Vector2f size(40,40);
+
+	//da calcolare posizione e angolo
+	
+	if (tipologia_benzina >= 50 && tipologia_benzina <= 74) {
+		benzina_ = new oggetto(BENZINA,"Texture/benzina.png",pos,angolo_rotazione,size);
+	}
+	else if (tipologia_benzina >= 75 && tipologia_benzina <= 90) {
+		benzina_ = new oggetto(BENZINA_BEST, "Texture/benzina_best.png", pos, angolo_rotazione, size);
+	}
+	else if (tipologia_benzina >= 91) {
+		benzina_ = new oggetto(CUORE, "Texture/cuore.png", pos, angolo_rotazione, size);
+	}
+ }
+
+SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto)
 {
-	int ritorno;
-	bunker_ptr app = bunker_;
-	bunker_stronger_ptr app2 = bunker_stronger_;
-	while (app!=nullptr)
-	{
-		ritorno++;
-		app = app->next;
-	}
-	while (app2 != nullptr)
-	{
-		ritorno++;
-		app2 = app2->next;
-	}
-	return ritorno;
-}
+	larghezza_finestra_ = larghezza_finestra;
+	altezza_finestra_ = altezza_finestra;
 
 	/* L'altezza massima della superficie può essere
 	il 30% dell'altezza della finestra*/
@@ -271,26 +275,7 @@ int SuperficiePianeta::getNumeroBunker()
 	generaBenzina();
 }
 
-void SuperficiePianeta::generaBenzina() {
-	int tipologia_benzina = rand() % 100 + 1;
-	sf::Vector2f pos;
-	float angolo_rotazione = 0;
-	sf::Vector2f size(40,40);
-
-	//da calcolare posizione e angolo
-	
-	if (tipologia_benzina >= 50 && tipologia_benzina <= 74) {
-		benzina_ = new oggetto(BENZINA,"Textuer/benzina.png",pos,angolo_rotazione,size);
-	}
-	else if (tipologia_benzina >= 75 && tipologia_benzina <= 90) {
-		benzina_ = new oggetto(BENZINA_BEST, "Textuer/benzina_best.png", pos, angolo_rotazione, size);
-	}
-	else if (tipologia_benzina >= 91) {
-		benzina_ = new oggetto(CUORE, "Texture/cuore.png", pos, angolo_rotazione, size);
-	}
- }
-
-SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra) : 
+SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra) :
 	SuperficiePianeta(larghezza_finestra, altezza_finestra, sf::Vector2f(), sf::Vector2f()) {}
 
 SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(1280, 720){}

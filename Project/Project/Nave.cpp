@@ -35,17 +35,17 @@ void Nave::spara()
 {
 	float angolo = getRotation();
 
-	if (clock_.getElapsedTime().asMilliseconds() > 700) {
+	if (clock_.getElapsedTime().asMilliseconds() > 400) {
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {
 			proiettili_ = new ProiettileNode();
-			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .6f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .8f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
 			proiettili_->next = nullptr;
 		}
 		else {
 			proiettile_ptr p = new ProiettileNode;
-			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .6f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .8f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
 			p->next = proiettili_;
 			proiettili_ = p;
 		}

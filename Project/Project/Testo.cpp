@@ -3,7 +3,6 @@
 
 
 Testo::Testo(std::string testo, int CharacterSize, sf::Color FillColor, sf::Color OutlineColor, double LetterSpacing, int OutlineThickness)
- 
 {
 	font_.loadFromFile("Font/edunline.ttf");
 	testo_.setFont(font_);
@@ -14,7 +13,8 @@ Testo::Testo(std::string testo, int CharacterSize, sf::Color FillColor, sf::Colo
 	testo_.setLetterSpacing(LetterSpacing);
 	testo_.setOutlineThickness(OutlineThickness);
 }
-Testo::Testo() : Testo("404", 25, sf::Color::Red, sf::Color::Red, 20, 0, 0, 5) {}
+
+Testo::Testo() : Testo("404", 25, sf::Color::Red, sf::Color::Red, 20, 0) {}
 
 void Testo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {

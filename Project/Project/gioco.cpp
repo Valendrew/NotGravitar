@@ -330,8 +330,6 @@ void Gioco::update()
 		controlloCollisioneProiettili();
 		movimentoNavicella();
 		controlloSparo();
-
-		aggiornaPunteggio();
 	}
 	else if (stato_ == GAMEOVER) {
 		start_.setString("RESTART");

@@ -2,7 +2,7 @@
 
 void Comportamento::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	target.draw(entita_);
+	//target.draw(entita_);
 }
 
 Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno, 
@@ -115,17 +115,17 @@ void Comportamento::eliminaProiettiliBordo()
 	{
 		sf::Vector2f pos_proiettile = (*tmp_proiettili->proiettile).getPosition();
 
-		if (pos_proiettile.x > larghezza_finestra_ - 100) {
+		if (pos_proiettile.x > larghezza_finestra_) {
 			tmp_proiettili = eliminaProiettile(tmp_proiettili);
 		}
-		else if (pos_proiettile.x < 0 + 100)
+		else if (pos_proiettile.x < 0)
 		{
 			tmp_proiettili = eliminaProiettile(tmp_proiettili);
 		}
-		else if (pos_proiettile.y > altezza_finestra_ - 100) {
+		else if (pos_proiettile.y > altezza_finestra_) {
 			tmp_proiettili = eliminaProiettile(tmp_proiettili);
 		}
-		else if (pos_proiettile.y < 0 + 100) {
+		else if (pos_proiettile.y < 0) {
 			tmp_proiettili = eliminaProiettile(tmp_proiettili);
 		}
 		else tmp_proiettili = tmp_proiettili->next;
@@ -139,13 +139,11 @@ void Comportamento::drawComportamento(sf::RenderTarget & target, sf::RenderState
 	eliminaProiettiliBordo();
 
 	proiettile_ptr p = proiettili_;
-	int i = 0;
 	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili, forse da spostare in funzione a parte!!
 	{
-		target.draw((*p->proiettile).getProiettile());
+		//target.draw((*p->proiettile).getProiettile());
+		target.draw(*p->proiettile);
 		(*p->proiettile).muovi();
 		p = p->next;
-		//i++;
-		//if (i >= 10 && p != NULL && p->next!=NULL) eliminaProiettile(p);
 	}
 }
