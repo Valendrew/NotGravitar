@@ -23,24 +23,15 @@ Proiettile::Proiettile(sf::Vector2f dimensione, sf::Vector2f posizione, float an
 
 Proiettile::Proiettile() : Proiettile(sf::Vector2f(), sf::Vector2f(), 0.f, 0.f, 0.f) {}
 
-sf::RectangleShape Proiettile::getProiettile()
+void Proiettile::setDistrutto()
 {
-	return proiettile_;
+	danno_ = 0;
+	proiettile_.setFillColor(sf::Color::Transparent);
 }
 
-float Proiettile::getVelocita()
+float Proiettile::getDanno()
 {
-	return velocita_;
-}
-
-void Proiettile::setVelocita(float velocita)
-{
-	velocita_ = velocita;
-}
-
-sf::FloatRect Proiettile::getGlobalBounds()
-{
-	return proiettile_.getGlobalBounds();
+	return danno_;
 }
 
 sf::Vector2f Proiettile::getPosition()
@@ -48,9 +39,24 @@ sf::Vector2f Proiettile::getPosition()
 	return proiettile_.getPosition();
 }
 
-void Proiettile::setColor(sf::Color color)
+sf::RectangleShape Proiettile::getProiettile()
 {
-	proiettile_.setFillColor(color);
+	return proiettile_;
+}
+
+//float Proiettile::getVelocita()
+//{
+//	return velocita_;
+//}
+//
+//void Proiettile::setVelocita(float velocita)
+//{
+//	velocita_ = velocita;
+//}
+
+sf::FloatRect Proiettile::getGlobalBounds()
+{
+	return proiettile_.getGlobalBounds();
 }
 
 void Proiettile::muovi()

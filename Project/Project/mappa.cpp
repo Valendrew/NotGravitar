@@ -30,7 +30,7 @@ Mappa::listaUniversi Mappa::findUniverso(int x, int y) {
 
 void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
-	target.draw(entita_);
+	target.draw(sfondo_);
 	target.draw((*posizione_attuale_->u));
 }
 
@@ -51,7 +51,7 @@ Mappa::Mappa(int larghezza_finestra, int altezza_finestra) {
 
 	}
 	texture_.setRepeated(true);
-	entita_ = sf::Sprite(texture_, sf::IntRect(0, 0, larghezza_finestra, altezza_finestra));
+	sfondo_ = sf::Sprite(texture_, sf::IntRect(0, 0, larghezza_finestra, altezza_finestra));
 
 	srand(time(0));
 	/*list_universi = new nodoMappa;

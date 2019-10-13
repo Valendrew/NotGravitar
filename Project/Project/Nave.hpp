@@ -35,7 +35,6 @@ public:
 	void setPosition(sf::Vector2f pos);
 
 	proiettile_ptr getProiettili();
-	float getVita();
 	void restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante);
 };
 

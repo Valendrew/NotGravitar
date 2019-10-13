@@ -157,7 +157,7 @@ void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angol
 {
 	sf::Vector2f grandezza(50, 50);
 	float vita = 50;
-	float danno = 10;
+	float danno = 12;
 
 	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_3.png", "Texture/bunker_3d.png", coordinate, grandezza, angolo);
 
@@ -178,7 +178,7 @@ void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, flo
 {
 	sf::Vector2f grandezza(50, 50);
 	float vita = 70;
-	float danno = 8;
+	float danno = 16;
 
 	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_2.png", "Texture/bunker_2d.png", coordinate, grandezza, angolo);
 
@@ -206,9 +206,14 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	bunker_ptr bunker_to_print = bunker_;
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
+
 	while (bunker_to_print != nullptr) {
 		(*bunker_to_print->bunker_item).spara();
+		(*bunker_to_print->bunker_item).aggiornaBarraVita();
+
 		(*bunker_to_print->bunker_item).drawComportamento(target, states);
+		target.draw(*bunker_to_print->bunker_item);
+
 		bunker_to_print = bunker_to_print->next;
 	}
 
@@ -218,7 +223,11 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_stronger_to_print != nullptr) {
 		(*bunker_stronger_to_print->bunker_item).spara();
+		(*bunker_stronger_to_print->bunker_item).aggiornaBarraVita();
+
 		(*bunker_stronger_to_print->bunker_item).drawComportamento(target, states);
+		target.draw(*bunker_stronger_to_print->bunker_item);
+
 		bunker_stronger_to_print = bunker_stronger_to_print->next;
 	}
 }
@@ -370,15 +379,7 @@ void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 
 	while (tmp_bunker != nullptr)
 	{
-		proiettile_ptr tmp_proiettili = lista_proiettili;
-
-		while (tmp_proiettili != nullptr)
-		{
-			if ((*tmp_bunker->bunker_item).getGlobalBounds().intersects((*tmp_proiettili->proiettile).getGlobalBounds())) {
-				(*tmp_bunker->bunker_item).setDistrutto();
-			}
-			tmp_proiettili = tmp_proiettili->next;
-		}
+		(*tmp_bunker->bunker_item).controlloProiettili(lista_proiettili);
 		tmp_bunker = tmp_bunker->next;
 	}
 
@@ -386,15 +387,7 @@ void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 
 	while (tmp_stronger_bunker != nullptr)
 	{
-		proiettile_ptr tmp_proiettili = lista_proiettili;
-
-		while (tmp_proiettili != nullptr)
-		{
-			if ((*tmp_stronger_bunker->bunker_item).getGlobalBounds().intersects((*tmp_proiettili->proiettile).getGlobalBounds())) {
-				(*tmp_stronger_bunker->bunker_item).setDistrutto();
-			}
-			tmp_proiettili = tmp_proiettili->next;
-		}
+		(*tmp_stronger_bunker->bunker_item).controlloProiettili(lista_proiettili);
 		tmp_stronger_bunker = tmp_stronger_bunker->next;
 	}
 

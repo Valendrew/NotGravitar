@@ -22,6 +22,7 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 
 	vita_ = vita;
 	danno_ = danno;
+	distrutto_ = false;
 
 	proiettili_ = nullptr;
 
@@ -74,12 +75,13 @@ void Comportamento::setRotation(float rot)
 
 void Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 {
-	while (lista_proiettili != nullptr)
+	while (lista_proiettili != nullptr && !distrutto_)
 	{
 		sf::FloatRect rect_proiettile = (*lista_proiettili->proiettile).getGlobalBounds();
 
 		if (entita_.getGlobalBounds().intersects(rect_proiettile)) {
-			(*lista_proiettili->proiettile).setColor(sf::Color::Red);
+			diminuisciVita((*lista_proiettili->proiettile).getDanno());
+			(*lista_proiettili->proiettile).setDistrutto();
 		}
 		lista_proiettili = lista_proiettili->next;
 	}
@@ -132,10 +134,39 @@ void Comportamento::eliminaProiettiliBordo()
 	}
 }
 
+float Comportamento::getVita()
+{
+	return vita_;
+}
+
+bool Comportamento::getDistrutto()
+{
+	return distrutto_;
+}
+
+void Comportamento::setDistrutto()
+{
+	distrutto_ = true;
+
+	texture_.loadFromFile(nomeFileDistrutto_); // texture dell'oggetto
+	entita_.setTexture(&texture_); // impostata la texture
+}
+
+void Comportamento::diminuisciVita(float danno)
+{
+	if (vita_ > danno) {
+		vita_ -= danno;
+	}
+	else {
+		vita_ = 0;
+		setDistrutto();
+	}
+}
+
 void Comportamento::drawComportamento(sf::RenderTarget & target, sf::RenderStates states)
 {
 	target.draw(entita_);
-
+	
 	eliminaProiettiliBordo();
 
 	proiettile_ptr p = proiettili_;

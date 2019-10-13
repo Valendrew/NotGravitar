@@ -17,6 +17,7 @@ protected:
 
 	float vita_;
 	float danno_;
+	bool distrutto_;
 
 	char nomeFile_[50];
 	char nomeFileDistrutto_[50];
@@ -35,9 +36,7 @@ public:
 
 	sf::Vector2f getPosizione();
 	void setPosizione(sf::Vector2f pos);
-
 	sf::FloatRect getGlobalBounds();
-
 	sf::Vector2f getDimensione();
 
 	float getRotation();
@@ -47,6 +46,10 @@ public:
 	proiettile_ptr eliminaProiettile(proiettile_ptr p);
 	void eliminaProiettiliBordo();
 
+	float getVita();
+	bool getDistrutto();
+	void setDistrutto();
+	void diminuisciVita(float danno);
 	void drawComportamento(sf::RenderTarget& target, sf::RenderStates states);
 };
 #endif // !_COMPORTAMENTO_H

@@ -23,17 +23,17 @@ protected:
 	Testo start_;
 	Testo titolo_;
 	Testo subtitle_;
-	Testo punteggio_text;
-	Testo vita_text;
-	Testo carburante_text;
+	Testo punteggio_text_;
+	Testo vita_text_;
+	Testo carburante_text_;
 
 	Nave nave_;
 	Mappa mappa_;
-	bool nave_movimento;
-	bool nave_rotazioneL;
-	bool nave_rotazioneR;
-	bool nave_spara;
-	bool collisione_nave;
+
+	bool nave_movimento_;
+	bool nave_rotazioneL_;
+	bool nave_rotazioneR_;
+	bool nave_spara_;
 
 	int punteggio_;
 	sf::Vector2f posizione_entrata_pianeta_;
@@ -47,7 +47,7 @@ protected:
 		PAUSA
 	};
 	Stato stato_;
-	Stato salva_stato;//serve per la pausa, cosi se ero nel pianeta ci sono di nuovo e se ero nell'universo ci sono di nuovo
+	Stato salva_stato_;//serve per la pausa, cosi se ero nel pianeta ci sono di nuovo e se ero nell'universo ci sono di nuovo
 
 	void processaEventi();
 	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);
@@ -59,11 +59,11 @@ protected:
 	void controlloPassaggioSuperficie();
 	void controlloCollisioneSuperficie();
 	void controlloCollisioneProiettili();
-	bool debug;
+
 	void update();
 	void render();
-	int gestisciMouse(sf::Vector2i v);
 	void mouseClick(sf::Mouse::Button b);
+	int gestisciMouse(sf::Vector2i v);
 	void aggiornaTestoNumeri(const char stringa[], int valore, Testo &t);
 	void controlloAggiornamentoPunteggio();
 public:
