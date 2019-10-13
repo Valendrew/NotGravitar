@@ -342,10 +342,7 @@ void Gioco::update()
 	}
 	else if (stato_ == START) {
 		start_.setString("START");
-		titolo_.setPosition(LARGHEZZA / 2 - titolo_.getGlobalBounds().width / 2, 10);
-		exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
 	}
-	//grazie a questo controllo la nave   smette di/non puo iniziare a   muoversi 
 	if (stato_ == START || stato_ == PAUSA || stato_ == GAMEOVER) {
 
 		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
@@ -394,16 +391,18 @@ Gioco::Gioco() :
 		sf::Vector2f(40, 40), sf::Vector2f(40, 40), 0, 220, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
-	, punteggio_text("PUNTEGGIO: 100",32, sf::Color::Blue, sf::Color::Magenta, 1.5, 1)
-	,titolo_("NON GRAVITAR", 120, sf::Color::Red, sf::Color::Yellow, 1.5, 4)
-	,subtitle_("",60, sf::Color::Red, sf::Color::Transparent, 1.5, 0)
-	,start_("",55, sf::Color::Green, sf::Color::Transparent, 1.5, 0)
-	,exit_("EXIT", 55, sf::Color::Magenta, sf::Color::Transparent, 1.5, 0)
-	,vita_text("VITA: 100", 32, sf::Color::Green, sf::Color::Yellow, 1.5, 1)
-	,carburante_text("", 32, sf::Color::Red, sf::Color::Blue, 1.5, 1)
+	, punteggio_text("PUNTEGGIO: 100",32, sf::Color::Blue, sf::Color::Magenta, 1.5, 1, sf::Vector2f(5, 0))
+	,titolo_("NON GRAVITAR", 120, sf::Color::Red, sf::Color::Yellow, 1.5, 4, sf::Vector2f(LARGHEZZA / 2 - titolo_.getGlobalBounds().width / 2, 10))
+	,subtitle_("",60, sf::Color::Red, sf::Color::Transparent, 1.5, 0, sf::Vector2f(0, 0))
+	,start_("",55, sf::Color::Green, sf::Color::Transparent, 1.5, 0, sf::Vector2f(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2))
+	,exit_("EXIT", 55, sf::Color::Magenta, sf::Color::Transparent, 1.5, 0, sf::Vector2f(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100))
+	,vita_text("VITA: 100", 32, sf::Color::Red, sf::Color::Blue, 1.5, 1, sf::Vector2f(LARGHEZZA / 2 - 300, 0))
+	,carburante_text("", 32, sf::Color::Red, sf::Color::Blue, 1.5, 1, sf::Vector2f(0, 0))
 {
-	punteggio_text.setPosition(5, 0);
-	vita_text.setPosition(LARGHEZZA / 2 - 300, 0);
+	titolo_.setPosition(LARGHEZZA / 2 - titolo_.getGlobalBounds().width / 2,10);
+	exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
+	start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+
 	float distanzaPunteggioVita = vita_text.getPosition().x - (punteggio_text.getPosition().x + punteggio_text.getGlobalBounds().width);
 	carburante_text.setPosition(vita_text.getPosition().x + vita_text.getGlobalBounds().width + distanzaPunteggioVita, 0);
 

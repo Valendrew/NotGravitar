@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 
-Testo::Testo(std::string testo, int CharacterSize, sf::Color FillColor, sf::Color OutlineColor, double LetterSpacing, int OutlineThickness)
+Testo::Testo(std::string testo, int CharacterSize, sf::Color FillColor, sf::Color OutlineColor, double LetterSpacing, int OutlineThickness, sf::Vector2f posizione)
 {
 	font_.loadFromFile("Font/edunline.ttf");
 	testo_.setFont(font_);
@@ -12,9 +12,10 @@ Testo::Testo(std::string testo, int CharacterSize, sf::Color FillColor, sf::Colo
 	testo_.setOutlineColor(OutlineColor);
 	testo_.setLetterSpacing(LetterSpacing);
 	testo_.setOutlineThickness(OutlineThickness);
+	testo_.setPosition(posizione);
 }
 
-Testo::Testo() : Testo("404", 25, sf::Color::Red, sf::Color::Red, 20, 0) {}
+Testo::Testo() : Testo("404", 25, sf::Color::Red, sf::Color::Red, 20, 0, sf::Vector2f(0,0)) {}
 
 void Testo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {

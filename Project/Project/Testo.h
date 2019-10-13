@@ -10,7 +10,7 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
 	Testo();
-	Testo(std::string testo ,int CharacterSize, sf::Color FillColor, sf::Color OutlineColor, double LetterSpacing, int OutlineThickness);
+	Testo(std::string testo ,int CharacterSize, sf::Color FillColor, sf::Color OutlineColor, double LetterSpacing, int OutlineThickness, sf::Vector2f posizione);
 	
 	void setString(std::string s);
 	sf::FloatRect getGlobalBounds();
