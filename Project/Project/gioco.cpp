@@ -283,8 +283,24 @@ void Gioco::controlloCollisioneSuperficie()
 void Gioco::controlloCollisioneProiettili()
 {
 	nave_.controlloProiettili(mappa_.getProiettili());
-	
 	mappa_.controlloProiettili(nave_.getProiettili());
+}
+
+void Gioco::controlloCollisioneProiettiliSuperficie()
+{
+	proiettile_ptr lista_p = nave_.getProiettili();
+
+	while (lista_p != nullptr)
+	{
+		if (mappa_.controlloCollisioneSuperficie((*lista_p->proiettile).getPosition()))
+		{
+			lista_p = nave_.eliminaProiettile(lista_p);
+		}
+		else
+		{
+			lista_p = lista_p->next;
+		}
+	}
 }
 
 void Gioco::controlloAggiornamentoPunteggio() {
@@ -323,6 +339,7 @@ void Gioco::update()
 		controlloPassaggioSuperficie();
 		controlloCollisioneSuperficie();
 		controlloCollisioneProiettili();
+		controlloCollisioneProiettiliSuperficie();
 
 		movimentoNavicella();
 		controlloSparo();

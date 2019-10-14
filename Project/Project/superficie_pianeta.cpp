@@ -240,7 +240,7 @@ void SuperficiePianeta::generaBenzina() {
 	while (!found)
 	{
 		index = rand() % (NUMERO_DI_LINEE - 2) + 1;
-		if (!controllaOggettiVicinanze(index, 1)) {
+		if (!controllaOggettiVicinanze(index, 0)) {
 			found = true;
 		}
 	}
@@ -405,22 +405,33 @@ proiettile_ptr SuperficiePianeta::getProiettili()
 	return lista_proiettili;
 }
 
-bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
+sf::VertexArray SuperficiePianeta::getPosizioneLineaSuperficie(sf::Vector2f posizione)
 {
+	sf::VertexArray pos_linea(sf::LineStrip, 2);
+
 	bool found = false;
 	int index = 0;
 	int i = 0;
-	while (!found && i < (vertici_superficie_.getVertexCount() - 1))
+	while (!found && i < NUMERO_DI_LINEE)
 	{
-		if (vertici_superficie_[i].position.x >= pos.x) {
+		if (posizione.x >= superficie_[i].getPoint(0).x && posizione.x <= superficie_[i].getPoint(1).x) {
 			found = true;
 			index = i;
 		}
 		i++;
 	}
 
-	sf::Vector2f point_1 = vertici_superficie_[index].position;
-	sf::Vector2f point_2 = vertici_superficie_[index + 1].position;
+	pos_linea[0].position = superficie_[index].getPoint(0);
+	pos_linea[1].position = superficie_[index].getPoint(1);
+
+	return pos_linea;
+}
+bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
+{
+	sf::VertexArray pos_linea = getPosizioneLineaSuperficie(pos);
+
+	sf::Vector2f point_1 = pos_linea[0].position;
+	sf::Vector2f point_2 = pos_linea[1].position;
 
 	float coefficiente_angolare = (point_2.y - point_1.y) /
 		(point_2.x - point_1.x);

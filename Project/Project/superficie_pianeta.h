@@ -73,6 +73,7 @@ public:
 
 	proiettile_ptr getProiettili();
 
+	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	void controlloProiettili(proiettile_ptr lista_proiettili);
 	int getNumeroBunker();

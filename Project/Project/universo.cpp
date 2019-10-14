@@ -208,10 +208,20 @@ int Universo::controlloPassaggioSuperficie(sf::Vector2f pos)
 
 bool Universo::controlloCollisioneSuperficie(sf::Vector2f pos) {
 	bool ritorno = false;
+
 	if (pianetaAttuale != nullptr) {
 		ritorno = (*pianetaAttuale->pianeta_).controlloCollisioneSuperficie(pos);
 	}
 	return ritorno;
+}
+
+sf::VertexArray Universo::getPosizioneLineaSuperficie(sf::Vector2f posizione)
+{
+	if (pianetaAttuale != nullptr) {
+		return (*pianetaAttuale->pianeta_).getPosizioneLineaSuperficie(posizione);
+	}
+	else
+		return sf::VertexArray();
 }
 
 proiettile_ptr Universo::getProiettili()

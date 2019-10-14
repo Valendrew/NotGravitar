@@ -169,6 +169,11 @@ bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
 	return (posizione_attuale_->u)->pianetaAttualeRicerca(x_astronave, y_astronave);
 }
 
+sf::VertexArray Mappa::getPosizioneLineaSuperficie(sf::Vector2f posizione)
+{
+	return sf::VertexArray();
+}
+
 proiettile_ptr Mappa::getProiettili()
 {
 	return (*posizione_attuale_->u).getProiettili();

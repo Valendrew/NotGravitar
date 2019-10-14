@@ -41,6 +41,8 @@ public:
 	adiacenti a quello attuale */
 	bool spostamento(int i);
 	bool ricercaPianeta(int x_astronave, int y_astronave);
+
+	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	proiettile_ptr getProiettili();
 	void controlloProiettili(proiettile_ptr lista_proiettili);
 

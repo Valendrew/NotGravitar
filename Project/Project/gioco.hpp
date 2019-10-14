@@ -59,6 +59,7 @@ protected:
 	void controlloPassaggioSuperficie();
 	void controlloCollisioneSuperficie();
 	void controlloCollisioneProiettili();
+	void controlloCollisioneProiettiliSuperficie();
 
 	void update();
 	void render();
