@@ -42,13 +42,13 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 			mappa_.restart(LARGHEZZA, ALTEZZA);
 			nave_.restart(100, LARGHEZZA/2, ALTEZZA/2, 0, 10);
 			stato_ = UNIVERSO;
-			punteggio_text.setPosition(5, 0);
+			punteggio_text_.setPosition(5, 0);
 		}
 		else if (stringa_start.compare("START") == 0) {
 			stato_ = UNIVERSO;
 		}
 		else if (stringa_start.compare("RESUME") == 0) {
-			stato_ = salva_stato;
+			stato_ = salva_stato_;
 		}
 		//Le due linee seguenti servono per ridimensionare subito lo start, altrimenti una volata premuta la pausa si visualizzerebbe "RESUME" a dimensione 60
 		//invece che 55 per un istante
@@ -57,7 +57,7 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 
 	}
 	else if (gestioneMouse == 2) { 
-		salva_stato = stato_;
+		salva_stato_ = stato_;
 		stato_ = PAUSA;
 	}
 	
@@ -66,11 +66,8 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 
 int Gioco::gestisciMouse() {
 
-	int pulsantePremuto = -1;
 	sf::Vector2i posizioneMouse = sf::Mouse::getPosition(window_);
-	/*Grazie a questo booleano posso verificare che l'astronave non stia compiando azioni. Senza di esso se tengo premuto un pulsante di movimento
-	mentre premo pausa, l'astronave continuerà comunque a muoversi*/
-	bool nave_ferma = !(nave_movimento || nave_rotazioneL || nave_rotazioneR || nave_spara);
+	int pulsantePremuto = -1;
 
 	if (stato_ == GAMEOVER || stato_ == PAUSA || stato_ == START) {
 		if (start_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
@@ -93,11 +90,11 @@ int Gioco::gestisciMouse() {
 			pulsantePremuto = 2;
 			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 255));
 		}
-		else 
+		else
 			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 160));
 	}
 	return pulsantePremuto;
-	 
+
 }
 
 void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
@@ -307,7 +304,7 @@ void Gioco::controlloAggiornamentoPunteggio() {
 		punteggio_ += 10;
 	}
 	
-	aggiornaTestoNumeri("PUNTEGGIO: ",punteggio_, punteggio_text);
+	aggiornaTestoNumeri("PUNTEGGIO: ",punteggio_, punteggio_text_);
 
 }
 
@@ -375,75 +372,7 @@ void Gioco::render()
 	window_.display();
 }
 
-void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 
-	sf::Vector2i posizioneMouse;
-	posizioneMouse.x = sf::Mouse::getPosition(window_).x;
-	posizioneMouse.y = sf::Mouse::getPosition(window_).y;
-
-	int gestioneMouse = gestisciMouse(posizioneMouse);
-	if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 1) {
-		window_.close();
-	}
-	else if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 0) {
-
-		std::string app = start_.getString();
-		//compare torna 0 se le due stringhe sono uguali
-		if (!app.compare("RESTART")) {
-			mappa_.restart(LARGHEZZA, ALTEZZA);
-			nave_.restart(100, LARGHEZZA / 2, ALTEZZA / 2, 0, 10);
-			stato_ = UNIVERSO;
-			punteggio_text_.setPosition(5, 0);
-		}
-		else if (!app.compare("START")) {
-			stato_ = UNIVERSO;
-		}
-		else if (!app.compare("RESUME")) {
-			stato_ = salva_stato_;
-		}
-		//Le due linee seguenti servono per ridimensionare subito lo start, altrimenti una volata premuta la pausa si visualizzerebbe "RESUME" a dimensione 60
-		//invece che 55 per un istante
-		start_.setCharacterSize(55);
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-
-	}
-	else if (gestioneMouse == 2) {
-		salva_stato_ = stato_;
-		stato_ = PAUSA;
-	}
-}
-
-int Gioco::gestisciMouse(sf::Vector2i posizioneMouse) {
-
-	int pulsantePremuto = -1;
-
-	if (stato_ == GAMEOVER || stato_ == PAUSA || stato_ == START) {
-		if (start_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-			start_.setCharacterSize(60);
-			pulsantePremuto = 0;
-		}
-		else {
-			start_.setCharacterSize(55);
-			if (exit_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-				exit_.setCharacterSize(60);
-				pulsantePremuto = 1;
-			}
-			else exit_.setCharacterSize(55);
-		}
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-		exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
-	}
-	else {
-		if (pausa_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-			pulsantePremuto = 2;
-			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 255));
-		}
-		else
-			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 160));
-	}
-	return pulsantePremuto;
-
-}
 
 void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
 
@@ -455,25 +384,6 @@ void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
 	t.setString(stringaCompleta);
 }
 
-void Gioco::controlloAggiornamentoPunteggio() {
-
-	listaPianeti p_attuale = mappa_.getUniversoDiGioco().getPianetaAttuale();
-
-	//Il controllo mappa_.isNuovoUniverso() serve per far aumentare il punteggio di 100 una sola volta per ugni sistema solare
-	if (mappa_.getUniversoDiGioco().distrutto() && mappa_.isNuovoUniverso()) {
-		punteggio_ += 100;
-		mappa_.setVecchioUniverso();
-	}
-	else if ((*p_attuale->pianeta_).distrutto()) {
-		punteggio_ += 50;
-	}
-	else if ((*p_attuale->pianeta_).distruzioneSingoloBunker()) {
-		punteggio_ += 10;
-	}
-
-	aggiornaTestoNumeri("PUNTEGGIO: ", punteggio_, punteggio_text_);
-
-}
 
 Gioco::Gioco() :
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
