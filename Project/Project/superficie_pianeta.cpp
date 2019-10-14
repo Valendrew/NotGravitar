@@ -73,8 +73,10 @@ void SuperficiePianeta::generaSuperficie()
 void SuperficiePianeta::generaBunker()
 {
 	// Il numero di bunker sarà compreso tra 2 e 3
-	int numero_di_bunker = (rand() % 2) + 2;
+	//int numero_di_bunker = (rand() % 2) + 2;
+	int numero_di_bunker = 3;
 	
+	// Viene generato un solo bunker da 3 proiettili per superficie
 	int bunker_stronger = 1;
 	/* Inizialmente viene scelta casualmente la posizione del bunker
 	tra le linee 0 e (MAX - 1), dopo di che, se nella posizione non è presente
@@ -84,13 +86,13 @@ void SuperficiePianeta::generaBunker()
 		int posizione_bunker = rand() % (NUMERO_DI_LINEE - 2) + 1;
 
 		if (bunker_presenti_[posizione_bunker] == false) {
-			if (!controllaBunkerVicinanze(posizione_bunker)) {
+			if (!controllaOggettiVicinanze(posizione_bunker, 2)) {
 				if (bunker_stronger > 0) {
-					aggiungiBunker(posizione_bunker, true);
+					aggiungiOggetto(posizione_bunker, BUNKER_STRONGER, sf::Vector2f(50, 50));
 					bunker_stronger--;
 				}
 				else {
-					aggiungiBunker(posizione_bunker, false); // metodo per aggiungere il bunker alla struttura
+					aggiungiOggetto(posizione_bunker, BUNKER, sf::Vector2f(50, 50)); // metodo per aggiungere il bunker alla struttura
 				}
 				numero_di_bunker--;
 				// Posizione impostata a true, per indicare che adesso è occupata da un bunker
@@ -100,9 +102,9 @@ void SuperficiePianeta::generaBunker()
 	}
 }
 
-bool SuperficiePianeta::controllaBunkerVicinanze(int posizione)
+bool SuperficiePianeta::controllaOggettiVicinanze(int posizione, int distanza)
 {
-	int distanza = 2, startIndex = 0, finishIndex = NUMERO_DI_LINEE;
+	int startIndex = 0, finishIndex = NUMERO_DI_LINEE;
 	bool found = false;
 
 	if (posizione - distanza > startIndex) startIndex = posizione - distanza;
@@ -117,12 +119,11 @@ bool SuperficiePianeta::controllaBunkerVicinanze(int posizione)
 	return found;
 }
 
-void SuperficiePianeta::aggiungiBunker(int index, bool bunker_stronger)
+void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto, sf::Vector2f dimensione)
 {
 	// Vettore che rappresenta la coppia (x,y)
-	sf::Vector2f new_coordinate_bunker;
-	float coordinate_bunker[2];
-	int grandezza_bunker = 30;
+	sf::Vector2f new_coordinate;
+	float coordinate[2];
 	
 	/* Viene calcolato l'angolo tra i due punti. Per prima cosa deve essere
 	calcolato il coefficiente_angolare, che poi viene utilizzato per calcolare 
@@ -141,25 +142,61 @@ void SuperficiePianeta::aggiungiBunker(int index, bool bunker_stronger)
 	float ordinata_origine = vertici_superficie_[index].position.y - vertici_superficie_[index].position.x * coefficiente_angolare;
 	int offset = 15;
 
-	coordinate_bunker[0] = rand() % (grandezza_bunker) + offset + vertici_superficie_[index].position.x;
-	coordinate_bunker[1] = coordinate_bunker[0] * coefficiente_angolare + ordinata_origine;
+	coordinate[0] = rand() % ((int) dimensione.x) + offset + vertici_superficie_[index].position.x;
+	coordinate[1] = coordinate[0] * coefficiente_angolare + ordinata_origine;
 
-	new_coordinate_bunker.x = rand() % (grandezza_bunker)+offset + vertici_superficie_[index].position.x;
-	new_coordinate_bunker.y = new_coordinate_bunker.x * coefficiente_angolare + ordinata_origine;;
+	new_coordinate.x = rand() % ((int) dimensione.x)+offset + vertici_superficie_[index].position.x;
+	new_coordinate.y = new_coordinate.x * coefficiente_angolare + ordinata_origine;;
 
-	if (bunker_stronger)
-		inserisciNodoBunkerStronger(new_coordinate_bunker, angolo);
-	else 
-		inserisciNodoBunker(new_coordinate_bunker, angolo);
+	if (tipoOggetto == BUNKER_STRONGER)
+		inserisciNodoBunkerStronger(new_coordinate, angolo, dimensione);
+	else if (tipoOggetto == BUNKER)
+		inserisciNodoBunker(new_coordinate, angolo, dimensione);
+	else {
+		
+		char tipologia[50];
+		char texture[50];
+
+		switch (tipoOggetto)
+		{
+		case BENZINA_BEST:
+		{
+			char stringa_oggetto[] = "BENZINA_BEST";
+			char stringa_texture[] = "Texture/benzina_best_1.png";
+
+			copiaStringa(tipologia, 50, stringa_oggetto);
+			copiaStringa(texture, 50, stringa_texture);
+		} break;
+		case BENZINA:
+		{
+			char stringa_oggetto[] = "BENZINA";
+			char stringa_texture[] = "Texture/benzina_1.png";
+
+			copiaStringa(tipologia, 50, stringa_oggetto);
+			copiaStringa(texture, 50, stringa_texture);
+		} break;
+		case CUORE:
+		{
+			char stringa_oggetto[] = "CUORE";
+			char stringa_texture[] = "Texture/cuore_1.png";
+
+			copiaStringa(tipologia, 50, stringa_oggetto);
+			copiaStringa(texture, 50, stringa_texture);
+		} break;
+		default:
+			break;
+		}
+
+		benzina_ = new oggetto(tipologia, texture, new_coordinate, angolo, dimensione);
+	}
 }
 
-void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angolo)
+void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angolo, sf::Vector2f dimensione)
 {
-	sf::Vector2f grandezza(50, 50);
 	float vita = 50;
 	float danno = 12;
 
-	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_3.png", "Texture/bunker_3d.png", coordinate, grandezza, angolo);
+	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_1.png", "Texture/bunker_1d.png", coordinate, dimensione, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_ = new BunkerNode();
@@ -174,13 +211,12 @@ void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angol
 	}
 }
 
-void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo)
+void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo, sf::Vector2f dimensione)
 {
-	sf::Vector2f grandezza(50, 50);
 	float vita = 70;
 	float danno = 16;
 
-	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_2.png", "Texture/bunker_2d.png", coordinate, grandezza, angolo);
+	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_s_1.png", "Texture/bunker_s_1d.png", coordinate, dimensione, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_stronger_ = new BunkerStrongerNode();
@@ -195,6 +231,44 @@ void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, flo
 	}
 }
 
+void SuperficiePianeta::generaBenzina() {
+	int tipologia_benzina = rand() % 100 + 1;
+	sf::Vector2f size(30, 25);
+	
+	int index;
+	bool found = false;
+	while (!found)
+	{
+		index = rand() % (NUMERO_DI_LINEE - 2) + 1;
+		if (!controllaOggettiVicinanze(index, 1)) {
+			found = true;
+		}
+	}
+
+	//da calcolare posizione e angolo
+
+	if (tipologia_benzina > 30 && tipologia_benzina < 60) {
+		aggiungiOggetto(index, BENZINA, size);
+	}
+	else if (tipologia_benzina >= 60 && tipologia_benzina < 85) {
+		aggiungiOggetto(index, BENZINA_BEST, size);
+	}
+	else if (tipologia_benzina >= 85) {
+		aggiungiOggetto(index, CUORE, size);
+	}
+}
+
+void SuperficiePianeta::copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[])
+{
+	int i = 0;
+	while (stringa_da_copiare[i] != '\0')
+	{
+		stringa[i] = stringa_da_copiare[i];
+		i++;
+	}
+	stringa[i] = '\0';
+}
+
 void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	for (size_t i = 0; i < NUMERO_DI_LINEE; i++)
@@ -202,13 +276,17 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 		target.draw(superficie_[i]);
 	}
 
+	if (benzina_ != nullptr) {
+		target.draw(*benzina_);
+	}
+	
 	// Puntatore all'attuale struttura rappresentante i Bunker
 	bunker_ptr bunker_to_print = bunker_;
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 
 	while (bunker_to_print != nullptr) {
-		(*bunker_to_print->bunker_item).spara();
+		//(*bunker_to_print->bunker_item).spara();
 		(*bunker_to_print->bunker_item).aggiornaBarraVita();
 
 		(*bunker_to_print->bunker_item).drawComportamento(target, states);
@@ -222,7 +300,7 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_stronger_to_print != nullptr) {
-		(*bunker_stronger_to_print->bunker_item).spara();
+		//(*bunker_stronger_to_print->bunker_item).spara();
 		(*bunker_stronger_to_print->bunker_item).aggiornaBarraVita();
 
 		(*bunker_stronger_to_print->bunker_item).drawComportamento(target, states);
@@ -231,25 +309,6 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 		bunker_stronger_to_print = bunker_stronger_to_print->next;
 	}
 }
-
-void SuperficiePianeta::generaBenzina() {
-	int tipologia_benzina = rand() % 100 + 1;
-	sf::Vector2f pos;
-	float angolo_rotazione = 0;
-	sf::Vector2f size(40,40);
-
-	//da calcolare posizione e angolo
-	
-	if (tipologia_benzina >= 50 && tipologia_benzina <= 74) {
-		benzina_ = new oggetto(BENZINA,"Texture/benzina.png",pos,angolo_rotazione,size);
-	}
-	else if (tipologia_benzina >= 75 && tipologia_benzina <= 90) {
-		benzina_ = new oggetto(BENZINA_BEST, "Texture/benzina_best.png", pos, angolo_rotazione, size);
-	}
-	else if (tipologia_benzina >= 91) {
-		benzina_ = new oggetto(CUORE, "Texture/cuore.png", pos, angolo_rotazione, size);
-	}
- }
 
 SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto)
 {

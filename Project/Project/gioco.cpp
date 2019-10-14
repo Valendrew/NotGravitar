@@ -372,8 +372,6 @@ void Gioco::render()
 	window_.display();
 }
 
-
-
 void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
 
 	char valoreToString[10];
@@ -384,10 +382,9 @@ void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
 	t.setString(stringaCompleta);
 }
 
-
 Gioco::Gioco() :
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
-	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_3.png", "Texture/ship_3d.png",
+	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_2.png", "Texture/ship_2d.png",
 		sf::Vector2f(40, 40), sf::Vector2f(60, 60), 0, 350, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()

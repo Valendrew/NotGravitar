@@ -23,12 +23,14 @@ Nave::Nave() : Comportamento() {
 
 void Nave::ruotaSinistra()
 {
-	entita_.rotate(-velocita_rotazione_);
+	if (!distrutto_) 
+		entita_.rotate(-velocita_rotazione_);
 }
 
 void Nave::ruotaDestra()
 {
-	entita_.rotate(velocita_rotazione_);
+	if (!distrutto_) 
+		entita_.rotate(velocita_rotazione_);
 }
 
 void Nave::spara()
@@ -84,10 +86,12 @@ sf::VertexArray Nave::getPosizioneFrontale()
 }
 
 void Nave::muovi(sf::Time deltaTime) {
-	float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
-	float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
+	if (!distrutto_) {
+		float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
+		float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 
-	entita_.move(velX, velY);
+		entita_.move(velX, velY);
+	}
 }
 
 sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghezza/2 generici
