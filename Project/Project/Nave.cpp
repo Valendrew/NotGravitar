@@ -35,7 +35,7 @@ void Nave::spara()
 {
 	float angolo = getRotation();
 
-	if (clock_.getElapsedTime().asMilliseconds() > 400) {
+	if (clock_.getElapsedTime().asMilliseconds() > 400 && !distrutto_) {
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {
@@ -91,7 +91,6 @@ void Nave::muovi(sf::Time deltaTime) {
 }
 
 sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghezza/2 generici
-	//float coeff = 12.5;
 	float coeff_x = entita_.getSize().x / 2;
 	float coeff_y = entita_.getSize().y / 2;
 
@@ -104,7 +103,6 @@ sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghe
 }
 
 void Nave::setPosition(sf::Vector2f pos) { //non testata
-	//float coeff = 12.5;
 	float coeff_x = entita_.getSize().x / 2;
 	float coeff_y = entita_.getSize().y / 2;
 
@@ -118,11 +116,6 @@ void Nave::setPosition(sf::Vector2f pos) { //non testata
 proiettile_ptr Nave::getProiettili()
 {
 	return proiettili_;
-}
-
-float Nave::getVita()
-{
-	return vita_;
 }
 
 void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante) {

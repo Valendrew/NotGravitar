@@ -13,24 +13,17 @@ private:
 	float x_;
 	float y_;
 
-	int danno_;
+	float danno_;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
 	Proiettile(sf::Vector2f dimensione, sf::Vector2f posizione, float angolo, float velocita, float danno);
 	Proiettile();
-
-	sf::RectangleShape getProiettile();
-
-	float getVelocita();
-	void setVelocita(float velocita_);
-	
-	sf::FloatRect getGlobalBounds();
-
+	void setDistrutto();
+	float getDanno();
 	sf::Vector2f getPosition();
-
-	void setColor(sf::Color color);
-
+	sf::RectangleShape getProiettile();
+	sf::FloatRect getGlobalBounds();
 	void muovi();
 };
 

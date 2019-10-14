@@ -2,7 +2,7 @@
 
 void Bunker::spara()
 {
-	if (clock_.getElapsedTime().asMilliseconds() > 1000) {
+	if (clock_.getElapsedTime().asMilliseconds() > 1000 && !distrutto_) {
 		clock_.restart();
 		
 		sf::Vector2f posizione(entita_.getPosition().x, entita_.getPosition().y - entita_.getSize().y);
@@ -21,12 +21,15 @@ void Bunker::spara()
 	}
 }
 
-void Bunker::setDistrutto()
+void Bunker::aggiornaBarraVita()
 {
-	distrutto_ = true;
-	
-	texture_.loadFromFile(nomeFileDistrutto_); // texture dell'oggetto
-	entita_.setTexture(&texture_); // impostata la texture
+	vita_rimanente_.setSize(sf::Vector2f(vita_ * entita_.getSize().x / vita_massima_, 10));
+	vita_eliminta_.setSize(sf::Vector2f(entita_.getSize().x - vita_rimanente_.getSize().x, 10));
+
+	sf::Vector2f posizione(entita_.getPosition().x, altezza_finestra_ * 0.90);
+
+	vita_rimanente_.setPosition(posizione);
+	vita_eliminta_.setPosition(posizione.x + vita_rimanente_.getSize().x, posizione.y);
 }
 
 proiettile_ptr Bunker::getProiettili()
@@ -56,18 +59,26 @@ proiettile_ptr Bunker::getProiettili()
 	return list_proiettili;
 }
 
-Bunker::Bunker(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno, 
+void Bunker::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(vita_rimanente_);
+	target.draw(vita_eliminta_);
+}
+
+Bunker::Bunker(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno,
 	const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, float angolo_rotazione)
 : Comportamento(larghezza_finestra, altezza_finestra, vita, danno, nomeFile, 
 	nomeFileDistrutto, posizione, dimensione, angolo_rotazione) {
-	distrutto_ = false;
 	angolo_sparo_ = 25;
-
 	entita_.setOrigin(0, 0 + dimensione.y);
+	vita_massima_ = vita;
+	
+	vita_rimanente_.setFillColor(sf::Color::Blue);
+	vita_eliminta_.setFillColor(sf::Color::Red);
+	aggiornaBarraVita();
 }
 
 Bunker::Bunker() : Comportamento() {
-	distrutto_ = false;
 	angolo_sparo_ = 25;
 	entita_.setOrigin(0, 0 + 25);
 }
