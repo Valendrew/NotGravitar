@@ -156,14 +156,6 @@ bool Pianeta::controlloCollisioneSuperficie(sf::Vector2f posizione)
 	else return false;
 }
 
-sf::VertexArray Pianeta::getPosizioneLineaSuperficie(sf::Vector2f posizione)
-{
-	if (superficie_attuale_ != nullptr)
-		return (*superficie_attuale_->superficie_item).getPosizioneLineaSuperficie(posizione);
-	else 
-		return sf::VertexArray();
-}
-
 proiettile_ptr Pianeta::getProiettili()
 {
 	if (superficie_attuale_ != nullptr)

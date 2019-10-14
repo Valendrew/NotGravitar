@@ -215,15 +215,6 @@ bool Universo::controlloCollisioneSuperficie(sf::Vector2f pos) {
 	return ritorno;
 }
 
-sf::VertexArray Universo::getPosizioneLineaSuperficie(sf::Vector2f posizione)
-{
-	if (pianetaAttuale != nullptr) {
-		return (*pianetaAttuale->pianeta_).getPosizioneLineaSuperficie(posizione);
-	}
-	else
-		return sf::VertexArray();
-}
-
 proiettile_ptr Universo::getProiettili()
 {
 	if (pianetaAttuale != nullptr) {

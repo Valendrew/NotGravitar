@@ -62,7 +62,6 @@ public:
 
 	int controlloPassaggioSuperficie(sf::Vector2f pos);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
-	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	proiettile_ptr getProiettili();
 
 	void uscitaPianeta();

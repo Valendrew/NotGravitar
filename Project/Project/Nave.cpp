@@ -36,18 +36,19 @@ void Nave::ruotaDestra()
 void Nave::spara()
 {
 	float angolo = getRotation();
+	float velocita = 1.2f;
 
 	if (clock_.getElapsedTime().asMilliseconds() > 400 && !distrutto_) {
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {
 			proiettili_ = new ProiettileNode();
-			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .8f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
 			proiettili_->next = nullptr;
 		}
 		else {
 			proiettile_ptr p = new ProiettileNode;
-			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .8f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
 			p->next = proiettili_;
 			proiettili_ = p;
 		}
