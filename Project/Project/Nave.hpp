@@ -26,8 +26,6 @@ public:
 	void riempiCarburante(int carburante);
 
 	sf::VertexArray getPosizioneFrontale();
-
-	void colpito();
 	
 	void muovi(sf::Time deltaTime);
 

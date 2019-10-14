@@ -14,16 +14,16 @@ Mappa::listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinat
 Mappa::listaUniversi Mappa::findUniverso(int x, int y) {
 	//Dato che ogni universo è associato ad una coppia di coordinate cosi da distinguelo in modo univoco per sapere se un
 	//universo è gia presente in lista o meno cerco all'interno della lista un universo con le coordinate di interesse
-	listaUniversi appoggio = list_universi_;
+	listaUniversi list_universi_tmp = list_universi_;
 	listaUniversi ritorno = nullptr;
 	bool found = false;
-	while (appoggio != nullptr && !found)
+	while (list_universi_tmp != nullptr && !found)
 	{
-		if (appoggio->c.x == x && appoggio->c.y == y) {
-			ritorno = appoggio;
+		if (list_universi_tmp->c.x == x && list_universi_tmp->c.y == y) {
+			ritorno = list_universi_tmp;
 			found = true;
 		}
-		appoggio = appoggio->next;
+		list_universi_tmp = list_universi_tmp->next;
 	}
 	return ritorno;
 }
@@ -54,16 +54,6 @@ Mappa::Mappa(int larghezza_finestra, int altezza_finestra) {
 	entita_ = sf::Sprite(texture_, sf::IntRect(0, 0, larghezza_finestra, altezza_finestra));
 
 	srand(time(0));
-	/*list_universi = new nodoMappa;
-	list_universi->c.x = -1;
-	list_universi->c.y = 0;
-	list_universi->u = new Universo(width_, height_);
-	
-	list_universi->next = nullptr;
-	list_universi = addUniverso(0, 1);
-	list_universi = addUniverso(1, 0);
-	list_universi = addUniverso(0, -1);
-	list_universi = addUniverso(0, 0);*/
 
 	list_universi_ = new nodoMappa;
 	list_universi_->c.x = 0;
@@ -123,35 +113,35 @@ bool Mappa::spostamento(int direzione) {
 	//Se nell'universo attuale ho distrutto tutti i pianeti setto lo statoAttacco a false
 	if ((*universo_di_gioco_->u).distrutto()) statoAttacco = false;
 		
-		listaUniversi app = posizione_attuale_;
+		listaUniversi posizione_attuale_tmp = posizione_attuale_;
 		switch (direzione) {
 		case 0:
 			posizione_attuale_ = findUniverso(posizione_attuale_->c.x, posizione_attuale_->c.y + 1);
 			//Se lo statoAttacco è false e la posizione cercata è nulla (ovvero sto cercando di andare in un uiverso nuovo) aggiorno la list_universi mettendo in testa il
 			//nuovo universo e setto un bool a true
 			if (posizione_attuale_ == nullptr && !statoAttacco) {
-				list_universi_ = addUniverso(app->c.x, app->c.y + 1);
+				list_universi_ = addUniverso(posizione_attuale_tmp->c.x, posizione_attuale_tmp->c.y + 1);
 				setStato = true;
 			}
 			break;
 		case 1:
 			posizione_attuale_ = findUniverso(posizione_attuale_->c.x + 1, posizione_attuale_->c.y);
 			if (posizione_attuale_ == nullptr && !statoAttacco) {
-				list_universi_ = addUniverso(app->c.x + 1, app->c.y);
+				list_universi_ = addUniverso(posizione_attuale_tmp->c.x + 1, posizione_attuale_tmp->c.y);
 				setStato = true;
 			}
 			break;
 		case 2:
 			posizione_attuale_ = findUniverso(posizione_attuale_->c.x, posizione_attuale_->c.y - 1);
 			if (posizione_attuale_ == nullptr && !statoAttacco) {
-				list_universi_ = addUniverso(app->c.x, app->c.y - 1);
+				list_universi_ = addUniverso(posizione_attuale_tmp->c.x, posizione_attuale_tmp->c.y - 1);
 				setStato = true;
 			}
 			break;
 		case 3:
 			posizione_attuale_ = findUniverso(posizione_attuale_->c.x - 1, posizione_attuale_->c.y);
 			if (posizione_attuale_ == nullptr && !statoAttacco) {
-				list_universi_ = addUniverso(app->c.x - 1, app->c.y);
+				list_universi_ = addUniverso(posizione_attuale_tmp->c.x - 1, posizione_attuale_tmp->c.y);
 				setStato = true;
 			}
 			break;
@@ -167,7 +157,7 @@ bool Mappa::spostamento(int direzione) {
 		//se non mi ci muovo perche tanto di andare verso un universo gia es
 		else if (statoAttacco) {
 			if (posizione_attuale_ == nullptr) {
-				posizione_attuale_ = app;
+				posizione_attuale_ = posizione_attuale_tmp;
 				ritorno = false;
 			}
 		}

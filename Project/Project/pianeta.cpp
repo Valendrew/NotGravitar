@@ -65,7 +65,7 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	bunker_precedenti_ = 0;
 
 	id_ = id;
-
+	distrutto_ = false;
 	pianeta_.setRadius(25.0);
 	pianeta_.setPointCount(100);
 	numero_superfici_ = 3;
@@ -87,8 +87,8 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 
 Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720) {}
 
-int Pianeta::getRaggio() {
-	return (int) pianeta_.getRadius();
+float Pianeta::getRaggio() {
+	return pianeta_.getRadius();
 }
 
 sf::Vector2f Pianeta::getPosizione()
@@ -100,8 +100,9 @@ sf::Vector2f Pianeta::getPosizione()
 //	pianeta_.setFillColor(sf::Color(255, 0, 0, pianeta_.getFillColor().a - 25));
 //}
 
-bool Pianeta::distrutto() {
-	return bunkerRimanenti() == 0;
+void Pianeta::distrutto() {
+	if (bunkerRimanenti() == 0)
+		distrutto_ = true;
 }
 
 bool Pianeta::distruzioneSingoloBunker()
@@ -113,6 +114,11 @@ bool Pianeta::distruzioneSingoloBunker()
 		bunker_precedenti_--;
 	}
 	return ritorno;
+}
+
+bool Pianeta::isDistrutto()
+{
+	return distrutto_;
 }
 
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)

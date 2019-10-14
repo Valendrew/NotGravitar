@@ -168,31 +168,32 @@ void Universo::setVisitato() {
 }
 
 bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
-	listaPianeti app = lista_Pianeti;
+	listaPianeti lista_pianeti_tmp = lista_Pianeti;
 	pianetaAttuale = nullptr;
 	bool found = false;
 
-	while (app != nullptr && !found) {
-		int x_pianeta = (*app->pianeta_).getPosizione().x;
-		int y_pianeta = (*app->pianeta_).getPosizione().y;
-		int radius_pianeta = (*app->pianeta_).getRaggio();
+	while (lista_pianeti_tmp != nullptr && !found) {
+		int x_pianeta = (*lista_pianeti_tmp->pianeta_).getPosizione().x;
+		int y_pianeta = (*lista_pianeti_tmp->pianeta_).getPosizione().y;
+		int radius_pianeta = (*lista_pianeti_tmp->pianeta_).getRaggio();
 
 
 		if ((x_pianeta <= x_astronave && x_astronave <= x_pianeta + radius_pianeta * 2) && (y_pianeta <= y_astronave && y_astronave <= y_pianeta + radius_pianeta * 2)) {
-			pianetaAttuale = app;
+			pianetaAttuale = lista_pianeti_tmp;
 			found = true;
 		}
-		app = app->next;
+		lista_pianeti_tmp = lista_pianeti_tmp->next;
 	}
 	return found;
 }
 
 bool Universo::distrutto() {
 	bool ritorno = true;
-	listaPianeti app = lista_Pianeti;
-	while (app!=nullptr && ritorno){
-		if (!((*app->pianeta_).distrutto())) ritorno = false;
-	}
+	listaPianeti lista_pianeti_tmp = lista_Pianeti;
+
+	while (lista_pianeti_tmp != nullptr && ritorno)
+		if (!((*lista_pianeti_tmp->pianeta_).isDistrutto())) ritorno = false;
+
 	return ritorno;
 }
 

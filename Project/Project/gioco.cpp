@@ -19,11 +19,7 @@ void Gioco::processaEventi()
 			break;
 
 		case sf::Event::MouseMoved: {
-
-			sf::Vector2i posizioneMouse;
-			posizioneMouse.x = sf::Mouse::getPosition(window_).x;
-			posizioneMouse.y = sf::Mouse::getPosition(window_).y;
-			gestisciMouse(posizioneMouse);
+			gestisciMouse();
 		}
 			break;
 		case sf::Event::MouseButtonPressed:
@@ -34,28 +30,25 @@ void Gioco::processaEventi()
 }
 
 void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
-	
-	sf::Vector2i posizioneMouse;
-	posizioneMouse.x = sf::Mouse::getPosition(window_).x;
-	posizioneMouse.y = sf::Mouse::getPosition(window_).y;
-	int gestioneMouse = gestisciMouse(posizioneMouse);
+
+	int gestioneMouse = gestisciMouse();
 	if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 1) {
 		window_.close();
 	}
 	else if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 0) {
 
-		std::string app = start_.getString();
+		std::string stringa_start = start_.getString();
 		//compare torna 0 se le due stringhe sono uguali
-		if (!app.compare("RESTART")) {
+		if (stringa_start.compare("RESTART") == 0) {
 			mappa_.restart(LARGHEZZA, ALTEZZA);
 			nave_.restart(100, LARGHEZZA/2, ALTEZZA/2, 0, 10);
 			stato_ = UNIVERSO;
 			punteggio_text.setPosition(5, 0);
 		}
-		else if (!app.compare("START")) {
+		else if (stringa_start.compare("START") == 0) {
 			stato_ = UNIVERSO;
 		}
-		else if (!app.compare("RESUME")) {
+		else if (stringa_start.compare("RESUME") == 0) {
 			stato_ = salva_stato;
 		}
 		//Le due linee seguenti servono per ridimensionare subito lo start, altrimenti una volata premuta la pausa si visualizzerebbe "RESUME" a dimensione 60
@@ -72,10 +65,10 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 	
 }
 
-int Gioco::gestisciMouse(sf::Vector2i posizioneMouse) {
+int Gioco::gestisciMouse() {
 
 	int pulsantePremuto = -1;
-
+	sf::Vector2i posizioneMouse = sf::Mouse::getPosition(window_);
 	/*Grazie a questo booleano posso verificare che l'astronave non stia compiando azioni. Senza di esso se tengo premuto un pulsante di movimento
 	mentre premo pausa, l'astronave continuerà comunque a muoversi*/
 	bool nave_ferma = !(nave_movimento || nave_rotazioneL || nave_rotazioneR || nave_spara);
@@ -297,17 +290,18 @@ void Gioco::controlloCollisioneProiettili()
 
 void Gioco::controlloAggiornamentoPunteggio() {
 
-	listaPianeti p_attuale = mappa_.getUniversoDiGioco().getPianetaAttuale();
+	Pianeta p_attuale = *mappa_.getUniversoDiGioco().getPianetaAttuale()->pianeta_;
+	p_attuale.distrutto();
 
 	//Il controllo mappa_.isNuovoUniverso() serve per far aumentare il punteggio di 100 una sola volta per ugni sestema solare
 	if (mappa_.getUniversoDiGioco().distrutto() && mappa_.isNuovoUniverso()) {
 		punteggio_ += 100;
 		mappa_.setVecchioUniverso();
 	}
-	else if ((*p_attuale->pianeta_).distrutto()) {
+	else if (p_attuale.isDistrutto()) {
 		punteggio_ += 50;
 	}
-	else if ((*p_attuale->pianeta_).distruzioneSingoloBunker()) {
+	else if (p_attuale.distruzioneSingoloBunker()) {
 		punteggio_ += 10;
 	}
 	

@@ -62,7 +62,7 @@ protected:
 	bool debug;
 	void update();
 	void render();
-	int gestisciMouse(sf::Vector2i v);
+	int gestisciMouse();
 	void mouseClick(sf::Mouse::Button b);
 	void aggiornaTestoNumeri(const char stringa[], int valore, Testo &t);
 	void controlloAggiornamentoPunteggio();

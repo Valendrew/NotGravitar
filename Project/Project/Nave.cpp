@@ -83,11 +83,6 @@ sf::VertexArray Nave::getPosizioneFrontale()
 	return vertex;
 }
 
-void Nave::colpito() {
-	if (vita_ > 0)
-		vita_--;
-}
-
 void Nave::muovi(sf::Time deltaTime) {
 	float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
 	float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
@@ -131,9 +126,7 @@ float Nave::getVita()
 }
 
 void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante) {
-	vita_ = vita;
-	entita_.setPosition(cord_x, cord_y);
-	entita_.setRotation(angolo_rotazione);
+	Comportamento::restart(vita, cord_x, cord_y, angolo_rotazione);
 	carburante_ = carburante;	
 
 }

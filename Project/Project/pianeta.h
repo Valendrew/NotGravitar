@@ -9,7 +9,7 @@ class Pianeta : public sf::Drawable, public sf::Transformable {
 protected: 
 	int larghezza_finestra_;
 	int altezza_finestra_;
-
+	bool distrutto_;
 	int id_;
 	sf::CircleShape pianeta_;
 
@@ -36,13 +36,14 @@ public:
 	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra);
 	Pianeta();
 
-	int getRaggio();
+	float getRaggio();
 	sf::Vector2f getPosizione();
 
 	//void cambiaColore();
 
-	bool distrutto();
+	void distrutto();
 	bool distruzioneSingoloBunker();
+	bool isDistrutto();
 
 	int controlloPassaggioSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f posizione);
