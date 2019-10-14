@@ -286,7 +286,7 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	alla struttura dei Bunker non sarà nullo */
 
 	while (bunker_to_print != nullptr) {
-		//(*bunker_to_print->bunker_item).spara();
+		(*bunker_to_print->bunker_item).spara();
 		(*bunker_to_print->bunker_item).aggiornaBarraVita();
 
 		(*bunker_to_print->bunker_item).drawComportamento(target, states);
@@ -300,7 +300,7 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	/* Vengono disegnati i Bunker finchè il puntatore
 	alla struttura dei Bunker non sarà nullo */
 	while (bunker_stronger_to_print != nullptr) {
-		//(*bunker_stronger_to_print->bunker_item).spara();
+		(*bunker_stronger_to_print->bunker_item).spara();
 		(*bunker_stronger_to_print->bunker_item).aggiornaBarraVita();
 
 		(*bunker_stronger_to_print->bunker_item).drawComportamento(target, states);
@@ -403,6 +403,25 @@ proiettile_ptr SuperficiePianeta::getProiettili()
 	}
 
 	return lista_proiettili;
+}
+
+void SuperficiePianeta::resetProiettiliBunker()
+{
+	bunker_ptr tmp_bunker = bunker_;
+
+	while (tmp_bunker != nullptr)
+	{
+		(*tmp_bunker->bunker_item).resetProiettili();
+		tmp_bunker = tmp_bunker->next;
+	}
+
+	bunker_stronger_ptr tmp_bunker_stronger = bunker_stronger_;
+
+	while (tmp_bunker_stronger != nullptr)
+	{
+		(*tmp_bunker_stronger->bunker_item).resetProiettili();
+		tmp_bunker_stronger = tmp_bunker_stronger->next;
+	}
 }
 
 sf::VertexArray SuperficiePianeta::getPosizioneLineaSuperficie(sf::Vector2f posizione)

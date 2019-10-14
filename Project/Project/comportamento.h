@@ -24,6 +24,7 @@ protected:
 
 	sf::RectangleShape entita_;
 	sf::Texture texture_;
+	sf::Texture texture_distrutto_;
 
 	sf::Clock clock_;
 	proiettile_ptr proiettili_;
@@ -47,6 +48,7 @@ public:
 	void controlloProiettili(proiettile_ptr lista_proiettili);
 	proiettile_ptr eliminaProiettile(proiettile_ptr p);
 	void eliminaProiettiliBordo();
+	void resetProiettili();
 
 	float getVita();
 	bool getDistrutto();

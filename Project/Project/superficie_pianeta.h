@@ -72,6 +72,7 @@ public:
 	sf::Vector2f getLastVertex();
 
 	proiettile_ptr getProiettili();
+	void resetProiettiliBunker();
 
 	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);

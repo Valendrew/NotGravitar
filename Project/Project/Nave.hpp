@@ -28,6 +28,8 @@ public:
 	sf::VertexArray getPosizioneFrontale();
 	
 	void muovi(sf::Time deltaTime);
+	void cambiaTextureMovimento(bool movimento);
+	void passaggioAmbiente(sf::Vector2f posizione);
 
 	sf::Vector2f getPosition();
 	void setPosition(sf::Vector2f pos);

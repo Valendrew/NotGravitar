@@ -101,6 +101,8 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 {
 	if (key == sf::Keyboard::W) {
 		nave_movimento_ = isPressed;
+
+		nave_.cambiaTextureMovimento(nave_movimento_);
 	}
 	else if (key == sf::Keyboard::A) {
 		nave_rotazioneL_ = isPressed;
@@ -154,13 +156,13 @@ void Gioco::controlloPassaggioUniverso()
 		if (mappa_.spostamento(direzione)) {
 			switch (direzione)
 			{
-			case 0: nave_.setPosition(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getDimensione().y));
+			case 0: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getDimensione().y));
 				break;
-			case 1: nave_.setPosition(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
+			case 1: nave_.passaggioAmbiente(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
 				break;
-			case 2: nave_.setPosition(sf::Vector2f(nave_.getPosition().x, nave_.getDimensione().y));
+			case 2: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, nave_.getDimensione().y));
 				break;
-			case 3: nave_.setPosition(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
+			case 3: nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
 			default:
 				break;
 			}
@@ -202,7 +204,7 @@ void Gioco::controlloPassaggioPianeta()
 		posizione_entrata_pianeta_ = sf::Vector2f(punti[0].position.x - 50, punti[0].position.y - 50);
 		
 		nave_.setRotation(180);
-		nave_.setPosition(sf::Vector2f(LARGHEZZA / 2, 40));
+		nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA / 2, 80));
 	}
 }
 
@@ -221,8 +223,8 @@ void Gioco::controlloUscitaPianeta()
 	if (cambia_stato) {
 		stato_ = UNIVERSO;
 
-		nave_.setPosition(posizione_entrata_pianeta_);
-		posizione_entrata_pianeta_ = sf::Vector2f(0, 0);
+		nave_.passaggioAmbiente(posizione_entrata_pianeta_);
+		posizione_entrata_pianeta_ = sf::Vector2f();
 
 		mappa_.uscitaPianeta();
 	}
@@ -243,10 +245,10 @@ void Gioco::controlloPassaggioSuperficie()
 
 	if (direzione != -1) {
 		if (direzione == 0) {
-			nave_.setPosition(sf::Vector2f(LARGHEZZA - 2 * nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
 		}
 		else {
-			nave_.setPosition(sf::Vector2f(2 * nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
 		}
 	}
 }

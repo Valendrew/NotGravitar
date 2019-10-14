@@ -124,8 +124,11 @@ bool Pianeta::isDistrutto()
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 {
 	int direzione = -1;
+	int offset = 20;
 
-	if (posizione.x <= 0) {
+	if (posizione.x <= 0 + offset) {
+		(*superficie_attuale_->superficie_item).resetProiettiliBunker();
+
 		direzione = 0;
 
 		if (superficie_attuale_->next == nullptr) {
@@ -135,7 +138,8 @@ int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 			superficie_attuale_ = superficie_attuale_->next;
 		}
 	}
-	else if (posizione.x >= larghezza_finestra_) {
+	else if (posizione.x >= larghezza_finestra_ - offset) {
+		(*superficie_attuale_->superficie_item).resetProiettiliBunker();
 		direzione = 1;
 		
 		if (superficie_attuale_->prev == nullptr) {

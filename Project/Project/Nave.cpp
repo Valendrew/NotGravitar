@@ -95,6 +95,22 @@ void Nave::muovi(sf::Time deltaTime) {
 	}
 }
 
+void Nave::cambiaTextureMovimento(bool movimento)
+{
+	if (movimento) {
+		entita_.setTexture(&texture_); // impostata la texture
+	}
+	else {
+		entita_.setTexture(&texture_distrutto_); // impostata la texture
+	}
+}
+
+void Nave::passaggioAmbiente(sf::Vector2f posizione)
+{
+	resetProiettili();
+	setPosition(posizione);
+}
+
 sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghezza/2 generici
 	float coeff_x = entita_.getSize().x / 2;
 	float coeff_y = entita_.getSize().y / 2;
