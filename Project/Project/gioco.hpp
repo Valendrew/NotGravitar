@@ -34,6 +34,7 @@ protected:
 	bool nave_rotazioneL_;
 	bool nave_rotazioneR_;
 	bool nave_spara_;
+	bool nave_raggio_;
 
 	int punteggio_;
 	sf::Vector2f posizione_entrata_pianeta_;
@@ -53,6 +54,7 @@ protected:
 	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);
 	void movimentoNavicella();
 	void controlloSparo();
+	void controlloRaggio();
 	void controlloPassaggioUniverso();
 	void controlloPassaggioPianeta();
 	void controlloUscitaPianeta();

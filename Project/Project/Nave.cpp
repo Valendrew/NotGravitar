@@ -1,5 +1,6 @@
 #include "Nave.hpp"
 
+
 Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno,
 	const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione,
 	float angolo_rotazione, float velocita_movimento, float velocita_rotazione, int carburante)
@@ -8,6 +9,14 @@ Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float
 	carburante_ = carburante;
 	velocita_movimento_ = velocita_movimento;
 	velocita_rotazione_ = velocita_rotazione;
+
+	raggio_.setPointCount(4);
+	raggio_.setPoint(0, sf::Vector2f(-dimensione.x, 0));
+	raggio_.setPoint(1, sf::Vector2f(0, 0));
+	raggio_.setPoint(2, sf::Vector2f(dimensione.x/2, 90));
+	raggio_.setPoint(3, sf::Vector2f(-dimensione.x*3/2, 90));
+	raggio_.setPosition(getPosition());
+	raggio_.setFillColor(sf::Color(0,255,255,100));
 
 	// viene impostato il punto di origine 
 	entita_.setOrigin(sf::Vector2f(dimensione.x / 2.f, dimensione.y / 2.f));
@@ -19,6 +28,15 @@ Nave::Nave() : Comportamento() {
 	velocita_rotazione_ = 10.f;
 
 	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
+}
+
+void Nave::drawComportamento(sf::RenderTarget& target, sf::RenderStates states)
+{
+	Comportamento::drawComportamento(target, states);
+	if (raggio_attivato_) {
+		aggiornaRaggio();
+		target.draw(raggio_);
+	}
 }
 
 void Nave::ruotaSinistra()
@@ -63,6 +81,27 @@ void Nave::setCarburante(int carburante_) {
 
 void Nave::riempiCarburante(int carburante) {
 	carburante_ += carburante;
+}
+
+void Nave::controlloRaggioTraente()
+{
+
+}
+
+void Nave::aggiornaRaggio()
+{
+	raggio_.setPosition(getPosition());
+	raggio_.setRotation(getRotation()+180);
+}
+
+sf::ConvexShape Nave::getRaggio()
+{
+	return raggio_;
+}
+
+void Nave::attivaRaggio(bool attiva)
+{
+	raggio_attivato_ = attiva;
 }
 
 sf::VertexArray Nave::getPosizioneFrontale()

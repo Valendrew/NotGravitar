@@ -6,15 +6,19 @@
 
 class Nave : public Comportamento {
 protected:
-	//proiettiliP proiettilil;
 	int carburante_;
 	float velocita_movimento_;
 	float velocita_rotazione_;
+	sf::ConvexShape raggio_;
+	bool raggio_attivato_;
+
 public:
 	Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno,
 		const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, 
 		float angolo_rotazione, float velocita_movimento, float velocita_rotazione, int carburante);
 	Nave();
+	
+	void drawComportamento(sf::RenderTarget& target, sf::RenderStates states);
 
 	void ruotaSinistra();
 	void ruotaDestra();
@@ -24,6 +28,11 @@ public:
 	int getCarburante();
 	void setCarburante(int carburante);
 	void riempiCarburante(int carburante);
+
+	void controlloRaggioTraente();
+	void aggiornaRaggio();
+	sf::ConvexShape getRaggio();
+	void attivaRaggio(bool attiva);
 
 	sf::VertexArray getPosizioneFrontale();
 

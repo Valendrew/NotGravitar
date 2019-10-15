@@ -43,6 +43,9 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::Space) {
 		nave_spara_ = isPressed;
 	}
+	else if (key == sf::Keyboard::Q) {
+		nave_raggio_ = isPressed;
+	}
 }
 
 void Gioco::movimentoNavicella()
@@ -63,6 +66,11 @@ void Gioco::controlloSparo()
 	if (nave_spara_) {
 		nave_.spara();
 	}
+}
+
+void Gioco::controlloRaggio()
+{
+	nave_.attivaRaggio(nave_raggio_);
 }
 
 void Gioco::controlloPassaggioUniverso()
@@ -237,6 +245,8 @@ void Gioco::update()
 
 		movimentoNavicella();
 		controlloSparo();
+
+		controlloRaggio();
 	}
 	else if (stato_ == GAMEOVER) {
 		start_.setString("RESTART");
@@ -421,6 +431,7 @@ Gioco::Gioco() :
 	nave_rotazioneL_ = false;
 	nave_rotazioneR_ = false;
 	nave_spara_ = false;
+	nave_raggio_ = false;
 
 	posizione_entrata_pianeta_ = sf::Vector2f(0, 0); // posizione della nave prima di entrare nel pianeta
 
