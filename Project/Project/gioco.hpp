@@ -61,11 +61,12 @@ protected:
 	void controlloPassaggioSuperficie();
 	void controlloCollisioneSuperficie();
 	void controlloCollisioneProiettili();
+	void controlloCollisioneProiettiliSuperficie();
 
 	void update();
 	void render();
+	int gestisciMouse();
 	void mouseClick(sf::Mouse::Button b);
-	int gestisciMouse(sf::Vector2i v);
 	void aggiornaTestoNumeri(const char stringa[], int valore, Testo &t);
 	void controlloAggiornamentoPunteggio();
 public:

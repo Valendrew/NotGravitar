@@ -18,6 +18,8 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 	entita_.setFillColor(sf::Color::White); // colore dell'oggetto
 
 	texture_.loadFromFile(nomeFile); // texture dell'oggetto
+	texture_distrutto_.loadFromFile(nomeFileDistrutto);
+
 	entita_.setTexture(&texture_); // impostata la texture
 
 	vita_ = vita;
@@ -26,6 +28,7 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 
 	proiettili_ = nullptr;
 
+	
 	int i = 0;
 	while (nomeFileDistrutto[i] != '\0')
 	{
@@ -42,6 +45,12 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 
 Comportamento::Comportamento() : Comportamento(1280, 720, 50, 10, 
 	"Texture/default.png", "Texture/default_d.png", sf::Vector2f(), sf::Vector2f(), 0) {}
+
+void Comportamento::restart(float vita, float cord_x, float cord_y, float angolo_rotazione){
+	vita_ = vita;
+	entita_.setPosition(cord_x, cord_y);
+	entita_.setRotation(angolo_rotazione);
+}
 
 sf::Vector2f Comportamento::getPosizione()
 {
@@ -134,6 +143,19 @@ void Comportamento::eliminaProiettiliBordo()
 	}
 }
 
+void Comportamento::resetProiettili()
+{
+	proiettile_ptr del_ptr = proiettili_;
+
+	while (del_ptr != nullptr)
+	{
+		proiettili_ = proiettili_->next;
+		delete del_ptr;
+		del_ptr = proiettili_;
+	}
+	proiettili_ = nullptr;
+}
+
 float Comportamento::getVita()
 {
 	return vita_;
@@ -147,9 +169,7 @@ bool Comportamento::getDistrutto()
 void Comportamento::setDistrutto()
 {
 	distrutto_ = true;
-
-	texture_.loadFromFile(nomeFileDistrutto_); // texture dell'oggetto
-	entita_.setTexture(&texture_); // impostata la texture
+	entita_.setTexture(&texture_distrutto_); // impostata la texture
 }
 
 void Comportamento::diminuisciVita(float danno)

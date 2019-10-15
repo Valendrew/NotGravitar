@@ -41,29 +41,32 @@ void Nave::drawComportamento(sf::RenderTarget& target, sf::RenderStates states)
 
 void Nave::ruotaSinistra()
 {
-	entita_.rotate(-velocita_rotazione_);
+	if (!distrutto_) 
+		entita_.rotate(-velocita_rotazione_);
 }
 
 void Nave::ruotaDestra()
 {
-	entita_.rotate(velocita_rotazione_);
+	if (!distrutto_) 
+		entita_.rotate(velocita_rotazione_);
 }
 
 void Nave::spara()
 {
 	float angolo = getRotation();
+	float velocita = 1.2f;
 
 	if (clock_.getElapsedTime().asMilliseconds() > 400 && !distrutto_) {
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {
 			proiettili_ = new ProiettileNode();
-			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .8f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
 			proiettili_->next = nullptr;
 		}
 		else {
 			proiettile_ptr p = new ProiettileNode;
-			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .8f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
 			p->next = proiettili_;
 			proiettili_ = p;
 		}
@@ -122,16 +125,29 @@ sf::VertexArray Nave::getPosizioneFrontale()
 	return vertex;
 }
 
-void Nave::colpito() {
-	if (vita_ > 0)
-		vita_--;
+void Nave::muovi(sf::Time deltaTime) {
+	if (!distrutto_) {
+		float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
+		float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
+
+		entita_.move(velX, velY);
+	}
 }
 
-void Nave::muovi(sf::Time deltaTime) {
-	float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
-	float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
+void Nave::cambiaTextureMovimento(bool movimento)
+{
+	if (movimento) {
+		entita_.setTexture(&texture_); // impostata la texture
+	}
+	else {
+		entita_.setTexture(&texture_distrutto_); // impostata la texture
+	}
+}
 
-	entita_.move(velX, velY);
+void Nave::passaggioAmbiente(sf::Vector2f posizione)
+{
+	resetProiettili();
+	setPosition(posizione);
 }
 
 sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghezza/2 generici
@@ -163,9 +179,7 @@ proiettile_ptr Nave::getProiettili()
 }
 
 void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante) {
-	vita_ = vita;
-	entita_.setPosition(cord_x, cord_y);
-	entita_.setRotation(angolo_rotazione);
+	Comportamento::restart(vita, cord_x, cord_y, angolo_rotazione);
 	carburante_ = carburante;	
 
 }

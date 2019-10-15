@@ -15,24 +15,94 @@ void Gioco::processaEventi()
 				break;
 			case sf::Event::KeyReleased:
 				gestisciMovimentoNave(event.key.code, false);
-				break;
-			case sf::Event::MouseMoved: {
-				sf::Vector2i posizioneMouse;
-				posizioneMouse.x = sf::Mouse::getPosition(window_).x;
-				posizioneMouse.y = sf::Mouse::getPosition(window_).y;
-				gestisciMouse(posizioneMouse);
-			} break;
-			case sf::Event::MouseButtonPressed:
-				mouseClick(sf::Mouse::Button::Left);
-				break;
-			}
+			break;
+
+		case sf::Event::MouseMoved: {
+			gestisciMouse();
+		}
+			break;
+		case sf::Event::MouseButtonPressed:
+			mouseClick(sf::Mouse::Button::Left);
+			break;
+		}
 	}
+}
+
+void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
+
+	int gestioneMouse = gestisciMouse();
+	if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 1) {
+		window_.close();
+	}
+	else if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 0) {
+
+		std::string stringa_start = start_.getString();
+		//compare torna 0 se le due stringhe sono uguali
+		if (stringa_start.compare("RESTART") == 0) {
+			mappa_.restart(LARGHEZZA, ALTEZZA);
+			nave_.restart(100, LARGHEZZA/2, ALTEZZA/2, 0, 10);
+			stato_ = UNIVERSO;
+			punteggio_text_.setPosition(5, 0);
+		}
+		else if (stringa_start.compare("START") == 0) {
+			stato_ = UNIVERSO;
+		}
+		else if (stringa_start.compare("RESUME") == 0) {
+			stato_ = salva_stato_;
+		}
+		//Le due linee seguenti servono per ridimensionare subito lo start, altrimenti una volata premuta la pausa si visualizzerebbe "RESUME" a dimensione 60
+		//invece che 55 per un istante
+		start_.setCharacterSize(55);
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+
+	}
+	else if (gestioneMouse == 2) { 
+		salva_stato_ = stato_;
+		stato_ = PAUSA;
+	}
+	
+	
+}
+
+int Gioco::gestisciMouse() {
+
+	sf::Vector2i posizioneMouse = sf::Mouse::getPosition(window_);
+	int pulsantePremuto = -1;
+
+	if (stato_ == GAMEOVER || stato_ == PAUSA || stato_ == START) {
+		if (start_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
+			start_.setCharacterSize(60);
+			pulsantePremuto = 0;
+		}
+		else {
+			start_.setCharacterSize(55);
+			if (exit_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
+				exit_.setCharacterSize(60);
+				pulsantePremuto = 1;
+			}
+			else exit_.setCharacterSize(55);
+		}
+		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
+		exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
+	}
+	else {
+		if (pausa_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
+			pulsantePremuto = 2;
+			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 255));
+		}
+		else
+			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 160));
+	}
+	return pulsantePremuto;
+
 }
 
 void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 {
 	if (key == sf::Keyboard::W) {
 		nave_movimento_ = isPressed;
+
+		nave_.cambiaTextureMovimento(nave_movimento_);
 	}
 	else if (key == sf::Keyboard::A) {
 		nave_rotazioneL_ = isPressed;
@@ -94,13 +164,13 @@ void Gioco::controlloPassaggioUniverso()
 		if (mappa_.spostamento(direzione)) {
 			switch (direzione)
 			{
-			case 0: nave_.setPosition(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getDimensione().y));
+			case 0: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getDimensione().y));
 				break;
-			case 1: nave_.setPosition(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
+			case 1: nave_.passaggioAmbiente(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
 				break;
-			case 2: nave_.setPosition(sf::Vector2f(nave_.getPosition().x, nave_.getDimensione().y));
+			case 2: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, nave_.getDimensione().y));
 				break;
-			case 3: nave_.setPosition(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
+			case 3: nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
 			default:
 				break;
 			}
@@ -142,7 +212,7 @@ void Gioco::controlloPassaggioPianeta()
 		posizione_entrata_pianeta_ = sf::Vector2f(punti[0].position.x - 50, punti[0].position.y - 50);
 		
 		nave_.setRotation(180);
-		nave_.setPosition(sf::Vector2f(LARGHEZZA / 2, 40));
+		nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA / 2, 80));
 	}
 }
 
@@ -161,8 +231,8 @@ void Gioco::controlloUscitaPianeta()
 	if (cambia_stato) {
 		stato_ = UNIVERSO;
 
-		nave_.setPosition(posizione_entrata_pianeta_);
-		posizione_entrata_pianeta_ = sf::Vector2f(0, 0);
+		nave_.passaggioAmbiente(posizione_entrata_pianeta_);
+		posizione_entrata_pianeta_ = sf::Vector2f();
 
 		mappa_.uscitaPianeta();
 	}
@@ -183,10 +253,10 @@ void Gioco::controlloPassaggioSuperficie()
 
 	if (direzione != -1) {
 		if (direzione == 0) {
-			nave_.setPosition(sf::Vector2f(LARGHEZZA - 2 * nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
 		}
 		else {
-			nave_.setPosition(sf::Vector2f(2 * nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
 		}
 	}
 }
@@ -223,8 +293,45 @@ void Gioco::controlloCollisioneSuperficie()
 void Gioco::controlloCollisioneProiettili()
 {
 	nave_.controlloProiettili(mappa_.getProiettili());
-	
 	mappa_.controlloProiettili(nave_.getProiettili());
+}
+
+void Gioco::controlloCollisioneProiettiliSuperficie()
+{
+	proiettile_ptr lista_p = nave_.getProiettili();
+
+	while (lista_p != nullptr)
+	{
+		if (mappa_.controlloCollisioneSuperficie((*lista_p->proiettile).getPosition()))
+		{
+			lista_p = nave_.eliminaProiettile(lista_p);
+		}
+		else
+		{
+			lista_p = lista_p->next;
+		}
+	}
+}
+
+void Gioco::controlloAggiornamentoPunteggio() {
+
+	Pianeta p_attuale = *mappa_.getUniversoDiGioco().getPianetaAttuale()->pianeta_;
+	p_attuale.distrutto();
+
+	//Il controllo mappa_.isNuovoUniverso() serve per far aumentare il punteggio di 100 una sola volta per ugni sestema solare
+	if (mappa_.getUniversoDiGioco().distrutto() && mappa_.isNuovoUniverso()) {
+		punteggio_ += 100;
+		mappa_.setVecchioUniverso();
+	}
+	else if (p_attuale.isDistrutto()) {
+		punteggio_ += 50;
+	}
+	else if (p_attuale.distruzioneSingoloBunker()) {
+		punteggio_ += 10;
+	}
+	
+	aggiornaTestoNumeri("PUNTEGGIO: ",punteggio_, punteggio_text_);
+
 }
 
 void Gioco::update()
@@ -242,6 +349,7 @@ void Gioco::update()
 		controlloPassaggioSuperficie();
 		controlloCollisioneSuperficie();
 		controlloCollisioneProiettili();
+		controlloCollisioneProiettiliSuperficie();
 
 		movimentoNavicella();
 		controlloSparo();
@@ -293,76 +401,6 @@ void Gioco::render()
 	window_.display();
 }
 
-void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
-
-	sf::Vector2i posizioneMouse;
-	posizioneMouse.x = sf::Mouse::getPosition(window_).x;
-	posizioneMouse.y = sf::Mouse::getPosition(window_).y;
-
-	int gestioneMouse = gestisciMouse(posizioneMouse);
-	if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 1) {
-		window_.close();
-	}
-	else if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 0) {
-
-		std::string app = start_.getString();
-		//compare torna 0 se le due stringhe sono uguali
-		if (!app.compare("RESTART")) {
-			mappa_.restart(LARGHEZZA, ALTEZZA);
-			nave_.restart(100, LARGHEZZA / 2, ALTEZZA / 2, 0, 10);
-			stato_ = UNIVERSO;
-			punteggio_text_.setPosition(5, 0);
-		}
-		else if (!app.compare("START")) {
-			stato_ = UNIVERSO;
-		}
-		else if (!app.compare("RESUME")) {
-			stato_ = salva_stato_;
-		}
-		//Le due linee seguenti servono per ridimensionare subito lo start, altrimenti una volata premuta la pausa si visualizzerebbe "RESUME" a dimensione 60
-		//invece che 55 per un istante
-		start_.setCharacterSize(55);
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-
-	}
-	else if (gestioneMouse == 2) {
-		salva_stato_ = stato_;
-		stato_ = PAUSA;
-	}
-}
-
-int Gioco::gestisciMouse(sf::Vector2i posizioneMouse) {
-
-	int pulsantePremuto = -1;
-
-	if (stato_ == GAMEOVER || stato_ == PAUSA || stato_ == START) {
-		if (start_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-			start_.setCharacterSize(60);
-			pulsantePremuto = 0;
-		}
-		else {
-			start_.setCharacterSize(55);
-			if (exit_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-				exit_.setCharacterSize(60);
-				pulsantePremuto = 1;
-			}
-			else exit_.setCharacterSize(55);
-		}
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-		exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
-	}
-	else {
-		if (pausa_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-			pulsantePremuto = 2;
-			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 255));
-		}
-		else
-			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 160));
-	}
-	return pulsantePremuto;
-
-}
-
 void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
 
 	char valoreToString[10];
@@ -373,29 +411,9 @@ void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
 	t.setString(stringaCompleta);
 }
 
-void Gioco::controlloAggiornamentoPunteggio() {
-
-	listaPianeti p_attuale = mappa_.getUniversoDiGioco().getPianetaAttuale();
-
-	//Il controllo mappa_.isNuovoUniverso() serve per far aumentare il punteggio di 100 una sola volta per ugni sistema solare
-	if (mappa_.getUniversoDiGioco().distrutto() && mappa_.isNuovoUniverso()) {
-		punteggio_ += 100;
-		mappa_.setVecchioUniverso();
-	}
-	else if ((*p_attuale->pianeta_).distrutto()) {
-		punteggio_ += 50;
-	}
-	else if ((*p_attuale->pianeta_).distruzioneSingoloBunker()) {
-		punteggio_ += 10;
-	}
-
-	aggiornaTestoNumeri("PUNTEGGIO: ", punteggio_, punteggio_text_);
-
-}
-
 Gioco::Gioco() :
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
-	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_3.png", "Texture/ship_3d.png",
+	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_2.png", "Texture/ship_2d.png",
 		sf::Vector2f(40, 40), sf::Vector2f(60, 60), 0, 350, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()

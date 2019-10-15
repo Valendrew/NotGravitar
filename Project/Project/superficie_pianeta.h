@@ -20,6 +20,14 @@ protected:
 	int altezza_minima_;
 	oggetto *benzina_;
 
+	enum TipologiaOggetto {
+		BUNKER_STRONGER,
+		BUNKER,
+		BENZINA_BEST,
+		BENZINA,
+		CUORE
+	};
+
 	sf::VertexArray vertici_superficie_;
 	sf::ConvexShape superficie_[NUMERO_DI_LINEE];
 
@@ -46,11 +54,12 @@ protected:
 	bool bunker_presenti_[NUMERO_DI_LINEE];
 
 	void generaBunker();
+	bool controllaOggettiVicinanze(int posizione, int distanza);
+	void aggiungiOggetto(int index, TipologiaOggetto tipoOggetto, sf::Vector2f dimensione);
+	void inserisciNodoBunker(sf::Vector2f coordinate, float angolo, sf::Vector2f dimensione);
+	void inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo, sf::Vector2f dimensione);
 	void generaBenzina();
-	bool controllaBunkerVicinanze(int posizione);
-	void aggiungiBunker(int index, bool bunker_stronger_);
-	void inserisciNodoBunker(sf::Vector2f coordinate, float angolo);
-	void inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo);
+	void copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[]);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
@@ -63,7 +72,9 @@ public:
 	sf::Vector2f getLastVertex();
 
 	proiettile_ptr getProiettili();
+	void resetProiettiliBunker();
 
+	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	void controlloProiettili(proiettile_ptr lista_proiettili);
 	int getNumeroBunker();

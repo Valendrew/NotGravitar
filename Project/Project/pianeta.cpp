@@ -65,7 +65,7 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	bunker_precedenti_ = 0;
 
 	id_ = id;
-
+	distrutto_ = false;
 	pianeta_.setRadius(25.0);
 	pianeta_.setPointCount(100);
 	numero_superfici_ = 3;
@@ -87,8 +87,8 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 
 Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720) {}
 
-int Pianeta::getRaggio() {
-	return (int) pianeta_.getRadius();
+float Pianeta::getRaggio() {
+	return pianeta_.getRadius();
 }
 
 sf::Vector2f Pianeta::getPosizione()
@@ -100,8 +100,9 @@ sf::Vector2f Pianeta::getPosizione()
 //	pianeta_.setFillColor(sf::Color(255, 0, 0, pianeta_.getFillColor().a - 25));
 //}
 
-bool Pianeta::distrutto() {
-	return bunkerRimanenti() == 0;
+void Pianeta::distrutto() {
+	if (bunkerRimanenti() == 0)
+		distrutto_ = true;
 }
 
 bool Pianeta::distruzioneSingoloBunker()
@@ -115,11 +116,19 @@ bool Pianeta::distruzioneSingoloBunker()
 	return ritorno;
 }
 
+bool Pianeta::isDistrutto()
+{
+	return distrutto_;
+}
+
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 {
 	int direzione = -1;
+	int offset = 20;
 
-	if (posizione.x <= 0) {
+	if (posizione.x <= 0 + offset) {
+		(*superficie_attuale_->superficie_item).resetProiettiliBunker();
+
 		direzione = 0;
 
 		if (superficie_attuale_->next == nullptr) {
@@ -129,7 +138,8 @@ int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 			superficie_attuale_ = superficie_attuale_->next;
 		}
 	}
-	else if (posizione.x >= larghezza_finestra_) {
+	else if (posizione.x >= larghezza_finestra_ - offset) {
+		(*superficie_attuale_->superficie_item).resetProiettiliBunker();
 		direzione = 1;
 		
 		if (superficie_attuale_->prev == nullptr) {
@@ -152,12 +162,16 @@ bool Pianeta::controlloCollisioneSuperficie(sf::Vector2f posizione)
 
 proiettile_ptr Pianeta::getProiettili()
 {
-	return (*superficie_attuale_->superficie_item).getProiettili();
+	if (superficie_attuale_ != nullptr)
+		return (*superficie_attuale_->superficie_item).getProiettili();
+	else
+		return nullptr;
 }
 
 void Pianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 {
-	(*superficie_attuale_->superficie_item).controlloProiettili(lista_proiettili);
+	if (superficie_attuale_ != nullptr)
+		(*superficie_attuale_->superficie_item).controlloProiettili(lista_proiettili);
 }
 
 void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)
