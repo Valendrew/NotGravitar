@@ -45,7 +45,13 @@
     <ClCompile Include="gioco.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Testo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="bunker_stronger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="oggetto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -78,6 +84,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="bunker_stronger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Testo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="oggetto.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

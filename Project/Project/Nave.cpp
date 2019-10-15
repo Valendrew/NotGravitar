@@ -1,13 +1,18 @@
 #include "Nave.hpp"
 
-Nave::Nave(unsigned int width, unsigned int height, float vita, const char nomeFile[], sf::Vector2f pos, sf::Vector2f size, float angolo_rotazione, float velocita_movimento, float velocita_rotazione, int carburante)
-	: Comportamento(width, height, vita, nomeFile, pos, size, angolo_rotazione) {
+Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno,
+	const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione,
+	float angolo_rotazione, float velocita_movimento, float velocita_rotazione, int carburante)
+	: Comportamento(larghezza_finestra, altezza_finestra, vita, danno,
+		nomeFile, nomeFileDistrutto, posizione, dimensione, angolo_rotazione) {
 	carburante_ = carburante;
 	velocita_movimento_ = velocita_movimento;
 	velocita_rotazione_ = velocita_rotazione;
 
-	entita_.setOrigin(sf::Vector2f(size.x / 2.f, size.y / 2.f)); // viene impostato il punto di origine 
+	// viene impostato il punto di origine 
+	entita_.setOrigin(sf::Vector2f(dimensione.x / 2.f, dimensione.y / 2.f));
 }
+
 Nave::Nave() : Comportamento() {
 	carburante_ = 10;
 	velocita_movimento_ = 100.f;
@@ -16,27 +21,50 @@ Nave::Nave() : Comportamento() {
 	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
 }
 
-void Nave::ruotaL()
+void Nave::ruotaSinistra()
 {
 	entita_.rotate(-velocita_rotazione_);
 }
 
-void Nave::ruotaR()
+void Nave::ruotaDestra()
 {
 	entita_.rotate(velocita_rotazione_);
 }
 
 void Nave::spara()
 {
-	Comportamento::spara(this->getRotation());
+	float angolo = getRotation();
+
+	if (clock_.getElapsedTime().asMilliseconds() > 400 && !distrutto_) {
+		clock_.restart();
+
+		if (proiettili_ == nullptr) {
+			proiettili_ = new ProiettileNode();
+			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .8f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			proiettili_->next = nullptr;
+		}
+		else {
+			proiettile_ptr p = new ProiettileNode;
+			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, .8f, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			p->next = proiettili_;
+			proiettili_ = p;
+		}
+
+	}
+}
+
+int Nave::getCarburante() {
+	return carburante_;
 }
 
 void Nave::setCarburante(int carburante_) {
 	carburante_ = carburante_;
 }
-int Nave::getCarburante() {
-	return carburante_;
+
+void Nave::riempiCarburante(int carburante) {
+	carburante_ += carburante;
 }
+
 sf::VertexArray Nave::getPosizioneFrontale()
 {
 	sf::VertexArray vertex(sf::Points, 2);
@@ -47,22 +75,17 @@ sf::VertexArray Nave::getPosizioneFrontale()
 	float delta_x = getPosition().x + (entita_.getSize().x / 2) * cos(angolo);
 	float delta_y = getPosition().y + (entita_.getSize().y / 2) * sin(angolo);
 
-	//vertex[0].position = sf::Vector2f(delta_x , delta_y);
-	vertex[0].position = sf::Vector2f(getPosition().x , getPosition().y);
-	//vertex[0].position = sf::Vector2f(entita_.getGlobalBounds().left, entita_.getGlobalBounds().top);
-	
+	vertex[0].position = sf::Vector2f(getPosition().x, getPosition().y);
+
 	vertex[1].position.x = vertex[0].position.x + entita_.getSize().x * cos(angolo);
 	vertex[1].position.y = vertex[0].position.y + entita_.getSize().y * sin(angolo);
 
 	return vertex;
 }
-void Nave::colpito() {
-	if (vita_ <= 0)
-		vita_--;
-}
 
-void Nave::fill(int carburante_) {
-	carburante_ += carburante_;
+void Nave::colpito() {
+	if (vita_ > 0)
+		vita_--;
 }
 
 void Nave::muovi(sf::Time deltaTime) {
@@ -73,7 +96,6 @@ void Nave::muovi(sf::Time deltaTime) {
 }
 
 sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghezza/2 generici
-	//float coeff = 12.5;
 	float coeff_x = entita_.getSize().x / 2;
 	float coeff_y = entita_.getSize().y / 2;
 
@@ -86,7 +108,6 @@ sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghe
 }
 
 void Nave::setPosition(sf::Vector2f pos) { //non testata
-	//float coeff = 12.5;
 	float coeff_x = entita_.getSize().x / 2;
 	float coeff_y = entita_.getSize().y / 2;
 
@@ -100,4 +121,12 @@ void Nave::setPosition(sf::Vector2f pos) { //non testata
 proiettile_ptr Nave::getProiettili()
 {
 	return proiettili_;
+}
+
+void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante) {
+	vita_ = vita;
+	entita_.setPosition(cord_x, cord_y);
+	entita_.setRotation(angolo_rotazione);
+	carburante_ = carburante;	
+
 }

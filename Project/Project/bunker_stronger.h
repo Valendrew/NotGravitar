@@ -9,7 +9,8 @@ class BunkerStronger : public Bunker{
 protected:
 public:
 	void spara();
-	BunkerStronger(unsigned int width, unsigned int height, float vita, const char nomeFile[], const char nomeFileDistrutto[50], sf::Vector2f pos, sf::Vector2f size, float angolo_rotazione);
+	BunkerStronger(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno, 
+		const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, float angolo_rotazione);
 	BunkerStronger();
 };
 #endif // !_BUNKER_STRONGER_H

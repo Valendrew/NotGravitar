@@ -1,22 +1,58 @@
 #include "mappa.hpp";
 
-Mappa::Mappa() : Mappa(1280, 720) {}
+Mappa::listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_universo_y) {
+	//quando creo un nuovo universo lo aggiungo in testa alla lista cosi da avere l'inserimento in O(1)
+	listaUniversi tmp = new nodoMappa;
+	tmp->c.x = coordinata_universo_x;
+	tmp->c.y = coordinata_universo_y;
+	tmp->u = new Universo(larghezza_finestra_, altezza_finestra_);
+	tmp->next = list_universi_;
+	list_universi_ = tmp;
+	return list_universi_;
+}
 
-Mappa::Mappa(int width_, int height_) {
+Mappa::listaUniversi Mappa::findUniverso(int x, int y) {
+	//Dato che ogni universo è associato ad una coppia di coordinate cosi da distinguelo in modo univoco per sapere se un
+	//universo è gia presente in lista o meno cerco all'interno della lista un universo con le coordinate di interesse
+	listaUniversi appoggio = list_universi_;
+	listaUniversi ritorno = nullptr;
+	bool found = false;
+	while (appoggio != nullptr && !found)
+	{
+		if (appoggio->c.x == x && appoggio->c.y == y) {
+			ritorno = appoggio;
+			found = true;
+		}
+		appoggio = appoggio->next;
+	}
+	return ritorno;
+}
 
-	/*
-	qu
-ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
+void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
+{
+	target.draw(sfondo_);
+	target.draw((*posizione_attuale_->u));
+}
+
+Mappa::Mappa(int larghezza_finestra, int altezza_finestra) {
+
+	/*quando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
 	e quelli nelle 4 direzioni possibili che l'astronave potrà visitare
 	*/
 
 	statoAttacco = true;
-	width = width_;
-	height = height_;
+	larghezza_finestra_ = larghezza_finestra;
+	altezza_finestra_ = altezza_finestra;
 
-	entita_.setSize(sf::Vector2f(width_, height_));
-	texture_.loadFromFile("Texture/universo.png"); // texture dell'oggetto
-	entita_.setTexture(&texture_);
+	//entita_.setSize(sf::Vector2f(width_, height_));
+
+	// texture dell'oggetto
+	if (!texture_.loadFromFile("Texture/universo.jpg")) {
+
+	}
+	texture_.setRepeated(true);
+	sfondo_ = sf::Sprite(texture_, sf::IntRect(0, 0, larghezza_finestra, altezza_finestra));
+
 	srand(time(0));
 	/*list_universi = new nodoMappa;
 	list_universi->c.x = -1;
@@ -29,62 +65,48 @@ ando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordi
 	list_universi = addUniverso(0, -1);
 	list_universi = addUniverso(0, 0);*/
 
-	list_universi = new nodoMappa;
-	list_universi->c.x = 0;
-	list_universi->c.y = 0;
-	list_universi->u = new Universo(width_, height_);
-	list_universi->next = nullptr;
+	list_universi_ = new nodoMappa;
+	list_universi_->c.x = 0;
+	list_universi_->c.y = 0;
+	list_universi_->u = new Universo(larghezza_finestra, altezza_finestra);
+	list_universi_->next = nullptr;
 
 	//setto a true il "visitato" dell' universo 0,0 dato che è quello di spawn 
 	(*findUniverso(0, 0)->u).setVisitato();
-	universoDiGioco = list_universi;
-	posizioneAttuale = list_universi;
+	universo_di_gioco_ = list_universi_;
+	posizione_attuale_ = list_universi_;
 }
+
+Mappa::Mappa() : Mappa(1280, 720) {}
 
 int Mappa::controlloPassaggioSuperficie(sf::Vector2f pos)
 {
 	int direzione = -1;
-	if (posizioneAttuale != nullptr) {
-		direzione = (*posizioneAttuale->u).controlloPassaggioSuperficie(pos);
+	if (posizione_attuale_ != nullptr) {
+		direzione = (*posizione_attuale_->u).controlloPassaggioSuperficie(pos);
 	}
 	return direzione;
 }
 
-listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_universo_y) {
-	//quando creo un nuovo universo lo aggiungo in testa alla lista cosi da avere l'inserimento in O(1)
-	listaUniversi tmp = new nodoMappa;
-	tmp->c.x = coordinata_universo_x;
-	tmp->c.y = coordinata_universo_y;
-	tmp->u = new Universo(width, height);
-	tmp->next = list_universi;
-	list_universi = tmp;
-	return list_universi;
+bool Mappa::isNuovoUniverso()
+{
+	return (*universo_di_gioco_->u).getVisitato();
 }
+
+void Mappa::setVecchioUniverso(){
+	(*universo_di_gioco_->u).setVisitato();
+}
+
 bool Mappa::controlloCollisioneSuperficie(sf::Vector2f pos) {
 	bool ritorno = false;
-	if (posizioneAttuale != nullptr) {
-		ritorno = (*posizioneAttuale->u).controlloCollisioneSuperficie(pos);
+	if (posizione_attuale_ != nullptr) {
+		ritorno = (*posizione_attuale_->u).controlloCollisioneSuperficie(pos);
 	}
 	return ritorno;
 }
+
 void Mappa::uscitaPianeta() {
-	(*posizioneAttuale->u).uscitaPianeta();
-}
-listaUniversi Mappa::findUniverso(int x, int y) {
-	//Dato che ogni universo è associato ad una coppia di coordinate cosi da distinguelo in modo univoco per sapere se un
-	//universo è gia presente in lista o meno cerco all'interno della lista un universo con le coordinate di interesse
-	listaUniversi appoggio = list_universi;
-	listaUniversi ritorno = nullptr;
-	bool found = false;
-	while (appoggio != nullptr && !found)
-	{
-		if (appoggio->c.x == x && appoggio->c.y == y) {
-			ritorno = appoggio;
-			found = true;
-		}
-		appoggio = appoggio->next;
-	}
-	return ritorno;
+	(*posizione_attuale_->u).uscitaPianeta();
 }
 
 bool Mappa::spostamento(int direzione) {
@@ -99,37 +121,37 @@ bool Mappa::spostamento(int direzione) {
 	*/
 	bool ritorno = true, setStato = false;
 	//Se nell'universo attuale ho distrutto tutti i pianeti setto lo statoAttacco a false
-	if ((*universoDiGioco->u).distrutto()) statoAttacco = false;
+	if ((*universo_di_gioco_->u).distrutto()) statoAttacco = false;
 		
-		listaUniversi app = posizioneAttuale;
+		listaUniversi app = posizione_attuale_;
 		switch (direzione) {
 		case 0:
-			posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y + 1);
+			posizione_attuale_ = findUniverso(posizione_attuale_->c.x, posizione_attuale_->c.y + 1);
 			//Se lo statoAttacco è false e la posizione cercata è nulla (ovvero sto cercando di andare in un uiverso nuovo) aggiorno la list_universi mettendo in testa il
 			//nuovo universo e setto un bool a true
-			if (posizioneAttuale == nullptr && !statoAttacco) {
-				list_universi = addUniverso(app->c.x, app->c.y + 1);
+			if (posizione_attuale_ == nullptr && !statoAttacco) {
+				list_universi_ = addUniverso(app->c.x, app->c.y + 1);
 				setStato = true;
 			}
 			break;
 		case 1:
-			posizioneAttuale = findUniverso(posizioneAttuale->c.x + 1, posizioneAttuale->c.y);
-			if (posizioneAttuale == nullptr && !statoAttacco) {
-				list_universi = addUniverso(app->c.x + 1, app->c.y);
+			posizione_attuale_ = findUniverso(posizione_attuale_->c.x + 1, posizione_attuale_->c.y);
+			if (posizione_attuale_ == nullptr && !statoAttacco) {
+				list_universi_ = addUniverso(app->c.x + 1, app->c.y);
 				setStato = true;
 			}
 			break;
 		case 2:
-			posizioneAttuale = findUniverso(posizioneAttuale->c.x, posizioneAttuale->c.y - 1);
-			if (posizioneAttuale == nullptr && !statoAttacco) {
-				list_universi = addUniverso(app->c.x, app->c.y - 1);
+			posizione_attuale_ = findUniverso(posizione_attuale_->c.x, posizione_attuale_->c.y - 1);
+			if (posizione_attuale_ == nullptr && !statoAttacco) {
+				list_universi_ = addUniverso(app->c.x, app->c.y - 1);
 				setStato = true;
 			}
 			break;
 		case 3:
-			posizioneAttuale = findUniverso(posizioneAttuale->c.x - 1, posizioneAttuale->c.y);
-			if (posizioneAttuale == nullptr && !statoAttacco) {
-				list_universi = addUniverso(app->c.x - 1, app->c.y);
+			posizione_attuale_ = findUniverso(posizione_attuale_->c.x - 1, posizione_attuale_->c.y);
+			if (posizione_attuale_ == nullptr && !statoAttacco) {
+				list_universi_ = addUniverso(app->c.x - 1, app->c.y);
 				setStato = true;
 			}
 			break;
@@ -138,14 +160,14 @@ bool Mappa::spostamento(int direzione) {
 		//sia la posizione attuale
 		if (setStato) {
 			statoAttacco = true;
-			universoDiGioco = posizioneAttuale;
-			posizioneAttuale = list_universi;
+			universo_di_gioco_ = posizione_attuale_;
+			posizione_attuale_ = list_universi_;
 		}
 		//Se setStato è false significa che non mi muoverso verso un universo nuovo
 		//se non mi ci muovo perche tanto di andare verso un universo gia es
 		else if (statoAttacco) {
-			if (posizioneAttuale == nullptr) {
-				posizioneAttuale = app;
+			if (posizione_attuale_ == nullptr) {
+				posizione_attuale_ = app;
 				ritorno = false;
 			}
 		}
@@ -154,21 +176,45 @@ bool Mappa::spostamento(int direzione) {
 }
 
 bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
-	return (posizioneAttuale->u)->pianetaAttualeRicerca(x_astronave, y_astronave);
+	return (posizione_attuale_->u)->pianetaAttualeRicerca(x_astronave, y_astronave);
 }
 
 proiettile_ptr Mappa::getProiettili()
 {
-	return (*posizioneAttuale->u).getProiettili();
+	return (*posizione_attuale_->u).getProiettili();
 }
 
 void Mappa::controlloProiettili(proiettile_ptr lista_proiettili)
 {
-	(*posizioneAttuale->u).controlloProiettili(lista_proiettili);
+	(*posizione_attuale_->u).controlloProiettili(lista_proiettili);
 }
 
-void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
-{
-	target.draw(entita_);
-	target.draw((*posizioneAttuale->u));
+Universo Mappa::getUniversoDiGioco() {
+	return *(universo_di_gioco_->u);
+}
+
+coordinate Mappa::getPosizioneAttuale() {
+	return (posizione_attuale_->c);
+}
+
+coordinate Mappa::getPosizioneDiGioco() {
+	return universo_di_gioco_->c;
+}
+
+void Mappa::restart(int width_, int height_) {
+
+	statoAttacco = true;
+	universo_di_gioco_ = nullptr;
+	posizione_attuale_ = nullptr;
+	delete list_universi_;
+	list_universi_ = new nodoMappa;
+	list_universi_->c.x = 0;
+	list_universi_->c.y = 0;
+	list_universi_->u = new Universo(width_, height_);
+	list_universi_->next = nullptr;
+
+	//setto a true il "visitato" dell' universo 0,0 dato che è quello di spawn 
+	(*findUniverso(0, 0)->u).setVisitato();
+	universo_di_gioco_ = list_universi_;
+	posizione_attuale_ = list_universi_;
 }

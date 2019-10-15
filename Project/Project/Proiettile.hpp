@@ -2,24 +2,29 @@
 #define PROIETTILE_H
 
 #include <SFML/Graphics.hpp>
+
 const double PI_G = 3.1416;
 
 class Proiettile : public sf::Drawable, public sf::Transformable {
 private:
 	sf::RectangleShape proiettile_;
+
 	float velocita_;
-	float x;
-	float y;
+	float x_;
+	float y_;
+
+	float danno_;
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
-	sf::RectangleShape getProiettile();
+	Proiettile(sf::Vector2f dimensione, sf::Vector2f posizione, float angolo, float velocita, float danno);
 	Proiettile();
-	Proiettile(sf::Vector2f dim, sf::Vector2f pos, float angolo, float velocita_);
-	void setVelocita(float velocita_);
-	float getVelocita();
-	void muovi();
+	void setDistrutto();
+	float getDanno();
+	sf::Vector2f getPosition();
+	sf::RectangleShape getProiettile();
 	sf::FloatRect getGlobalBounds();
-	void setColor(sf::Color color);
+	void muovi();
 };
 
 #endif
