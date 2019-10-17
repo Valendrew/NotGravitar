@@ -224,6 +224,9 @@ proiettile_ptr Universo::getProiettili()
 }
 
 void Universo::uscitaPianeta() {
+	if (pianetaAttuale != nullptr) {
+		(*pianetaAttuale->pianeta_).resetProiettiliBunker();
+	}
 	pianetaAttuale = nullptr;
 }
 
