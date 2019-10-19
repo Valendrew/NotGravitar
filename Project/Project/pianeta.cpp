@@ -192,6 +192,13 @@ bool Pianeta::controlloCollisioneSuperficie(sf::Vector2f posizione)
 	else return false;
 }
 
+void Pianeta::resetProiettiliBunker()
+{
+	if (superficie_attuale_ != nullptr) {
+		(*superficie_attuale_->superficie_item).resetProiettiliBunker();
+	}
+}
+
 proiettile_ptr Pianeta::getProiettili()
 {
 	if (superficie_attuale_ != nullptr)
