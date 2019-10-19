@@ -1,4 +1,5 @@
 #include "mappa.hpp";
+#include <iostream>;
 
 Mappa::listaUniversi Mappa::addUniverso(int coordinata_universo_x, int coordinata_universo_y) {
 	//quando creo un nuovo universo lo aggiungo in testa alla lista cosi da avere l'inserimento in O(1)
@@ -36,11 +37,9 @@ void Mappa::draw(sf::RenderTarget & target, sf::RenderStates states) const
 
 Mappa::Mappa(int larghezza_finestra, int altezza_finestra) {
 
-	/*quando inizializzo la mappa creo 5 universi: quello di spawn associato alle coordinate (0,0)
-	e quelli nelle 4 direzioni possibili che l'astronave potrà visitare
-	*/
-
-	statoAttacco = true;
+	
+	statoAttacco = new bool();
+	*statoAttacco = true;
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
 
@@ -61,8 +60,6 @@ Mappa::Mappa(int larghezza_finestra, int altezza_finestra) {
 	list_universi_->u = new Universo(larghezza_finestra, altezza_finestra);
 	list_universi_->next = nullptr;
 
-	//setto a true il "visitato" dell' universo 0,0 dato che è quello di spawn 
-	(*findUniverso(0, 0)->u).setVisitato();
 	universo_di_gioco_ = list_universi_;
 	posizione_attuale_ = list_universi_;
 }
@@ -78,13 +75,20 @@ int Mappa::controlloPassaggioSuperficie(sf::Vector2f pos)
 	return direzione;
 }
 
-bool Mappa::isNuovoUniverso()
+bool Mappa::aggiornaPunteggioBunker()
 {
-	return (*universo_di_gioco_->u).getVisitato();
+	return getPosizioneAttuale().getPianetaAttuale().distruzioneSingoloBunker();
 }
 
-void Mappa::setVecchioUniverso(){
-	(*universo_di_gioco_->u).setVisitato();
+bool Mappa::aggiornaPunteggioPianeta()
+{
+	
+	return !getPosizioneAttuale().restaUnSoloPianeta() && getPosizioneAttuale().getPianetaAttuale().isDistrutto();
+}
+
+bool Mappa::aggiornaPunteggioUniverso()
+{
+	return getPosizioneAttuale().distrutto();
 }
 
 bool Mappa::controlloCollisioneSuperficie(sf::Vector2f pos) {
@@ -111,36 +115,38 @@ bool Mappa::spostamento(int direzione) {
 	*/
 	bool ritorno = true, setStato = false;
 	//Se nell'universo attuale ho distrutto tutti i pianeti setto lo statoAttacco a false
-	if ((*universo_di_gioco_->u).distrutto()) statoAttacco = false;
+	if ((*universo_di_gioco_->u).getDistrutto()) 
+		*statoAttacco = false;
 		
 		listaUniversi posizione_attuale_tmp = posizione_attuale_;
+
 		switch (direzione) {
 		case 0:
 			posizione_attuale_ = findUniverso(posizione_attuale_->c.x, posizione_attuale_->c.y + 1);
 			//Se lo statoAttacco è false e la posizione cercata è nulla (ovvero sto cercando di andare in un uiverso nuovo) aggiorno la list_universi mettendo in testa il
 			//nuovo universo e setto un bool a true
-			if (posizione_attuale_ == nullptr && !statoAttacco) {
+			if (posizione_attuale_ == nullptr && !(*statoAttacco)) {
 				list_universi_ = addUniverso(posizione_attuale_tmp->c.x, posizione_attuale_tmp->c.y + 1);
 				setStato = true;
 			}
 			break;
 		case 1:
 			posizione_attuale_ = findUniverso(posizione_attuale_->c.x + 1, posizione_attuale_->c.y);
-			if (posizione_attuale_ == nullptr && !statoAttacco) {
+			if (posizione_attuale_ == nullptr && !(*statoAttacco)) {
 				list_universi_ = addUniverso(posizione_attuale_tmp->c.x + 1, posizione_attuale_tmp->c.y);
 				setStato = true;
 			}
 			break;
 		case 2:
 			posizione_attuale_ = findUniverso(posizione_attuale_->c.x, posizione_attuale_->c.y - 1);
-			if (posizione_attuale_ == nullptr && !statoAttacco) {
+			if (posizione_attuale_ == nullptr && !(*statoAttacco)) {
 				list_universi_ = addUniverso(posizione_attuale_tmp->c.x, posizione_attuale_tmp->c.y - 1);
 				setStato = true;
 			}
 			break;
 		case 3:
 			posizione_attuale_ = findUniverso(posizione_attuale_->c.x - 1, posizione_attuale_->c.y);
-			if (posizione_attuale_ == nullptr && !statoAttacco) {
+			if (posizione_attuale_ == nullptr && !(*statoAttacco)) {
 				list_universi_ = addUniverso(posizione_attuale_tmp->c.x - 1, posizione_attuale_tmp->c.y);
 				setStato = true;
 			}
@@ -149,24 +155,28 @@ bool Mappa::spostamento(int direzione) {
 		//Se setStato è true significa che mi muovero verso un universo nuovo mai visitato e quindi setto statoAttacco a true, e aggiorno sia l'universo di gioco
 		//sia la posizione attuale
 		if (setStato) {
-			statoAttacco = true;
-			universo_di_gioco_ = posizione_attuale_;
+			*statoAttacco = true;
 			posizione_attuale_ = list_universi_;
+			universo_di_gioco_ = posizione_attuale_;
 		}
+
 		//Se setStato è false significa che non mi muoverso verso un universo nuovo
-		//se non mi ci muovo perche tanto di andare verso un universo gia es
-		else if (statoAttacco) {
+		//se non mi ci muovo perche tanto di andare verso un universo gia visitato
+
+		else if (*statoAttacco) {
+
+			//caso in cui l'universo in cui voglio andare non sia ancora stato sbloccato
 			if (posizione_attuale_ == nullptr) {
 				posizione_attuale_ = posizione_attuale_tmp;
 				ritorno = false;
 			}
+			//Il caso in cui torno a visitare un universo gia distrutto è già gestito
 		}
-	
 	return ritorno;
 }
 
 bool Mappa::ricercaPianeta(int x_astronave, int y_astronave) {
-	return (posizione_attuale_->u)->pianetaAttualeRicerca(x_astronave, y_astronave);
+	return (*posizione_attuale_->u).pianetaAttualeRicerca(x_astronave, y_astronave);
 }
 
 proiettile_ptr Mappa::getProiettili()
@@ -179,21 +189,16 @@ void Mappa::controlloProiettili(proiettile_ptr lista_proiettili)
 	(*posizione_attuale_->u).controlloProiettili(lista_proiettili);
 }
 
-Universo Mappa::getUniversoDiGioco() {
-	return *(universo_di_gioco_->u);
+Universo Mappa::getPosizioneAttuale() {
+	return (*posizione_attuale_->u);
 }
 
-coordinate Mappa::getPosizioneAttuale() {
-	return (posizione_attuale_->c);
-}
 
-coordinate Mappa::getPosizioneDiGioco() {
-	return universo_di_gioco_->c;
-}
+
 
 void Mappa::restart(int width_, int height_) {
 
-	statoAttacco = true;
+	*statoAttacco = true;
 	universo_di_gioco_ = nullptr;
 	posizione_attuale_ = nullptr;
 	delete list_universi_;
@@ -203,8 +208,6 @@ void Mappa::restart(int width_, int height_) {
 	list_universi_->u = new Universo(width_, height_);
 	list_universi_->next = nullptr;
 
-	//setto a true il "visitato" dell' universo 0,0 dato che è quello di spawn 
-	(*findUniverso(0, 0)->u).setVisitato();
 	universo_di_gioco_ = list_universi_;
 	posizione_attuale_ = list_universi_;
 }

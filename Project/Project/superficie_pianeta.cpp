@@ -73,8 +73,8 @@ void SuperficiePianeta::generaSuperficie()
 void SuperficiePianeta::generaBunker()
 {
 	// Il numero di bunker sarà compreso tra 2 e 3
-	//int numero_di_bunker = (rand() % 2) + 2;
-	int numero_di_bunker = 3;
+	int numero_di_bunker = (rand() % 2) + 2;
+	//int numero_di_bunker = 3;
 	
 	// Viene generato un solo bunker da 3 proiettili per superficie
 	int bunker_stronger = 1;
@@ -245,7 +245,6 @@ void SuperficiePianeta::generaBenzina() {
 		}
 	}
 
-	//da calcolare posizione e angolo
 
 	if (tipologia_benzina > 30 && tipologia_benzina < 60) {
 		aggiungiOggetto(index, BENZINA, size);
@@ -482,23 +481,49 @@ void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 
 }
 
+bool SuperficiePianeta::isDistrutta()
+{
+	bool distrutta = true;
+	bunker_ptr bunker_tmp = bunker_;
+	bunker_stronger_ptr bunker_stronger_tmp = bunker_stronger_;
+
+	while (bunker_tmp != nullptr && distrutta) {
+
+		if (!(*bunker_tmp->bunker_item).getDistrutto())
+			distrutta = false;
+
+		bunker_tmp = bunker_tmp->next;
+	}
+	while (bunker_stronger_tmp != nullptr && distrutta) {
+
+		if (!(*bunker_stronger_tmp->bunker_item).getDistrutto())
+			distrutta = false;
+
+		bunker_stronger_tmp = bunker_stronger_tmp->next;
+	}
+	return distrutta;
+}
+
 int SuperficiePianeta::getNumeroBunker()
 {
-	int numero_bunker = 0;
+	int numeroBunker = 0;
+	bunker_ptr bunker_tmp = bunker_;
+	bunker_stronger_ptr bunker_stronger_tmp = bunker_stronger_;
 
-	bunker_ptr tmp_bunker = bunker_;
-	bunker_stronger_ptr tmp_bunker_stronger = bunker_stronger_;
+	while (bunker_tmp != nullptr) {
 
-	while (tmp_bunker != nullptr)
-	{
-		numero_bunker++;
-		tmp_bunker = tmp_bunker->next;
+		if (!(*bunker_tmp->bunker_item).getDistrutto())
+			numeroBunker++;
+
+		bunker_tmp = bunker_tmp->next;
 	}
+	while (bunker_stronger_tmp != nullptr) {
 
-	while (tmp_bunker_stronger != nullptr)
-	{
-		numero_bunker++;
-		tmp_bunker_stronger = tmp_bunker_stronger->next;
+		if (!(*bunker_stronger_tmp->bunker_item).getDistrutto())
+			numeroBunker++;
+
+		bunker_stronger_tmp = bunker_stronger_tmp->next;
 	}
-	return numero_bunker;
+	return numeroBunker;
 }
+

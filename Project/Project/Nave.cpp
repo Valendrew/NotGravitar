@@ -23,13 +23,11 @@ Nave::Nave() : Comportamento() {
 
 void Nave::ruotaSinistra()
 {
-	if (!distrutto_) 
 		entita_.rotate(-velocita_rotazione_);
 }
 
 void Nave::ruotaDestra()
 {
-	if (!distrutto_) 
 		entita_.rotate(velocita_rotazione_);
 }
 
@@ -38,7 +36,7 @@ void Nave::spara()
 	float angolo = getRotation();
 	float velocita = 1.2f;
 
-	if (clock_.getElapsedTime().asMilliseconds() > 400 && !distrutto_) {
+	if (clock_.getElapsedTime().asMilliseconds() > 400) {
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {
@@ -87,12 +85,10 @@ sf::VertexArray Nave::getPosizioneFrontale()
 }
 
 void Nave::muovi(sf::Time deltaTime) {
-	if (!distrutto_) {
 		float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
 		float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 
 		entita_.move(velX, velY);
-	}
 }
 
 void Nave::cambiaTextureMovimento(bool movimento)
@@ -134,13 +130,15 @@ void Nave::setPosition(sf::Vector2f pos) { //non testata
 	entita_.setPosition(x2, y2);
 }
 
+
 proiettile_ptr Nave::getProiettili()
 {
 	return proiettili_;
 }
 
-void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante) {
-	Comportamento::restart(vita, cord_x, cord_y, angolo_rotazione);
+
+void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante, bool distrutto) {
+	Comportamento::restart(vita, cord_x, cord_y, angolo_rotazione, distrutto);
 	carburante_ = carburante;	
 
 }

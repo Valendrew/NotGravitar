@@ -67,6 +67,7 @@ protected:
 	void mouseClick(sf::Mouse::Button b);
 	void aggiornaTestoNumeri(const char stringa[], int valore, Testo &t);
 	void controlloAggiornamentoPunteggio();
+	void controlloGameOver();
 public:
 	Gioco();
 	void avviaGioco();

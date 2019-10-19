@@ -1,5 +1,6 @@
 #include "gioco.hpp"
 #include <stdlib.h>
+#include <iostream>
 
 void Gioco::processaEventi()
 {
@@ -40,9 +41,11 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 		//compare torna 0 se le due stringhe sono uguali
 		if (stringa_start.compare("RESTART") == 0) {
 			mappa_.restart(LARGHEZZA, ALTEZZA);
-			nave_.restart(100, LARGHEZZA/2, ALTEZZA/2, 0, 10);
+			punteggio_ = 0;
+			nave_.restart(100, 40, 40, 0, 10, false);
 			stato_ = UNIVERSO;
 			punteggio_text_.setPosition(5, 0);
+			aggiornaTestoNumeri("PUNTEGGIO: ", punteggio_, punteggio_text_);
 		}
 		else if (stringa_start.compare("START") == 0) {
 			stato_ = UNIVERSO;
@@ -307,23 +310,26 @@ void Gioco::controlloCollisioneProiettiliSuperficie()
 
 void Gioco::controlloAggiornamentoPunteggio() {
 
-	Pianeta p_attuale = *mappa_.getUniversoDiGioco().getPianetaAttuale()->pianeta_;
-	p_attuale.distrutto();
 
-	//Il controllo mappa_.isNuovoUniverso() serve per far aumentare il punteggio di 100 una sola volta per ugni sestema solare
-	if (mappa_.getUniversoDiGioco().distrutto() && mappa_.isNuovoUniverso()) {
-		punteggio_ += 100;
-		mappa_.setVecchioUniverso();
-	}
-	else if (p_attuale.isDistrutto()) {
-		punteggio_ += 50;
-	}
-	else if (p_attuale.distruzioneSingoloBunker()) {
+	if (mappa_.aggiornaPunteggioBunker()) {
 		punteggio_ += 10;
+	}
+	else if (mappa_.aggiornaPunteggioPianeta()) {
+			punteggio_ += 50;
+	}
+	else if (mappa_.aggiornaPunteggioUniverso()) {
+		punteggio_ += 100;
 	}
 	
 	aggiornaTestoNumeri("PUNTEGGIO: ",punteggio_, punteggio_text_);
 
+}
+
+void Gioco::controlloGameOver() {
+
+	if (nave_.getDistrutto()) {
+		stato_ = GAMEOVER;
+	}
 }
 
 void Gioco::update()
@@ -331,7 +337,6 @@ void Gioco::update()
 	if (stato_ == UNIVERSO) {
 		controlloPassaggioUniverso();
 		controlloPassaggioPianeta();
-
 		movimentoNavicella();
 	}
 	else if (stato_ == PIANETA) {
@@ -342,7 +347,7 @@ void Gioco::update()
 		controlloCollisioneSuperficie();
 		controlloCollisioneProiettili();
 		controlloCollisioneProiettiliSuperficie();
-
+		controlloGameOver();
 		movimentoNavicella();
 		controlloSparo();
 	}
@@ -404,7 +409,7 @@ void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
 Gioco::Gioco() :
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
 	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_2.png", "Texture/ship_2d.png",
-		sf::Vector2f(40, 40), sf::Vector2f(60, 60), 0, 350, 2.f, 10)
+		sf::Vector2f(100, 100), sf::Vector2f(60, 60), 0, 350, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
 	, punteggio_text_("PUNTEGGIO: 100",32, sf::Color::Blue, sf::Color::Magenta, 1.5, 1, sf::Vector2f(5, 0))

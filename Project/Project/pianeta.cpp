@@ -1,4 +1,5 @@
 #include "pianeta.h"
+#include <iostream>
 
 void Pianeta::generaSuperficie()
 {
@@ -42,8 +43,6 @@ void Pianeta::generaSuperficie()
 			superficie_head_ = tmp_sup;
 		}
 
-		//all'inizio bunker_precedenti conterra il valore dei bunker totali
-		bunker_precedenti_ += (*superficie_head_->superficie_item).getNumeroBunker();
 		superfici_generate++;
 	}
 }
@@ -55,6 +54,7 @@ int Pianeta::bunkerRimanenti() {
 	while (tmp_superficie != nullptr)
 	{
 		bunker_rimanenti += (*tmp_superficie->superficie_item).getNumeroBunker();
+
 		tmp_superficie = tmp_superficie->next;
 	}
 
@@ -62,10 +62,10 @@ int Pianeta::bunkerRimanenti() {
 }
 
 Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra) {
-	bunker_precedenti_ = 0;
 
 	id_ = id;
-	distrutto_ = false;
+	distrutto_ = new bool();
+	*distrutto_ = false;
 	pianeta_.setRadius(25.0);
 	pianeta_.setPointCount(100);
 	numero_superfici_ = 3;
@@ -82,10 +82,20 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	numero_superfici_ = 3;
 	generaSuperficie();
 
+	superficie_ptr superficie_tmp = superficie_head_;
+	numero_bunker_precedenti = new int();
+	*numero_bunker_precedenti = 0;
+	while (superficie_tmp != nullptr) {
+
+		*numero_bunker_precedenti += (*superficie_tmp->superficie_item).getNumeroBunker();
+		superficie_tmp = superficie_tmp->next;
+	}
+
 	superficie_attuale_ = superficie_tail_;
 }
 
 Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720) {}
+
 
 float Pianeta::getRaggio() {
 	return pianeta_.getRadius();
@@ -99,26 +109,48 @@ sf::Vector2f Pianeta::getPosizione()
 //void Pianeta::cambiaColore() {
 //	pianeta_.setFillColor(sf::Color(255, 0, 0, pianeta_.getFillColor().a - 25));
 //}
-
-void Pianeta::distrutto() {
-	if (bunkerRimanenti() == 0)
-		distrutto_ = true;
-}
-
 bool Pianeta::distruzioneSingoloBunker()
 {
-	bool ritorno = false;
+	bool distrutto = false;
+	int bunker_rimanenti_ = bunkerRimanenti();
 	//il controllo != 0 è presente poiche se il numero di bunker rimanenti è 0 siamo nel caso in cui l'intero pianeta è distrutto
-	if (bunkerRimanenti() != 0 && bunkerRimanenti() < bunker_precedenti_) {
-		ritorno = true;
-		bunker_precedenti_--;
+
+	if (bunker_rimanenti_ != 0 && bunker_rimanenti_ < *numero_bunker_precedenti) {
+		distrutto = true;
+        *numero_bunker_precedenti = bunker_rimanenti_;
 	}
-	return ritorno;
+
+	return distrutto;
 }
 
 bool Pianeta::isDistrutto()
 {
-	return distrutto_;
+	bool distrutto = true;
+	//Questo metodo mi deve ritornare true solo una volta, appena ho distrutto il pianeta
+	//successivamente, anche se il pianeta è effettivamente distrutto mi deve tornare false altrimenti il punteggio salirebbe all'infinito
+		if (*distrutto_)
+			distrutto = false;
+		else {
+			superficie_ptr superficie_head_tmp = superficie_head_;
+
+			while (superficie_head_tmp != nullptr && distrutto) {
+
+				if (!(*superficie_head_tmp->superficie_item).isDistrutta())
+					distrutto = false;
+
+				superficie_head_tmp = superficie_head_tmp->next;
+			}
+
+			if (distrutto)
+				*distrutto_ = true;
+		}
+
+	return distrutto;
+}
+
+bool Pianeta::getDistrutto()
+{  
+	return *distrutto_;
 }
 
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
@@ -179,6 +211,7 @@ void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)
 	if (superficie_attuale_ != nullptr)	
 		target.draw((*superficie_attuale_->superficie_item));
 }
+
 
 void Pianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {

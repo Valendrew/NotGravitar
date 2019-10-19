@@ -77,6 +77,7 @@ public:
 	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	void controlloProiettili(proiettile_ptr lista_proiettili);
+	bool isDistrutta();
 	int getNumeroBunker();
 };
 #endif // !SUPERFICIE_PIANETA_H

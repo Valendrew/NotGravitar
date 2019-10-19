@@ -9,12 +9,12 @@ class Pianeta : public sf::Drawable, public sf::Transformable {
 protected: 
 	int larghezza_finestra_;
 	int altezza_finestra_;
-	bool distrutto_;
 	int id_;
+	int* numero_bunker_precedenti;
 	sf::CircleShape pianeta_;
 
+	bool* distrutto_;
 	int numero_superfici_;
-	int bunker_precedenti_;
 
 	struct SuperficieNode {
 		SuperficiePianeta *superficie_item;
@@ -35,15 +35,13 @@ protected:
 public: 
 	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra);
 	Pianeta();
-
 	float getRaggio();
 	sf::Vector2f getPosizione();
 
 	//void cambiaColore();
-
-	void distrutto();
 	bool distruzioneSingoloBunker();
 	bool isDistrutto();
+	bool getDistrutto();
 
 	int controlloPassaggioSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f posizione);

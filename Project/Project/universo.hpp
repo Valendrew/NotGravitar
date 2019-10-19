@@ -12,11 +12,10 @@ struct coordinate {
 };
 
 struct nodoPianeta {
-	Pianeta *pianeta_;
-	bool visitato;
-	nodoPianeta *next;
+	Pianeta* pianeta_;
+	nodoPianeta* next;
 };
-typedef nodoPianeta *listaPianeti;
+typedef nodoPianeta* listaPianeti;
 
 class Universo : public sf::Drawable, public sf::Transformable {
 protected:
@@ -30,35 +29,27 @@ protected:
 
 	//Dimensione delle celle dove spawneranno i pianeti rispetto alla grandezza della finestra
 	coordinate dimensioni_celle_;
-	//Booleano per verificare se è la prima volta che visito un universo o meno (in caso affermativo genero gli universi adiacenti)
+
 	bool visitato_;
+	bool* distrutto_;
 	int id_pianeta_;
 
-	listaPianeti generaPianeti(listaPianeti p);
-	//Precondizione: la lista p passata è = NULL
+	void generaPianeti();
 	listaPianeti pianetaAttuale;
-	listaPianeti headInsert(listaPianeti L, Pianeta* p);
+	void headInsert(Pianeta* p);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
 	Universo(int larghezza_finestra, int altezza_finestra);
 	Universo();
 
-	listaPianeti distruggiPianeta(listaPianeti p);
-	listaPianeti getPianeti();
-	listaPianeti getPianetaAttuale();
-
-	coordinate getDimensioniCelle();
-	void setDimensioniCelle(int x, int y);
-
-	bool getMatriceSpawn(int i, int j);
-	int getNumeroPianeti();
-
-	bool getVisitato();
-	void setVisitato();
+	Pianeta getPianetaAttuale();
 
 	bool pianetaAttualeRicerca(int x_astronave, int y_astronave);
 	bool distrutto();
+	bool getDistrutto();
+	bool restaUnSoloPianeta();
+
 
 	int controlloPassaggioSuperficie(sf::Vector2f pos);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
