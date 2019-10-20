@@ -116,6 +116,9 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::Space) {
 		nave_spara_ = isPressed;
 	}
+	else if (key == sf::Keyboard::R) {
+		nave_raggiotraente_ == isPressed;
+	}
 }
 
 void Gioco::movimentoNavicella()
@@ -140,44 +143,47 @@ void Gioco::controlloSparo()
 
 void Gioco::controlloPassaggioUniverso()
 {	
-	int direzione = -1;
-
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
+	int direzione_universo = -1;
+
 	int i = 0;
-	while (i < punti.getVertexCount() && direzione == -1)
+	while (i < punti.getVertexCount() && direzione_universo == -1)
 	{
-		if (punti[i].position.x >= LARGHEZZA) direzione = 1;
-		else if (punti[i].position.x <= 0) direzione = 3;
-		else if (punti[i].position.y >= ALTEZZA) direzione = 2;
-		else if (punti[i].position.y <= 0) direzione = 0;
+		if (punti[i].position.x >= LARGHEZZA) direzione_universo = 1;
+		else if (punti[i].position.x <= 0) direzione_universo = 3;
+		else if (punti[i].position.y >= ALTEZZA) direzione_universo = 2;
+		else if (punti[i].position.y <= 0) direzione_universo = 0;
 
 		i++;
 	}
 
-	if (direzione != -1) {
-		if (mappa_.spostamento(direzione)) {
-			switch (direzione)
+	if (direzione_universo != -1) {
+		// Se è possibile spostare la navicella in un altro universo
+		if (mappa_.spostamento(direzione_universo)) {
+			switch (direzione_universo)
 			{
-			case 0: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getDimensione().y));
+			case 0: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getSize().y));
 				break;
-			case 1: nave_.passaggioAmbiente(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
+			case 1: nave_.passaggioAmbiente(sf::Vector2f(nave_.getSize().x, nave_.getPosition().y));
 				break;
-			case 2: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, nave_.getDimensione().y));
+			case 2: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, nave_.getSize().y));
 				break;
-			case 3: nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
+			case 3: nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getSize().x, nave_.getPosition().y));
 			default:
 				break;
 			}
 		}
+		// Se è impossibile visitare l'universo nel quale si vuole accedere
 		else {
+			// Rimbalzo della navicella sul bordo dello schermo
 			float deg_angolo = nave_.getRotation();
 			float angolo = nave_.getRotation() * PI / 180;
 			float s_x = cos(angolo);
 			float s_y = sin(angolo);
 
 			float new_angolo;
-			if (direzione == 1 || direzione == 3) {
+			if (direzione_universo == 1 || direzione_universo == 3) {
 				new_angolo = asin(s_y * -1) * 180 / PI;
 				if (s_x < 0) {
 					new_angolo = 180 - (new_angolo);
@@ -199,14 +205,20 @@ void Gioco::controlloPassaggioPianeta()
 {
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
-	bool controllo_passaggio = mappa_.ricercaPianeta(punti[0].position.x, punti[0].position.y);
-	if (!controllo_passaggio) controllo_passaggio = mappa_.ricercaPianeta(punti[1].position.x, punti[1].position.y);
+	bool entrata_pianeta = false;
 
-	if (controllo_passaggio) {
+	int i = 0;
+	while (i < punti.getVertexCount() && !entrata_pianeta)
+	{
+		entrata_pianeta = mappa_.ricercaPianeta(punti[i].position);
+		i++;
+	}
+
+	if (entrata_pianeta) {
 		stato_ = PIANETA;
-		posizione_entrata_pianeta_ = sf::Vector2f(punti[0].position.x - 50, punti[0].position.y - 50);
+		posizione_entrata_pianeta_ = sf::Vector2f(punti[0].position.x - 2 * nave_.getSize().x, punti[0].position.y - 2 * nave_.getSize().y);
 		
-		nave_.setRotation(180);
+		nave_.setRotation(180); // la nave punta verso SUD
 		nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA / 2, 80));
 	}
 }
@@ -215,29 +227,31 @@ void Gioco::controlloUscitaPianeta()
 {
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
-	int direzione = -1;
-	bool cambia_stato = false;
+	bool uscita_pianeta = false;
 
-	for (int i = 0; i < punti.getVertexCount(); i++)
+	int i = 0;
+	while (i < punti.getVertexCount() && !uscita_pianeta)
 	{
-		if (punti[i].position.y <= 0) cambia_stato = true;
+		if (punti[i].position.y <= 0) uscita_pianeta = true;
+
+		i++;
 	}
 
-	if (cambia_stato) {
+	if (uscita_pianeta) {
 		stato_ = UNIVERSO;
+		mappa_.uscitaPianeta();
 
 		nave_.passaggioAmbiente(posizione_entrata_pianeta_);
-		posizione_entrata_pianeta_ = sf::Vector2f();
 
-		mappa_.uscitaPianeta();
+		posizione_entrata_pianeta_ = sf::Vector2f();
 	}
 }
 
 void Gioco::controlloPassaggioSuperficie()
 {
-	int direzione = -1;
-
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
+
+	int direzione = -1;
 
 	int i = 0;
 	while (i < punti.getVertexCount() && direzione == -1)
@@ -248,19 +262,19 @@ void Gioco::controlloPassaggioSuperficie()
 
 	if (direzione != -1) {
 		if (direzione == 0) {
-			nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getSize().x, nave_.getPosition().y));
 		}
 		else {
-			nave_.passaggioAmbiente(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(nave_.getSize().x, nave_.getPosition().y));
 		}
 	}
 }
 
 void Gioco::controlloCollisioneSuperficie()
 {
-	bool collisione_superficie = false;
-
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
+
+	bool collisione_superficie = false;
 
 	int i = 0;
 	while (i < punti.getVertexCount() && !collisione_superficie)
@@ -270,6 +284,7 @@ void Gioco::controlloCollisioneSuperficie()
 	}
 
 	if (collisione_superficie) {
+		// La nave viene fatta rimbalzare
 		float deg_angolo = nave_.getRotation();
 		float angolo = nave_.getRotation() * PI / 180;
 		float s_x = cos(angolo);
@@ -287,7 +302,9 @@ void Gioco::controlloCollisioneSuperficie()
 
 void Gioco::controlloCollisioneProiettili()
 {
+	// Vengono controllati i proiettili della Nave contro i Bunker (e viceversa)
 	nave_.controlloProiettili(mappa_.getProiettili());
+
 	mappa_.controlloProiettili(nave_.getProiettili());
 }
 
@@ -297,20 +314,16 @@ void Gioco::controlloCollisioneProiettiliSuperficie()
 
 	while (lista_p != nullptr)
 	{
-		if (mappa_.controlloCollisioneSuperficie((*lista_p->proiettile).getPosition()))
-		{
+		sf::Vector2f posizione_proiettile = (*lista_p->proiettile).getPosition();
+
+		if (mappa_.controlloCollisioneSuperficie(posizione_proiettile))
 			lista_p = nave_.eliminaProiettile(lista_p);
-		}
 		else
-		{
 			lista_p = lista_p->next;
-		}
 	}
 }
 
 void Gioco::controlloAggiornamentoPunteggio() {
-
-
 	if (mappa_.aggiornaPunteggioBunker()) {
 		punteggio_ += 10;
 	}
@@ -335,22 +348,32 @@ void Gioco::controlloGameOver() {
 void Gioco::update()
 {
 	if (stato_ == UNIVERSO) {
+		controlloGameOver();
+
 		controlloPassaggioUniverso();
 		controlloPassaggioPianeta();
+
 		movimentoNavicella();
 	}
 	else if (stato_ == PIANETA) {
+		controlloGameOver();
 		controlloAggiornamentoPunteggio();
+
 		controlloUscitaPianeta();
 
 		controlloPassaggioSuperficie();
 		controlloCollisioneSuperficie();
+
 		controlloCollisioneProiettili();
 		controlloCollisioneProiettiliSuperficie();
-		controlloGameOver();
+
 		movimentoNavicella();
 		controlloSparo();
 	}
+
+	/* TODO:
+	QUESTE COSE NON VANNO MODIFICATE SOLO UNA VOLTA? OSSIA AL CAMBIO
+	TRA UNO STATO E L'ALTRO, E NON AD OGNI CICLO DI CLOCK (COME IN QUESTO CASO)*/
 	else if (stato_ == GAMEOVER) {
 		start_.setString("RESTART");
 		subtitle_.setString("GAME OVER");
@@ -373,6 +396,7 @@ void Gioco::render()
 	window_.clear(sf::Color::Black);
 
 	if (stato_ == UNIVERSO || stato_ == PIANETA) {
+		// TODO: SPOSTARE IN UN ALTRA FUNZIONE DI GESTIONE DEL GIOCO
 		aggiornaTestoNumeri("VITA: ", nave_.getVita(), vita_text_);
 		aggiornaTestoNumeri("CARBURANTE: ", nave_.getCarburante(), carburante_text_);
 
@@ -390,6 +414,7 @@ void Gioco::render()
 		window_.draw(exit_);
 		window_.draw(subtitle_);
 
+		// TODO: IL PUNTEGGIO NON PUÒ ESSERE MOSTRATO ANCHE IN ALTRI STATI?
 		if (stato_ == GAMEOVER)
 			window_.draw(punteggio_text_);
 	}
@@ -444,12 +469,13 @@ Gioco::Gioco() :
 	nave_rotazioneL_ = false;
 	nave_rotazioneR_ = false;
 	nave_spara_ = false;
+	nave_raggiotraente_ == false;
 
-	posizione_entrata_pianeta_ = sf::Vector2f(0, 0); // posizione della nave prima di entrare nel pianeta
+	posizione_entrata_pianeta_ = sf::Vector2f(); // posizione della nave prima di entrare nel pianeta
 
 	time_frame_ = sf::seconds(1.f / 144.f);
 
-	stato_ = UNIVERSO;
+	stato_ = START;
 }
 
 void Gioco::avviaGioco()

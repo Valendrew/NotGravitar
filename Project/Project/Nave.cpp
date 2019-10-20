@@ -2,10 +2,12 @@
 
 Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno,
 	const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione,
-	float angolo_rotazione, float velocita_movimento, float velocita_rotazione, int carburante)
+	float angolo_rotazione, float velocita_movimento, float velocita_rotazione, float carburante)
 	: Comportamento(larghezza_finestra, altezza_finestra, vita, danno,
 		nomeFile, nomeFileDistrutto, posizione, dimensione, angolo_rotazione) {
 	carburante_ = carburante;
+	carburante_movimento_ = 0.001f;
+
 	velocita_movimento_ = velocita_movimento;
 	velocita_rotazione_ = velocita_rotazione;
 
@@ -85,10 +87,17 @@ sf::VertexArray Nave::getPosizioneFrontale()
 }
 
 void Nave::muovi(sf::Time deltaTime) {
+	if (carburante_ <= 0) {
+		Comportamento::setDistrutto();
+	}
+	else {
 		float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
 		float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 
 		entita_.move(velX, velY);
+
+		carburante_ -= carburante_movimento_;
+	}
 }
 
 void Nave::cambiaTextureMovimento(bool movimento)
@@ -130,15 +139,13 @@ void Nave::setPosition(sf::Vector2f pos) { //non testata
 	entita_.setPosition(x2, y2);
 }
 
-
 proiettile_ptr Nave::getProiettili()
 {
 	return proiettili_;
 }
 
-
-void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante, bool distrutto) {
+void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, float carburante, bool distrutto) {
 	Comportamento::restart(vita, cord_x, cord_y, angolo_rotazione, distrutto);
 	carburante_ = carburante;	
-
+	
 }

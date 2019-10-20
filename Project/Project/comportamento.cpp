@@ -53,12 +53,12 @@ void Comportamento::restart(float vita, float cord_x, float cord_y, float angolo
 	distrutto_ = distrutto;
 }
 
-sf::Vector2f Comportamento::getPosizione()
+sf::Vector2f Comportamento::getPosition()
 {
 	return entita_.getPosition();
 }
 
-void Comportamento::setPosizione(sf::Vector2f pos)
+void Comportamento::setPosition(sf::Vector2f pos)
 {
 	entita_.setPosition(pos);
 }
@@ -68,7 +68,7 @@ sf::FloatRect Comportamento::getGlobalBounds()
 	return entita_.getGlobalBounds();
 }
 
-sf::Vector2f Comportamento::getDimensione()
+sf::Vector2f Comportamento::getSize()
 {
 	return entita_.getSize();
 }

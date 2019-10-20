@@ -36,7 +36,9 @@ public:
 	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra);
 	Pianeta();
 	float getRaggio();
-	sf::Vector2f getPosizione();
+
+	sf::Vector2f getPosition();
+	sf::FloatRect getGlobalBounds();
 
 	//void cambiaColore();
 	bool distruzioneSingoloBunker();

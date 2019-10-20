@@ -18,7 +18,7 @@ protected:
 	int altezza_finestra_;
 	int altezza_massima_; // altezza massima di generazione della superficie
 	int altezza_minima_;
-	oggetto *benzina_;
+	Oggetto *benzina_;
 
 	enum TipologiaOggetto {
 		BUNKER_STRONGER,

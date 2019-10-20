@@ -114,24 +114,27 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 
 Universo::Universo() :Universo(1280, 720) {}
 
-
 Pianeta Universo::getPianetaAttuale() {
 
 	return (*pianetaAttuale->pianeta_);
 }
 
-bool Universo::pianetaAttualeRicerca(int x_astronave, int y_astronave) {
+bool Universo::pianetaAttualeRicerca(sf::Vector2f posizione) {
 	listaPianeti lista_pianeti_tmp = lista_Pianeti;
 	pianetaAttuale = nullptr;
 	bool found = false;
 	while (lista_pianeti_tmp != nullptr && !found) {
 
-		int x_pianeta = (*lista_pianeti_tmp->pianeta_).getPosizione().x;
-		int y_pianeta = (*lista_pianeti_tmp->pianeta_).getPosizione().y;
+		int x_pianeta = (*lista_pianeti_tmp->pianeta_).getPosition().x;
+		int y_pianeta = (*lista_pianeti_tmp->pianeta_).getPosition().y;
 		int radius_pianeta = (*lista_pianeti_tmp->pianeta_).getRaggio();
 
 
-		if ((x_pianeta <= x_astronave && x_astronave <= x_pianeta + radius_pianeta * 2) && (y_pianeta <= y_astronave && y_astronave <= y_pianeta + radius_pianeta * 2)) {
+		/*if ((x_pianeta <= posizione.x && posizione.x <= x_pianeta + radius_pianeta * 2) && (y_pianeta <= posizione.y && posizione.y <= y_pianeta + radius_pianeta * 2)) {
+			pianetaAttuale = lista_pianeti_tmp;
+			found = true;
+		}*/
+		if ((*lista_pianeti_tmp->pianeta_).getGlobalBounds().contains(posizione)) {
 			pianetaAttuale = lista_pianeti_tmp;
 			found = true;
 		}

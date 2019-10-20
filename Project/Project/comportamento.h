@@ -37,10 +37,10 @@ public:
 
 	void restart(float vita, float cord_x, float cord_y, float angolo_rotazione, bool distrutto);
 
-	sf::Vector2f getPosizione();
-	void setPosizione(sf::Vector2f pos);
+	sf::Vector2f getPosition();
+	void setPosition(sf::Vector2f pos);
 	sf::FloatRect getGlobalBounds();
-	sf::Vector2f getDimensione();
+	sf::Vector2f getSize();
 
 	float getRotation();
 	void setRotation(float rotazione);

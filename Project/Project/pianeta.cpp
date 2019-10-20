@@ -96,19 +96,24 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 
 Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720) {}
 
-
 float Pianeta::getRaggio() {
 	return pianeta_.getRadius();
 }
 
-sf::Vector2f Pianeta::getPosizione()
+sf::Vector2f Pianeta::getPosition()
 {
 	return pianeta_.getPosition();
+}
+
+sf::FloatRect Pianeta::getGlobalBounds()
+{
+	return pianeta_.getGlobalBounds();
 }
 
 //void Pianeta::cambiaColore() {
 //	pianeta_.setFillColor(sf::Color(255, 0, 0, pianeta_.getFillColor().a - 25));
 //}
+
 bool Pianeta::distruzioneSingoloBunker()
 {
 	bool distrutto = false;
@@ -186,10 +191,12 @@ int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 
 bool Pianeta::controlloCollisioneSuperficie(sf::Vector2f posizione)
 {
+	bool collisione_superficie = false;
 	if (superficie_attuale_ != nullptr) {
-		return (*superficie_attuale_->superficie_item).controlloCollisioneSuperficie(posizione);
+		collisione_superficie = (*superficie_attuale_->superficie_item).controlloCollisioneSuperficie(posizione);
 	}
-	else return false;
+	
+	return collisione_superficie;
 }
 
 void Pianeta::resetProiettiliBunker()
@@ -218,7 +225,6 @@ void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)
 	if (superficie_attuale_ != nullptr)	
 		target.draw((*superficie_attuale_->superficie_item));
 }
-
 
 void Pianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {

@@ -1,10 +1,12 @@
 #include "oggetto.h"
 
 
-oggetto::oggetto(const char tipo[], const char nomeFile[],sf::Vector2f pos, float angolo_rotazione, sf::Vector2f size) {
+Oggetto::Oggetto(const char tipo[], const char nomeFile[],sf::Vector2f pos, float angolo_rotazione, sf::Vector2f size)
+{
 	tipologia tipo_oggetto;
 
-	if (strcmp(tipo, "BENZINA_BEST") == 0)
+	
+if (strcmp(tipo, "BENZINA_BEST") == 0)
 		tipo_oggetto = BENZINA_BEST;
 	else if (strcmp(tipo, "BENZINA") == 0)
 		tipo_oggetto = BENZINA;
@@ -22,16 +24,20 @@ oggetto::oggetto(const char tipo[], const char nomeFile[],sf::Vector2f pos, floa
 
 	entita_.setOrigin(0, 0 + size.y);
 }
-oggetto::tipologia oggetto::getTipologia()
+
+Oggetto::Oggetto() {}
+
+Oggetto::tipologia Oggetto::getTipologia()
 {
 	return tipo_;
 }
-float oggetto::getCapacita()
+
+float Oggetto::getCapacita()
 {
 	return capacita_;
 }
-void oggetto::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+
+void Oggetto::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 
 		target.draw(entita_);
 }
-oggetto::oggetto() {}

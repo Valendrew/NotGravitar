@@ -34,6 +34,7 @@ protected:
 	bool nave_rotazioneL_;
 	bool nave_rotazioneR_;
 	bool nave_spara_;
+	bool nave_raggiotraente_;
 
 	int punteggio_;
 	sf::Vector2f posizione_entrata_pianeta_;

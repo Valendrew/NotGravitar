@@ -12,8 +12,8 @@ protected:
 	int altezza_finestra_;
 
 	struct nodoMappa {
-		Universo *u;
-		coordinate c;
+		Universo *universo;
+		coordinate posizione;
 		nodoMappa *next;
 	};
 
@@ -39,7 +39,7 @@ public:
 	/*spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
 	adiacenti a quello attuale */
 	bool spostamento(int direzione);
-	bool ricercaPianeta(int x_astronave, int y_astronave);
+	bool ricercaPianeta(sf::Vector2f posizione);
 
 	proiettile_ptr getProiettili();
 	void controlloProiettili(proiettile_ptr lista_proiettili);

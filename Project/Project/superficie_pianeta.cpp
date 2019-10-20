@@ -187,7 +187,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 			break;
 		}
 
-		benzina_ = new oggetto(tipologia, texture, new_coordinate, angolo, dimensione);
+		benzina_ = new Oggetto(tipologia, texture, new_coordinate, angolo, dimensione);
 	}
 }
 
@@ -444,6 +444,7 @@ sf::VertexArray SuperficiePianeta::getPosizioneLineaSuperficie(sf::Vector2f posi
 
 	return pos_linea;
 }
+
 bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
 {
 	sf::VertexArray pos_linea = getPosizioneLineaSuperficie(pos);

@@ -45,7 +45,7 @@ public:
 
 	Pianeta getPianetaAttuale();
 
-	bool pianetaAttualeRicerca(int x_astronave, int y_astronave);
+	bool pianetaAttualeRicerca(sf::Vector2f posizione);
 	bool distrutto();
 	bool getDistrutto();
 	bool restaUnSoloPianeta();
