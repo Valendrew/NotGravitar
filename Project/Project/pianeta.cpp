@@ -161,7 +161,7 @@ bool Pianeta::getDistrutto()
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 {
 	int direzione = -1;
-	int offset = 20;
+	int offset = 0;
 
 	if (posizione.x <= 0 + offset) {
 		(*superficie_attuale_->superficie_item).resetProiettiliBunker();

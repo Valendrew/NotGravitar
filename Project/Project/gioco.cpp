@@ -261,11 +261,12 @@ void Gioco::controlloPassaggioSuperficie()
 	}
 
 	if (direzione != -1) {
+		int offset = nave_.getSize().x;
 		if (direzione == 0) {
-			nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getSize().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA -offset, nave_.getPosition().y));
 		}
 		else {
-			nave_.passaggioAmbiente(sf::Vector2f(nave_.getSize().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(offset, nave_.getPosition().y));
 		}
 	}
 }
