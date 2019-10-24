@@ -368,14 +368,14 @@ proiettile_ptr SuperficiePianeta::getProiettili()
 		proiettile_ptr tmp = (*tmp_list->bunker_item).getProiettili();
 
 		if (tmp != nullptr) {
-			proiettile_ptr tmp2 = tmp; // per scorrere la lista di proiettili ottenuta fino alla fine
-			while (tmp2->next != nullptr)
-			{
-				tmp2 = tmp2->next;
-			}
+proiettile_ptr tmp2 = tmp; // per scorrere la lista di proiettili ottenuta fino alla fine
+while (tmp2->next != nullptr)
+{
+	tmp2 = tmp2->next;
+}
 
-			tmp2->next = lista_proiettili; // il puntatore successivo della lista appena ottenuta è uguale ai proiettili già processati
-			lista_proiettili = tmp;
+tmp2->next = lista_proiettili; // il puntatore successivo della lista appena ottenuta è uguale ai proiettili già processati
+lista_proiettili = tmp;
 		}
 
 		tmp_list = tmp_list->next; // bunker successivo
@@ -462,13 +462,17 @@ bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
 	return (nave_y_retta < pos.y);
 }
 
-void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
+int SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 {
 	bunker_ptr tmp_bunker = bunker_;
-
+	int numeroBunkerColpiti = 0;
 	while (tmp_bunker != nullptr)
 	{
-		(*tmp_bunker->bunker_item).controlloProiettili(lista_proiettili);
+		int numeroBunkerColpiti_tmp = (*tmp_bunker->bunker_item).controlloProiettili(lista_proiettili);
+
+		if (numeroBunkerColpiti_tmp > 0) {
+			numeroBunkerColpiti += numeroBunkerColpiti_tmp;
+		}
 		tmp_bunker = tmp_bunker->next;
 	}
 
@@ -476,10 +480,15 @@ void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 
 	while (tmp_stronger_bunker != nullptr)
 	{
-		(*tmp_stronger_bunker->bunker_item).controlloProiettili(lista_proiettili);
+		int numeroBunkerColpiti_tmp = (*tmp_stronger_bunker->bunker_item).controlloProiettili(lista_proiettili);
+
+		if (numeroBunkerColpiti_tmp > 0) {
+			numeroBunkerColpiti += numeroBunkerColpiti_tmp;
+		}
+		
 		tmp_stronger_bunker = tmp_stronger_bunker->next;
 	}
-
+	return numeroBunkerColpiti;
 }
 
 bool SuperficiePianeta::isDistrutta()

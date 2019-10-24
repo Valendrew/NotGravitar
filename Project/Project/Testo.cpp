@@ -34,11 +34,12 @@ std::string Testo::getString() {
 void Testo::setCharacterSize(int size) {
 	testo_.setCharacterSize(size);
 }
-void Testo::setPosition(float x, float y) {
-	testo_.setPosition(x, y);
+void Testo::setPosition(sf::Vector2f pos) {
+	testo_.setPosition(pos);
 }
 
 sf::Vector2f Testo::getPosition()
 {
 	return testo_.getPosition();
 }
+

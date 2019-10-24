@@ -43,19 +43,24 @@ public:
 	Universo(int larghezza_finestra, int altezza_finestra);
 	Universo();
 
-	Pianeta getPianetaAttuale();
+	//Provare a restutire un puntatore per settare il colore quando è distrutto
+	
 
 	bool pianetaAttualeRicerca(sf::Vector2f posizione);
 	bool distrutto();
 	bool getDistrutto();
 	bool restaUnSoloPianeta();
 
+	bool aggiornaPunteggioBunker();
+	bool distruzionePianetaAttuale();
+	void cambiaColorePianeta();
 
 	int controlloPassaggioSuperficie(sf::Vector2f pos);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	proiettile_ptr getProiettili();
 
 	void uscitaPianeta();
-	void controlloProiettili(proiettile_ptr lista_proiettili);
+	int controlloProiettili(proiettile_ptr lista_proiettili);
+	
 };
 #endif // !UNIVERSO_H

@@ -83,18 +83,21 @@ void Comportamento::setRotation(float rot)
 	entita_.setRotation(rot);
 }
 
-void Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
+int Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 {
+	int numerobunkerColpiti = 0;
 	while (lista_proiettili != nullptr && !distrutto_)
 	{
 		sf::FloatRect rect_proiettile = (*lista_proiettili->proiettile).getGlobalBounds();
 
 		if (entita_.getGlobalBounds().intersects(rect_proiettile)) {
 			diminuisciVita((*lista_proiettili->proiettile).getDanno());
+			numerobunkerColpiti++;
 			(*lista_proiettili->proiettile).setDistrutto();
 		}
 		lista_proiettili = lista_proiettili->next;
 	}
+	return numerobunkerColpiti;
 }
 
 proiettile_ptr Comportamento::eliminaProiettile(proiettile_ptr p)

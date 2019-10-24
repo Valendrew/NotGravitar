@@ -135,6 +135,7 @@
     <ClCompile Include="oggetto.cpp" />
     <ClCompile Include="pianeta.cpp" />
     <ClCompile Include="proiettile.cpp" />
+    <ClCompile Include="schermata_scritte.cpp" />
     <ClCompile Include="superficie_pianeta.cpp" />
     <ClCompile Include="Testo.cpp" />
     <ClCompile Include="universo.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="oggetto.h" />
     <ClInclude Include="pianeta.h" />
     <ClInclude Include="proiettile.hpp" />
+    <ClInclude Include="schermata_scritte.h" />
     <ClInclude Include="superficie_pianeta.h" />
     <ClInclude Include="Testo.h" />
     <ClInclude Include="universo.hpp" />

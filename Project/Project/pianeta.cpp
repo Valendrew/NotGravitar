@@ -71,7 +71,7 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	numero_superfici_ = 3;
 	pianeta_.setOrigin(0 , 0);
 	pianeta_.setPosition(posizione);
-	pianeta_.setFillColor(sf::Color(255, 0, 0, 255));
+	pianeta_.setFillColor(sf::Color(0,200,0,255));
 
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
@@ -110,9 +110,9 @@ sf::FloatRect Pianeta::getGlobalBounds()
 	return pianeta_.getGlobalBounds();
 }
 
-//void Pianeta::cambiaColore() {
-//	pianeta_.setFillColor(sf::Color(255, 0, 0, pianeta_.getFillColor().a - 25));
-//}
+void Pianeta::cambiaColore() {
+	pianeta_.setFillColor(sf::Color(255, 0, 0, 255));
+}
 
 bool Pianeta::distruzioneSingoloBunker()
 {
@@ -157,6 +157,8 @@ bool Pianeta::getDistrutto()
 {  
 	return *distrutto_;
 }
+
+
 
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 {
@@ -214,10 +216,11 @@ proiettile_ptr Pianeta::getProiettili()
 		return nullptr;
 }
 
-void Pianeta::controlloProiettili(proiettile_ptr lista_proiettili)
+int Pianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 {
 	if (superficie_attuale_ != nullptr)
-		(*superficie_attuale_->superficie_item).controlloProiettili(lista_proiettili);
+		return (*superficie_attuale_->superficie_item).controlloProiettili(lista_proiettili);
+	else return 0;
 }
 
 void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)

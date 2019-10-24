@@ -114,10 +114,6 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 
 Universo::Universo() :Universo(1280, 720) {}
 
-Pianeta Universo::getPianetaAttuale() {
-
-	return (*pianetaAttuale->pianeta_);
-}
 
 bool Universo::pianetaAttualeRicerca(sf::Vector2f posizione) {
 	listaPianeti lista_pianeti_tmp = lista_Pianeti;
@@ -193,6 +189,23 @@ bool Universo::restaUnSoloPianeta()
 	return un_solo_pianeta;
 }
 
+bool Universo::aggiornaPunteggioBunker()
+{
+	return (*pianetaAttuale->pianeta_).distruzioneSingoloBunker();
+}
+
+bool Universo::distruzionePianetaAttuale()
+{
+	return (*pianetaAttuale->pianeta_).isDistrutto();
+
+
+}
+
+void Universo::cambiaColorePianeta()
+{
+	(*pianetaAttuale->pianeta_).cambiaColore();
+}
+
 int Universo::controlloPassaggioSuperficie(sf::Vector2f pos)
 {
 	int direzione = -1;
@@ -226,9 +239,11 @@ void Universo::uscitaPianeta() {
 	pianetaAttuale = nullptr;
 }
 
-void Universo::controlloProiettili(proiettile_ptr lista_proiettili)
+int Universo::controlloProiettili(proiettile_ptr lista_proiettili)
 {
 	if (pianetaAttuale != nullptr) {
-		(*pianetaAttuale->pianeta_).controlloProiettili(lista_proiettili);
+		return (*pianetaAttuale->pianeta_).controlloProiettili(lista_proiettili);
 	}
+	else return 0;
 }
+

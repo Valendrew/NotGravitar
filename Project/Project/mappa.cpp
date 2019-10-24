@@ -77,29 +77,27 @@ int Mappa::controlloPassaggioSuperficie(sf::Vector2f pos)
 
 bool Mappa::aggiornaPunteggioBunker()
 {
-	/*
-	TODO: Eliminare getPosizioneAttuale (perchè fare un metodo che usi solo all'interno di questa classe?)
-	Eliminare getPianetaAttuale
-	Gestire il metodo in Universo e poi in Pianeta (come sempre)
-	*/
-	return getPosizioneAttuale().getPianetaAttuale().distruzioneSingoloBunker();
+	return (*posizione_attuale_->universo).aggiornaPunteggioBunker();
 }
 
 bool Mappa::aggiornaPunteggioPianeta()
 {
-	/*
-	TODO: Non puoi fare il controllo esattamente come per i Bunker? La dinamica mi sembra la stessa
-	Valgono gli stessi commenti di aggiornaPunteggioBunker
-	*/
-	return !getPosizioneAttuale().restaUnSoloPianeta() && getPosizioneAttuale().getPianetaAttuale().isDistrutto();
+	if (!(*posizione_attuale_->universo).restaUnSoloPianeta() && (*posizione_attuale_->universo).distruzionePianetaAttuale()) {
+
+		(*posizione_attuale_->universo).cambiaColorePianeta();
+		return true;
+	}
+	else return false;
 }
 
 bool Mappa::aggiornaPunteggioUniverso()
 {
-	/*
-	TODO: stesso discorso di aggiornaPunteggioBunker
-	*/
-	return getPosizioneAttuale().distrutto();
+	if ((*posizione_attuale_->universo).distrutto()) {
+		
+		(*posizione_attuale_->universo).cambiaColorePianeta();
+		return true;
+	}
+	else return false;
 }
 
 bool Mappa::controlloCollisioneSuperficie(sf::Vector2f pos) {
@@ -195,14 +193,11 @@ proiettile_ptr Mappa::getProiettili()
 	return (*posizione_attuale_->universo).getProiettili();
 }
 
-void Mappa::controlloProiettili(proiettile_ptr lista_proiettili)
+int Mappa::controlloProiettili(proiettile_ptr lista_proiettili)
 {
-	(*posizione_attuale_->universo).controlloProiettili(lista_proiettili);
+	return (*posizione_attuale_->universo).controlloProiettili(lista_proiettili);
 }
 
-Universo Mappa::getPosizioneAttuale() {
-	return (*posizione_attuale_->universo);
-}
 
 void Mappa::restart(int width_, int height_) {
 

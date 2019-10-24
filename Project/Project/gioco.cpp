@@ -37,31 +37,29 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 	}
 	else if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 0) {
 
-		std::string stringa_start = start_.getString();
+		std::string stringa_start = schermataScritte.getStart().getString();
 		//compare torna 0 se le due stringhe sono uguali
 		if (stringa_start.compare("RESTART") == 0) {
 			mappa_.restart(LARGHEZZA, ALTEZZA);
 			punteggio_ = 0;
 			nave_.restart(100, 40, 40, 0, 10, false);
 			stato_ = UNIVERSO;
-			punteggio_text_.setPosition(5, 0);
-			aggiornaTestoNumeri("PUNTEGGIO: ", punteggio_, punteggio_text_);
+			schermataScritte.setPunteggio();
+			schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 		}
 		else if (stringa_start.compare("START") == 0) {
 			stato_ = UNIVERSO;
 		}
 		else if (stringa_start.compare("RESUME") == 0) {
 			stato_ = salva_stato_;
+			schermataScritte.setPunteggio();
 		}
-		//Le due linee seguenti servono per ridimensionare subito lo start, altrimenti una volata premuta la pausa si visualizzerebbe "RESUME" a dimensione 60
-		//invece che 55 per un istante
-		start_.setCharacterSize(55);
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-
+		schermataScritte.setStart();
 	}
-	else if (gestioneMouse == 2) { 
+	else if (gestioneMouse == 2) {
 		salva_stato_ = stato_;
 		stato_ = PAUSA;
+		schermataScritte.SetPausa();
 	}
 	
 	
@@ -73,20 +71,7 @@ int Gioco::gestisciMouse() {
 	int pulsantePremuto = -1;
 
 	if (stato_ == GAMEOVER || stato_ == PAUSA || stato_ == START) {
-		if (start_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-			start_.setCharacterSize(60);
-			pulsantePremuto = 0;
-		}
-		else {
-			start_.setCharacterSize(55);
-			if (exit_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-				exit_.setCharacterSize(60);
-				pulsantePremuto = 1;
-			}
-			else exit_.setCharacterSize(55);
-		}
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-		exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
+		pulsantePremuto = schermataScritte.gestioneMouse(posizioneMouse);
 	}
 	else {
 		if (pausa_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
@@ -306,7 +291,12 @@ void Gioco::controlloCollisioneProiettili()
 	// Vengono controllati i proiettili della Nave contro i Bunker (e viceversa)
 	nave_.controlloProiettili(mappa_.getProiettili());
 
-	mappa_.controlloProiettili(nave_.getProiettili());
+	//Viene restituiro un intoro dato che ad uno stesso ciclo possono essere stati colpiti piu bunker
+
+	//Somma 1 tante volte perche per piu render di fila da il bunker come colpito in quell'istante(?)
+	int numeroBunkerColpiti = 0;
+		numeroBunkerColpiti = mappa_.controlloProiettili(nave_.getProiettili());
+		punteggio_ += numeroBunkerColpiti;
 }
 
 void Gioco::controlloCollisioneProiettiliSuperficie()
@@ -334,8 +324,7 @@ void Gioco::controlloAggiornamentoPunteggio() {
 	else if (mappa_.aggiornaPunteggioUniverso()) {
 		punteggio_ += 100;
 	}
-	
-	aggiornaTestoNumeri("PUNTEGGIO: ",punteggio_, punteggio_text_);
+	schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 
 }
 
@@ -343,6 +332,7 @@ void Gioco::controlloGameOver() {
 
 	if (nave_.getDistrutto()) {
 		stato_ = GAMEOVER;
+		schermataScritte.SetGameOver();
 	}
 }
 
@@ -371,25 +361,6 @@ void Gioco::update()
 		movimentoNavicella();
 		controlloSparo();
 	}
-
-	/* TODO:
-	QUESTE COSE NON VANNO MODIFICATE SOLO UNA VOLTA? OSSIA AL CAMBIO
-	TRA UNO STATO E L'ALTRO, E NON AD OGNI CICLO DI CLOCK (COME IN QUESTO CASO)*/
-	else if (stato_ == GAMEOVER) {
-		start_.setString("RESTART");
-		subtitle_.setString("GAME OVER");
-		subtitle_.setPosition(LARGHEZZA / 2 - subtitle_.getGlobalBounds().width / 2, 140);
-		punteggio_text_.setPosition(LARGHEZZA / 2 - punteggio_text_.getGlobalBounds().width / 2, 210);
-	}
-	else if (stato_ == PAUSA) {
-		start_.setString("RESUME");
-	}
-	else if (stato_ == START) {
-		start_.setString("START");
-	}
-	if (stato_ == START || stato_ == PAUSA || stato_ == GAMEOVER) {
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-	}
 }
 
 void Gioco::render()
@@ -398,39 +369,29 @@ void Gioco::render()
 
 	if (stato_ == UNIVERSO || stato_ == PIANETA) {
 		// TODO: SPOSTARE IN UN ALTRA FUNZIONE DI GESTIONE DEL GIOCO
-		aggiornaTestoNumeri("VITA: ", nave_.getVita(), vita_text_);
-		aggiornaTestoNumeri("CARBURANTE: ", nave_.getCarburante(), carburante_text_);
+		schermataScritte.aggiornaTesto("VITA: ", nave_.getVita());
+		schermataScritte.aggiornaTesto("CARBURANTE: ", nave_.getCarburante());
 
 		window_.draw(mappa_);
 		nave_.drawComportamento(window_, sf::RenderStates());
 
 		window_.draw(pausa_);
-		window_.draw(punteggio_text_);
-		window_.draw(vita_text_);
-		window_.draw(carburante_text_);
+		window_.draw(schermataScritte.getPunteggio());
+		window_.draw(schermataScritte.getVita());
+		window_.draw(schermataScritte.getCarburante());
 	}
 	else {
-		window_.draw(titolo_);
-		window_.draw(start_);
-		window_.draw(exit_);
-		window_.draw(subtitle_);
+		window_.draw(schermataScritte.getTitolo());
+		window_.draw(schermataScritte.getStart());
+		window_.draw(schermataScritte.getExit());
+		window_.draw(schermataScritte.getSubtitle());
 
-		// TODO: IL PUNTEGGIO NON PUÒ ESSERE MOSTRATO ANCHE IN ALTRI STATI?
-		if (stato_ == GAMEOVER)
-			window_.draw(punteggio_text_);
+		if(stato_ != START)
+		window_.draw(schermataScritte.getPunteggio());
 	}
 	window_.display();
 }
 
-void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
-
-	char valoreToString[10];
-	char stringaCompleta[100];
-	_itoa_s(valore, valoreToString, 10, 10);
-	strcpy_s(stringaCompleta, stringa);
-	strcat_s(stringaCompleta, valoreToString);
-	t.setString(stringaCompleta);
-}
 
 Gioco::Gioco() :
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
@@ -438,20 +399,9 @@ Gioco::Gioco() :
 		sf::Vector2f(100, 100), sf::Vector2f(60, 60), 0, 350, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
-	, punteggio_text_("PUNTEGGIO: 100",32, sf::Color::Blue, sf::Color::Magenta, 1.5, 1, sf::Vector2f(5, 0))
-	,titolo_("NON GRAVITAR", 120, sf::Color::Red, sf::Color::Yellow, 1.5, 4, sf::Vector2f(LARGHEZZA / 2 - titolo_.getGlobalBounds().width / 2, 10))
-	,subtitle_("",60, sf::Color::Red, sf::Color::Transparent, 1.5, 0, sf::Vector2f(0, 0))
-	,start_("",55, sf::Color::Green, sf::Color::Transparent, 1.5, 0, sf::Vector2f(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2))
-	,exit_("EXIT", 55, sf::Color::Magenta, sf::Color::Transparent, 1.5, 0, sf::Vector2f(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100))
-	,vita_text_("VITA: 100", 32, sf::Color::Red, sf::Color::Blue, 1.5, 1, sf::Vector2f(LARGHEZZA / 2 - 300, 0))
-	,carburante_text_("", 32, sf::Color::Red, sf::Color::Blue, 1.5, 1, sf::Vector2f(0, 0))
+	,schermataScritte(LARGHEZZA, ALTEZZA)
 {
-	titolo_.setPosition(LARGHEZZA / 2 - titolo_.getGlobalBounds().width / 2,10);
-	exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
-	start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-
-	float distanzaPunteggioVita = vita_text_.getPosition().x - (punteggio_text_.getPosition().x + punteggio_text_.getGlobalBounds().width);
-	carburante_text_.setPosition(vita_text_.getPosition().x + vita_text_.getGlobalBounds().width + distanzaPunteggioVita, 0);
+	
 
 	pausa_.setSize(sf::Vector2f(61.8, 64.0));
 	texture_.loadFromFile("Texture/pausa2.png");
@@ -460,9 +410,9 @@ Gioco::Gioco() :
 	pausa_.setTexture(&texture_);
 
 	punteggio_ = 0;
-	aggiornaTestoNumeri("PUNTEGGIO: ", punteggio_, punteggio_text_);
+	schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 
-	float pausa_size = punteggio_text_.getGlobalBounds().height + 15;
+	float pausa_size = schermataScritte.getPunteggio().getGlobalBounds().height + 15;
 	pausa_.setSize(sf::Vector2f(pausa_size, pausa_size));
 	pausa_.setPosition(LARGHEZZA - pausa_.getSize().x, 0);
 

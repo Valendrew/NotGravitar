@@ -4,7 +4,7 @@
 #include <SFML\Graphics.hpp>
 #include "mappa.hpp"
 #include "nave.hpp"
-#include "Testo.h"
+#include "schermata_scritte.h"
 
 const int LARGHEZZA = 1280;
 const int ALTEZZA = 720;
@@ -19,13 +19,7 @@ protected:
 	sf::RectangleShape pausa_;
 	sf::Texture texture_;
 
-	Testo exit_;
-	Testo start_;
-	Testo titolo_;
-	Testo subtitle_;
-	Testo punteggio_text_;
-	Testo vita_text_;
-	Testo carburante_text_;
+	schermata_scritte schermataScritte;
 
 	Nave nave_;
 	Mappa mappa_;
@@ -66,7 +60,6 @@ protected:
 	void render();
 	int gestisciMouse();
 	void mouseClick(sf::Mouse::Button b);
-	void aggiornaTestoNumeri(const char stringa[], int valore, Testo &t);
 	void controlloAggiornamentoPunteggio();
 	void controlloGameOver();
 public:

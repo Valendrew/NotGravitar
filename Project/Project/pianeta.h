@@ -40,16 +40,15 @@ public:
 	sf::Vector2f getPosition();
 	sf::FloatRect getGlobalBounds();
 
-	//void cambiaColore();
+	void cambiaColore();
 	bool distruzioneSingoloBunker();
 	bool isDistrutto();
 	bool getDistrutto();
-
 	int controlloPassaggioSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f posizione);
 	void resetProiettiliBunker();
 	proiettile_ptr getProiettili();
-	void controlloProiettili(proiettile_ptr lista_proiettili);
+	int controlloProiettili(proiettile_ptr lista_proiettili);
 	void drawSuperficie(sf::RenderTarget& target, sf::RenderStates states);
 };
 #endif // !PIANETA_H

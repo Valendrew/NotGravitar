@@ -42,9 +42,8 @@ public:
 	bool ricercaPianeta(sf::Vector2f posizione);
 
 	proiettile_ptr getProiettili();
-	void controlloProiettili(proiettile_ptr lista_proiettili);
+	int controlloProiettili(proiettile_ptr lista_proiettili);
 
-	Universo getPosizioneAttuale();
 
 	void restart(int width_, int height_);
 	bool aggiornaPunteggioBunker();

@@ -45,7 +45,7 @@ public:
 	float getRotation();
 	void setRotation(float rotazione);
 
-	void controlloProiettili(proiettile_ptr lista_proiettili);
+	int controlloProiettili(proiettile_ptr lista_proiettili);
 	proiettile_ptr eliminaProiettile(proiettile_ptr p);
 	void eliminaProiettiliBordo();
 	void resetProiettili();
