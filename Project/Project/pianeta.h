@@ -6,12 +6,20 @@
 #include "superficie_pianeta.h"
 
 class Pianeta : public sf::Drawable, public sf::Transformable {
-protected: 
+protected:
+	enum TipologiaPianeta {
+		ACQUA,
+		FUOCO,
+		ERBA
+	};
+
 	int larghezza_finestra_;
 	int altezza_finestra_;
 	int id_;
 	int* numero_bunker_precedenti;
 	sf::CircleShape pianeta_;
+	sf::Texture texture_;
+	TipologiaPianeta tipo_pianeta_;
 
 	bool* distrutto_;
 	int numero_superfici_;
@@ -33,7 +41,7 @@ protected:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public: 
-	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra);
+	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[]);
 	Pianeta();
 	float getRaggio();
 

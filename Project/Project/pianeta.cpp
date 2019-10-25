@@ -3,6 +3,19 @@
 
 void Pianeta::generaSuperficie()
 {
+	sf::Color colore_superficie;
+	switch (tipo_pianeta_)
+	{
+	case 0: colore_superficie = sf::Color::Cyan;
+		break;
+	case 1: colore_superficie = sf::Color::Red;
+		break;
+	case 2: colore_superficie = sf::Color::Green;
+		break;
+	default:
+		colore_superficie == sf::Color::Magenta;
+		break;
+	}
 	int superfici_generate = 0;
 
 	while (superfici_generate < numero_superfici_)
@@ -10,17 +23,17 @@ void Pianeta::generaSuperficie()
 		SuperficiePianeta *new_sup;
 
 		if (superfici_generate == 0) {
-			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_);
+			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, colore_superficie);
 		}
 		else if (superfici_generate == numero_superfici_ - 1) {
 			sf::Vector2f last_vertex = (*superficie_head_->superficie_item).getLastVertex();
 			sf::Vector2f first_vertex = (*superficie_tail_->superficie_item).getFirstVertex();
 
-			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, last_vertex, first_vertex);
+			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, last_vertex, first_vertex, colore_superficie);
 		}
 		else {
 			sf::Vector2f last_vertex = (*superficie_head_->superficie_item).getLastVertex();
-			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, last_vertex, sf::Vector2f());
+			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, last_vertex, sf::Vector2f(), colore_superficie);
 		}
 
 		if (superficie_head_ == nullptr) {
@@ -61,7 +74,7 @@ int Pianeta::bunkerRimanenti() {
 	return bunker_rimanenti;
 }
 
-Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra) {
+Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[]) {
 
 	id_ = id;
 	distrutto_ = new bool();
@@ -71,7 +84,20 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	numero_superfici_ = 3;
 	pianeta_.setOrigin(0 , 0);
 	pianeta_.setPosition(posizione);
-	pianeta_.setFillColor(sf::Color(0,200,0,255));
+
+	if (strcmp(tipologia, "ACQUA") == 0) {
+		tipo_pianeta_ = ACQUA;
+	}
+	else if (strcmp(tipologia, "FUOCO") == 0) {
+		tipo_pianeta_ = FUOCO;
+	}
+	else {
+		tipo_pianeta_ = ERBA;
+	}
+
+	texture_.loadFromFile(texture);
+	pianeta_.setTexture(&texture_);
+
 
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
@@ -85,6 +111,7 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	superficie_ptr superficie_tmp = superficie_head_;
 	numero_bunker_precedenti = new int();
 	*numero_bunker_precedenti = 0;
+
 	while (superficie_tmp != nullptr) {
 
 		*numero_bunker_precedenti += (*superficie_tmp->superficie_item).getNumeroBunker();
@@ -94,7 +121,7 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	superficie_attuale_ = superficie_tail_;
 }
 
-Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720) {}
+Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720, "ACQUA", "/Texture/acqua.png") {}
 
 float Pianeta::getRaggio() {
 	return pianeta_.getRadius();

@@ -35,6 +35,9 @@ protected:
 	int id_pianeta_;
 
 	void generaPianeti();
+	void ottieniTipologiaPianeta(char tipologia[], char texture[]);
+	void copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[]);
+
 	listaPianeti pianetaAttuale;
 	void headInsert(Pianeta* p);
 

@@ -13,6 +13,7 @@ private:
 
 	float capacita_;
 	char nomeFile_[50];
+
 	tipologia tipo_;
 	sf::RectangleShape entita_;
 	sf::Texture texture_;

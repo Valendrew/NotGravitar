@@ -6,7 +6,7 @@ Oggetto::Oggetto(const char tipo[], const char nomeFile[],sf::Vector2f pos, floa
 	tipologia tipo_oggetto;
 
 	
-if (strcmp(tipo, "BENZINA_BEST") == 0)
+	if (strcmp(tipo, "BENZINA_BEST") == 0)
 		tipo_oggetto = BENZINA_BEST;
 	else if (strcmp(tipo, "BENZINA") == 0)
 		tipo_oggetto = BENZINA;

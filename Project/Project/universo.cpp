@@ -11,7 +11,12 @@ void Universo::generaPianeti() {
 		{
 			if (matrice_spawn_[i][j])
 			{
-				Pianeta* pi = new Pianeta(id_pianeta_, sf::Vector2f(spawn_x, spawn_y), larghezza_finestra_, altezza_finestra_);//25 è il radius del pianeta
+				char tipologia_pianeta[50];
+				char texture_pianeta[50];
+
+				ottieniTipologiaPianeta(tipologia_pianeta, texture_pianeta);
+
+				Pianeta* pi = new Pianeta(id_pianeta_, sf::Vector2f(spawn_x, spawn_y), larghezza_finestra_, altezza_finestra_, tipologia_pianeta, texture_pianeta);
 				id_pianeta_++;
 
 				headInsert(pi);
@@ -24,6 +29,49 @@ void Universo::generaPianeti() {
 		j = 0;
 		i++;
 	}
+}
+
+void Universo::ottieniTipologiaPianeta(char tipologia[], char texture[])
+{
+	int tipo = rand() % 3;
+
+	switch (tipo)
+	{
+	case 0: {
+		char tipo_copy[] = "ACQUA";
+		char texture_copy[] = "Texture/pianeta_acqua.png";
+
+		copiaStringa(tipologia, 50, tipo_copy);
+		copiaStringa(texture, 50, texture_copy);
+	} break;
+	case 1: {
+		char tipo_copy[] = "FUOCO";
+		char texture_copy[] = "Texture/pianeta_fuoco.png";
+
+		copiaStringa(tipologia, 50, tipo_copy);
+		copiaStringa(texture, 50, texture_copy);
+	} break;
+	case 2: {
+		char tipo_copy[] = "ERBA";
+		char texture_copy[] = "Texture/pianeta_erba.png";
+
+		copiaStringa(tipologia, 50, tipo_copy);
+		copiaStringa(texture, 50, texture_copy);
+	} break;
+	default:
+		break;
+	}
+}
+
+void Universo::copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[])
+{
+	int i = 0;
+	while (stringa_da_copiare[i] != '\0')
+	{
+		stringa[i] = stringa_da_copiare[i];
+		i++;
+	}
+	stringa[i] = '\0';
 }
 
 void Universo::headInsert(Pianeta* p) {
@@ -113,7 +161,6 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 }
 
 Universo::Universo() :Universo(1280, 720) {}
-
 
 bool Universo::pianetaAttualeRicerca(sf::Vector2f posizione) {
 	listaPianeti lista_pianeti_tmp = lista_Pianeti;

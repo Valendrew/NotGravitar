@@ -392,17 +392,14 @@ void Gioco::render()
 	window_.display();
 }
 
-
 Gioco::Gioco() :
-	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
+	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar", sf::Style::Default, sf::ContextSettings(0, 0, 8))
 	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_2.png", "Texture/ship_2d.png",
-		sf::Vector2f(100, 100), sf::Vector2f(60, 60), 0, 350, 2.f, 10)
+		sf::Vector2f(100, 100), sf::Vector2f(60, 60), 0, 300, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	, clock_()
 	,schermataScritte(LARGHEZZA, ALTEZZA)
 {
-	
-
 	pausa_.setSize(sf::Vector2f(61.8, 64.0));
 	texture_.loadFromFile("Texture/pausa2.png");
 	texture_.setSmooth(true);

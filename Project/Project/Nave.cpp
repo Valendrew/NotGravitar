@@ -36,7 +36,7 @@ void Nave::ruotaDestra()
 void Nave::spara()
 {
 	float angolo = getRotation();
-	float velocita = 1.2f;
+	float velocita = 2.f;
 
 	if (clock_.getElapsedTime().asMilliseconds() > 400) {
 		clock_.restart();

@@ -11,14 +11,16 @@ const double PI = 3.14159265;
 // numero di linee
 const int NUMERO_DI_LINEE = 18;
 
+
 class SuperficiePianeta : public sf::Drawable {
-protected:	
+protected:
+
 	// larghezza e altezza della finestra
 	int larghezza_finestra_;
 	int altezza_finestra_;
 	int altezza_massima_; // altezza massima di generazione della superficie
 	int altezza_minima_;
-	Oggetto *benzina_;
+	Oggetto *oggetto_bonus;
 
 	enum TipologiaOggetto {
 		BUNKER_STRONGER,
@@ -30,6 +32,7 @@ protected:
 
 	sf::VertexArray vertici_superficie_;
 	sf::ConvexShape superficie_[NUMERO_DI_LINEE];
+	sf::Color colore_superficie_;
 
 	void generaVertici(sf::Vector2f first_point, sf::Vector2f last_point);
 	void generaSuperficie();
@@ -64,8 +67,8 @@ protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
 	
-	SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto);
-	SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra);
+	SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto, sf::Color colore);
+	SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra, sf::Color colore);
 	SuperficiePianeta();
 
 	sf::Vector2f getFirstVertex();

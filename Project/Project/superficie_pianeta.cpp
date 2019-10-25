@@ -66,7 +66,7 @@ void SuperficiePianeta::generaSuperficie()
 			superficie_[i].setPoint(3, sf::Vector2f(vertici_superficie_[i].position.x, altezza_finestra_));
 
 			// Impostazione del colore della superficie
-			superficie_[i].setFillColor(sf::Color::Color(0,100,0));
+			superficie_[i].setFillColor(colore_superficie_);
 		}
 }
 
@@ -86,7 +86,7 @@ void SuperficiePianeta::generaBunker()
 		int posizione_bunker = rand() % (NUMERO_DI_LINEE - 2) + 1;
 
 		if (bunker_presenti_[posizione_bunker] == false) {
-			if (!controllaOggettiVicinanze(posizione_bunker, 2)) {
+			if (!controllaOggettiVicinanze(posizione_bunker, 1)) {
 				if (bunker_stronger > 0) {
 					aggiungiOggetto(posizione_bunker, BUNKER_STRONGER, sf::Vector2f(50, 50));
 					bunker_stronger--;
@@ -162,7 +162,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 		case BENZINA_BEST:
 		{
 			char stringa_oggetto[] = "BENZINA_BEST";
-			char stringa_texture[] = "Texture/benzina_best_1.png";
+			char stringa_texture[] = "Texture/oggetto_benzina_best_1.png";
 
 			copiaStringa(tipologia, 50, stringa_oggetto);
 			copiaStringa(texture, 50, stringa_texture);
@@ -170,7 +170,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 		case BENZINA:
 		{
 			char stringa_oggetto[] = "BENZINA";
-			char stringa_texture[] = "Texture/benzina_1.png";
+			char stringa_texture[] = "Texture/oggetto_benzina_1.png";
 
 			copiaStringa(tipologia, 50, stringa_oggetto);
 			copiaStringa(texture, 50, stringa_texture);
@@ -178,7 +178,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 		case CUORE:
 		{
 			char stringa_oggetto[] = "CUORE";
-			char stringa_texture[] = "Texture/cuore_1.png";
+			char stringa_texture[] = "Texture/oggetto_cuore_1.png";
 
 			copiaStringa(tipologia, 50, stringa_oggetto);
 			copiaStringa(texture, 50, stringa_texture);
@@ -187,7 +187,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 			break;
 		}
 
-		benzina_ = new Oggetto(tipologia, texture, new_coordinate, angolo, dimensione);
+		oggetto_bonus = new Oggetto(tipologia, texture, new_coordinate, angolo, dimensione);
 	}
 }
 
@@ -275,8 +275,8 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 		target.draw(superficie_[i]);
 	}
 
-	if (benzina_ != nullptr) {
-		target.draw(*benzina_);
+	if (oggetto_bonus != nullptr) {
+		target.draw(*oggetto_bonus);
 	}
 	
 	// Puntatore all'attuale struttura rappresentante i Bunker
@@ -309,7 +309,7 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	}
 }
 
-SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto)
+SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto, sf::Color colore)
 {
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
@@ -319,6 +319,7 @@ SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned a
 	altezza_massima_ = altezza_finestra_ * 0.70;
 
 	altezza_minima_ = altezza_finestra * 0.90;
+	colore_superficie_ = colore;
 
 	/* Vengono impostate le proprietà relative
 	al VertexArray delle linee della superficie,
@@ -342,10 +343,10 @@ SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned a
 	generaBenzina();
 }
 
-SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra) :
-	SuperficiePianeta(larghezza_finestra, altezza_finestra, sf::Vector2f(), sf::Vector2f()) {}
+SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra, sf::Color colore) :
+	SuperficiePianeta(larghezza_finestra, altezza_finestra, sf::Vector2f(), sf::Vector2f(), colore) {}
 
-SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(1280, 720){}
+SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(1280, 720, sf::Color::Cyan){}
 
 sf::Vector2f SuperficiePianeta::getFirstVertex()
 {
