@@ -6,11 +6,11 @@ void Pianeta::generaSuperficie()
 	sf::Color colore_superficie;
 	switch (tipo_pianeta_)
 	{
-	case 0: colore_superficie = sf::Color::Cyan;
+	case 0: colore_superficie = sf::Color(66, 165, 245);
 		break;
-	case 1: colore_superficie = sf::Color::Red;
+	case 1: colore_superficie = sf::Color(255, 112, 67);
 		break;
-	case 2: colore_superficie = sf::Color::Green;
+	case 2: colore_superficie = sf::Color(102, 187, 106);
 		break;
 	default:
 		colore_superficie == sf::Color::Magenta;

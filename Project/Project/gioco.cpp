@@ -42,7 +42,7 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 		if (stringa_start.compare("RESTART") == 0) {
 			mappa_.restart(LARGHEZZA, ALTEZZA);
 			punteggio_ = 0;
-			nave_.restart(100, 40, 40, 0, 10, false);
+			nave_.restart(100, 100, 100, 0, 10, false);
 			stato_ = UNIVERSO;
 			schermataScritte.setPunteggio();
 			schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);

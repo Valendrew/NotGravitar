@@ -91,9 +91,11 @@ int Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 		sf::FloatRect rect_proiettile = (*lista_proiettili->proiettile).getGlobalBounds();
 
 		if (entita_.getGlobalBounds().intersects(rect_proiettile)) {
-			diminuisciVita((*lista_proiettili->proiettile).getDanno());
-			numerobunkerColpiti++;
-			(*lista_proiettili->proiettile).setDistrutto();
+			if ((*lista_proiettili->proiettile).getDanno() > 0) {
+				diminuisciVita((*lista_proiettili->proiettile).getDanno());
+				numerobunkerColpiti++;
+				(*lista_proiettili->proiettile).setDistrutto();
+			}	
 		}
 		lista_proiettili = lista_proiettili->next;
 	}

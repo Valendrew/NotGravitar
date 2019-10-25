@@ -233,7 +233,7 @@ void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, flo
 
 void SuperficiePianeta::generaBenzina() {
 	int tipologia_benzina = rand() % 100 + 1;
-	sf::Vector2f size(30, 25);
+	sf::Vector2f size(42, 35);
 	
 	int index;
 	bool found = false;
@@ -467,6 +467,7 @@ int SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 {
 	bunker_ptr tmp_bunker = bunker_;
 	int numeroBunkerColpiti = 0;
+
 	while (tmp_bunker != nullptr)
 	{
 		int numeroBunkerColpiti_tmp = (*tmp_bunker->bunker_item).controlloProiettili(lista_proiettili);
