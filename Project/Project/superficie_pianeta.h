@@ -11,14 +11,16 @@ const double PI = 3.14159265;
 // numero di linee
 const int NUMERO_DI_LINEE = 18;
 
+
 class SuperficiePianeta : public sf::Drawable {
-protected:	
+protected:
+
 	// larghezza e altezza della finestra
 	int larghezza_finestra_;
 	int altezza_finestra_;
 	int altezza_massima_; // altezza massima di generazione della superficie
 	int altezza_minima_;
-	oggetto *benzina_;
+	Oggetto *oggetto_bonus;
 
 	enum TipologiaOggetto {
 		BUNKER_STRONGER,
@@ -30,6 +32,7 @@ protected:
 
 	sf::VertexArray vertici_superficie_;
 	sf::ConvexShape superficie_[NUMERO_DI_LINEE];
+	sf::Color colore_superficie_;
 
 	void generaVertici(sf::Vector2f first_point, sf::Vector2f last_point);
 	void generaSuperficie();
@@ -45,16 +48,6 @@ protected:
 	struct BunkerStrongerNode {
 		BunkerStronger *bunker_item;
 		BunkerStrongerNode *next;
-	};
-
-	struct Line {
-		sf::Vector2f p1;
-		sf::Vector2f p2;
-
-		bool contains(sf::Vector2f point) const {
-			float margin = 0.1;
-			return true;// std::abs((distance(p1, point) + distance(point, p2)) - distance(p1, p2)) < margin;
-		}
 	};
 	// typedef del puntatore del BunkerNode
 	typedef BunkerStrongerNode* bunker_stronger_ptr;
@@ -74,8 +67,8 @@ protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
 	
-	SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto);
-	SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra);
+	SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto, sf::Color colore);
+	SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra, sf::Color colore);
 	SuperficiePianeta();
 
 	sf::Vector2f getFirstVertex();
@@ -86,12 +79,8 @@ public:
 
 	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
-	void controlloProiettili(proiettile_ptr lista_proiettili);
-	bool intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2);
+	int controlloProiettili(proiettile_ptr lista_proiettili);
+	bool isDistrutta();
 	int getNumeroBunker();
-
-	void controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f ppp);
-
-	void controlloRaggioTraente(sf::ConvexShape raggio);
 };
 #endif // !SUPERFICIE_PIANETA_H

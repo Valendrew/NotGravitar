@@ -6,15 +6,22 @@
 #include "superficie_pianeta.h"
 
 class Pianeta : public sf::Drawable, public sf::Transformable {
-protected: 
+protected:
+	enum TipologiaPianeta {
+		ACQUA,
+		FUOCO,
+		ERBA
+	};
+
 	int larghezza_finestra_;
 	int altezza_finestra_;
-	bool distrutto_;
 	int id_;
+	int* numero_bunker_precedenti;
 	sf::CircleShape pianeta_;
+	sf::Texture texture_;
+	TipologiaPianeta tipo_pianeta_;
 
 	int numero_superfici_;
-	int bunker_precedenti_;
 
 	struct SuperficieNode {
 		SuperficiePianeta *superficie_item;
@@ -33,22 +40,22 @@ protected:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public: 
-	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra);
+	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[]);
 	Pianeta();
-
 	float getRaggio();
-	sf::Vector2f getPosizione();
 
-	//void cambiaColore();
+	sf::Vector2f getPosition();
+	sf::FloatRect getGlobalBounds();
 
-	void distrutto();
+	void cambiaColore();
 	bool distruzioneSingoloBunker();
 	bool isDistrutto();
-
+	bool getDistrutto();
 	int controlloPassaggioSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f posizione);
+	void resetProiettiliBunker();
 	proiettile_ptr getProiettili();
-	void controlloProiettili(proiettile_ptr lista_proiettili);
+	int controlloProiettili(proiettile_ptr lista_proiettili);
 	void drawSuperficie(sf::RenderTarget& target, sf::RenderStates states);
 
 	void controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f posRaggio);

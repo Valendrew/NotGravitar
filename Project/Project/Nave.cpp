@@ -3,11 +3,14 @@
 
 Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno,
 	const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione,
-	float angolo_rotazione, float velocita_movimento, float velocita_rotazione, int carburante)
+	float angolo_rotazione, float velocita_movimento, float velocita_rotazione, float carburante)
 	: Comportamento(larghezza_finestra, altezza_finestra, vita, danno,
 		nomeFile, nomeFileDistrutto, posizione, dimensione, angolo_rotazione) {
 	carburante_ = carburante;
+	carburante_movimento_ = 0.001f;
+
 	velocita_movimento_ = velocita_movimento;
+	velocita_attuale_movimento_ = 0.0f;
 	velocita_rotazione_ = velocita_rotazione;
 
 	raggio_.setPointCount(4);
@@ -25,6 +28,7 @@ Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float
 Nave::Nave() : Comportamento() {
 	carburante_ = 10;
 	velocita_movimento_ = 100.f;
+	velocita_attuale_movimento_ = 0.0f;
 	velocita_rotazione_ = 10.f;
 
 	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
@@ -41,22 +45,20 @@ void Nave::drawComportamento(sf::RenderTarget& target, sf::RenderStates states)
 
 void Nave::ruotaSinistra()
 {
-	if (!distrutto_) 
 		entita_.rotate(-velocita_rotazione_);
 }
 
 void Nave::ruotaDestra()
 {
-	if (!distrutto_) 
 		entita_.rotate(velocita_rotazione_);
 }
 
 void Nave::spara()
 {
 	float angolo = getRotation();
-	float velocita = 1.2f;
+	float velocita = 2.f;
 
-	if (clock_.getElapsedTime().asMilliseconds() > 400 && !distrutto_) {
+	if (clock_.getElapsedTime().asMilliseconds() > 400) {
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {
@@ -125,12 +127,35 @@ sf::VertexArray Nave::getPosizioneFrontale()
 	return vertex;
 }
 
-void Nave::muovi(sf::Time deltaTime) {
-	if (!distrutto_) {
-		float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
-		float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
+void Nave::muovi(sf::Time deltaTime, bool movimento) {
+	if (carburante_ <= 0) {
+		Comportamento::setDistrutto();
+	}
+	else {
+		float accelerazione = 2.5f;
+		cambiaTextureMovimento(movimento);
+		if (movimento) {
+			if (velocita_attuale_movimento_ <= velocita_movimento_ - accelerazione)
+				velocita_attuale_movimento_ += accelerazione;
+			else
+				velocita_attuale_movimento_ = velocita_movimento_;
+		}
+		else {
+			if (velocita_attuale_movimento_ >= accelerazione)
+				velocita_attuale_movimento_ -= accelerazione;
+			else
+				velocita_attuale_movimento_ = 0.0f;
+		}
+		
+
+		//float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
+		float velX = deltaTime.asSeconds() * velocita_attuale_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
+		//float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
+		float velY = deltaTime.asSeconds() * -velocita_attuale_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 
 		entita_.move(velX, velY);
+
+		carburante_ -= carburante_movimento_;
 	}
 }
 
@@ -148,6 +173,10 @@ void Nave::passaggioAmbiente(sf::Vector2f posizione)
 {
 	resetProiettili();
 	setPosition(posizione);
+}
+
+void Nave::setDannoCollisione() {
+	diminuisciVita(5.0f);
 }
 
 sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghezza/2 generici
@@ -178,8 +207,8 @@ proiettile_ptr Nave::getProiettili()
 	return proiettili_;
 }
 
-void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, int carburante) {
-	Comportamento::restart(vita, cord_x, cord_y, angolo_rotazione);
+void Nave::restart(float vita, sf::Vector2f posizione, float angolo_rotazione, float carburante, bool distrutto) {
+	Comportamento::restart(vita, posizione, angolo_rotazione, distrutto);
 	carburante_ = carburante;	
-
+	resetProiettili();
 }

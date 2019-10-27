@@ -54,6 +54,9 @@
     <ClCompile Include="oggetto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="schermata_scritte.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mappa.hpp">
@@ -90,6 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="oggetto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="schermata_scritte.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

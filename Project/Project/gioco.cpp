@@ -1,5 +1,6 @@
 #include "gioco.hpp"
 #include <stdlib.h>
+#include <iostream>
 
 void Gioco::processaEventi()
 {
@@ -36,29 +37,36 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 	}
 	else if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 0) {
 
-		std::string stringa_start = start_.getString();
+		std::string stringa_start = schermataScritte.getStart().getString();
 		//compare torna 0 se le due stringhe sono uguali
 		if (stringa_start.compare("RESTART") == 0) {
 			mappa_.restart(LARGHEZZA, ALTEZZA);
-			nave_.restart(100, LARGHEZZA/2, ALTEZZA/2, 0, 10);
+			punteggio_ = 0;
+			nave_.restart(100, sf::Vector2f(100, 100), 0, 10, false);
 			stato_ = UNIVERSO;
-			punteggio_text_.setPosition(5, 0);
+			schermataScritte.setPunteggio();
+			schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
+			nave_movimento_ = false;
+			nave_rotazioneL_ = false;
+			nave_rotazioneR_ = false;
+			nave_spara_ = false;
+			nave_raggiotraente_ = false;
+			restart_ = true;
+			posizione_entrata_pianeta_ = sf::Vector2f();
 		}
 		else if (stringa_start.compare("START") == 0) {
 			stato_ = UNIVERSO;
 		}
 		else if (stringa_start.compare("RESUME") == 0) {
 			stato_ = salva_stato_;
+			schermataScritte.setPunteggio();
 		}
-		//Le due linee seguenti servono per ridimensionare subito lo start, altrimenti una volata premuta la pausa si visualizzerebbe "RESUME" a dimensione 60
-		//invece che 55 per un istante
-		start_.setCharacterSize(55);
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-
+		schermataScritte.setStart();
 	}
-	else if (gestioneMouse == 2) { 
+	else if (gestioneMouse == 2) {
 		salva_stato_ = stato_;
 		stato_ = PAUSA;
+		schermataScritte.SetPausa();
 	}
 	
 	
@@ -70,20 +78,7 @@ int Gioco::gestisciMouse() {
 	int pulsantePremuto = -1;
 
 	if (stato_ == GAMEOVER || stato_ == PAUSA || stato_ == START) {
-		if (start_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-			start_.setCharacterSize(60);
-			pulsantePremuto = 0;
-		}
-		else {
-			start_.setCharacterSize(55);
-			if (exit_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-				exit_.setCharacterSize(60);
-				pulsantePremuto = 1;
-			}
-			else exit_.setCharacterSize(55);
-		}
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-		exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
+		pulsantePremuto = schermataScritte.gestioneMouse(posizioneMouse);
 	}
 	else {
 		if (pausa_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
@@ -102,7 +97,7 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 	if (key == sf::Keyboard::W) {
 		nave_movimento_ = isPressed;
 
-		nave_.cambiaTextureMovimento(nave_movimento_);
+		//nave_.cambiaTextureMovimento(nave_movimento_);
 	}
 	else if (key == sf::Keyboard::A) {
 		nave_rotazioneL_ = isPressed;
@@ -113,16 +108,14 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::Space) {
 		nave_spara_ = isPressed;
 	}
-	else if (key == sf::Keyboard::Q) {
-		nave_raggio_ = isPressed;
+	else if (key == sf::Keyboard::R) {
+		nave_raggiotraente_ == isPressed;
 	}
 }
 
 void Gioco::movimentoNavicella()
 {
-	if (nave_movimento_) {
-		nave_.muovi(time_frame_);
-	}
+	nave_.muovi(time_frame_, nave_movimento_);
 	if (nave_rotazioneL_) {
 		nave_.ruotaSinistra();
 	}
@@ -138,54 +131,49 @@ void Gioco::controlloSparo()
 	}
 }
 
-void Gioco::controlloRaggio()
-{
-	nave_.attivaRaggio(nave_raggio_);
-	sf::ConvexShape raggio = nave_.getRaggio();
-	raggio.setPosition(nave_.getPosizioneRaggio());
-	if(nave_raggio_) mappa_.controlloRaggioTraente(raggio,nave_.getPosizioneRaggio());
-}
-
 void Gioco::controlloPassaggioUniverso()
 {	
-	int direzione = -1;
-
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
+	int direzione_universo = -1;
+
 	int i = 0;
-	while (i < punti.getVertexCount() && direzione == -1)
+	while (i < punti.getVertexCount() && direzione_universo == -1)
 	{
-		if (punti[i].position.x >= LARGHEZZA) direzione = 1;
-		else if (punti[i].position.x <= 0) direzione = 3;
-		else if (punti[i].position.y >= ALTEZZA) direzione = 2;
-		else if (punti[i].position.y <= 0) direzione = 0;
+		if (punti[i].position.x >= LARGHEZZA) direzione_universo = 1;
+		else if (punti[i].position.x <= 0) direzione_universo = 3;
+		else if (punti[i].position.y >= ALTEZZA) direzione_universo = 2;
+		else if (punti[i].position.y <= 0) direzione_universo = 0;
 
 		i++;
 	}
 
-	if (direzione != -1) {
-		if (mappa_.spostamento(direzione)) {
-			switch (direzione)
+	if (direzione_universo != -1) {
+		// Se è possibile spostare la navicella in un altro universo
+		if (mappa_.spostamento(direzione_universo)) {
+			switch (direzione_universo)
 			{
-			case 0: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getDimensione().y));
+			case 0: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getSize().y));
 				break;
-			case 1: nave_.passaggioAmbiente(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
+			case 1: nave_.passaggioAmbiente(sf::Vector2f(nave_.getSize().x, nave_.getPosition().y));
 				break;
-			case 2: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, nave_.getDimensione().y));
+			case 2: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, nave_.getSize().y));
 				break;
-			case 3: nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
+			case 3: nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getSize().x, nave_.getPosition().y));
 			default:
 				break;
 			}
 		}
+		// Se è impossibile visitare l'universo nel quale si vuole accedere
 		else {
+			// Rimbalzo della navicella sul bordo dello schermo
 			float deg_angolo = nave_.getRotation();
 			float angolo = nave_.getRotation() * PI / 180;
 			float s_x = cos(angolo);
 			float s_y = sin(angolo);
 
 			float new_angolo;
-			if (direzione == 1 || direzione == 3) {
+			if (direzione_universo == 1 || direzione_universo == 3) {
 				new_angolo = asin(s_y * -1) * 180 / PI;
 				if (s_x < 0) {
 					new_angolo = 180 - (new_angolo);
@@ -207,14 +195,20 @@ void Gioco::controlloPassaggioPianeta()
 {
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
-	bool controllo_passaggio = mappa_.ricercaPianeta(punti[0].position.x, punti[0].position.y);
-	if (!controllo_passaggio) controllo_passaggio = mappa_.ricercaPianeta(punti[1].position.x, punti[1].position.y);
+	bool entrata_pianeta = false;
 
-	if (controllo_passaggio) {
+	int i = 0;
+	while (i < punti.getVertexCount() && !entrata_pianeta)
+	{
+		entrata_pianeta = mappa_.ricercaPianeta(punti[i].position);
+		i++;
+	}
+
+	if (entrata_pianeta) {
 		stato_ = PIANETA;
-		posizione_entrata_pianeta_ = sf::Vector2f(punti[0].position.x - 50, punti[0].position.y - 50);
+		posizione_entrata_pianeta_ = sf::Vector2f(punti[0].position.x - 2 * nave_.getSize().x, punti[0].position.y - 2 * nave_.getSize().y);
 		
-		nave_.setRotation(180);
+		nave_.setRotation(180); // la nave punta verso SUD
 		nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA / 2, 80));
 	}
 }
@@ -223,29 +217,31 @@ void Gioco::controlloUscitaPianeta()
 {
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
-	int direzione = -1;
-	bool cambia_stato = false;
+	bool uscita_pianeta = false;
 
-	for (int i = 0; i < punti.getVertexCount(); i++)
+	int i = 0;
+	while (i < punti.getVertexCount() && !uscita_pianeta)
 	{
-		if (punti[i].position.y <= 0) cambia_stato = true;
+		if (punti[i].position.y <= 0) uscita_pianeta = true;
+
+		i++;
 	}
 
-	if (cambia_stato) {
+	if (uscita_pianeta) {
 		stato_ = UNIVERSO;
+		mappa_.uscitaPianeta();
 
 		nave_.passaggioAmbiente(posizione_entrata_pianeta_);
-		posizione_entrata_pianeta_ = sf::Vector2f();
 
-		mappa_.uscitaPianeta();
+		posizione_entrata_pianeta_ = sf::Vector2f();
 	}
 }
 
 void Gioco::controlloPassaggioSuperficie()
 {
-	int direzione = -1;
-
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
+
+	int direzione = -1;
 
 	int i = 0;
 	while (i < punti.getVertexCount() && direzione == -1)
@@ -255,20 +251,21 @@ void Gioco::controlloPassaggioSuperficie()
 	}
 
 	if (direzione != -1) {
+		int offset = nave_.getSize().x;
 		if (direzione == 0) {
-			nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA - nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(LARGHEZZA -offset, nave_.getPosition().y));
 		}
 		else {
-			nave_.passaggioAmbiente(sf::Vector2f(nave_.getDimensione().x, nave_.getPosition().y));
+			nave_.passaggioAmbiente(sf::Vector2f(offset, nave_.getPosition().y));
 		}
 	}
 }
 
 void Gioco::controlloCollisioneSuperficie()
 {
-	bool collisione_superficie = false;
-
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
+
+	bool collisione_superficie = false;
 
 	int i = 0;
 	while (i < punti.getVertexCount() && !collisione_superficie)
@@ -278,6 +275,7 @@ void Gioco::controlloCollisioneSuperficie()
 	}
 
 	if (collisione_superficie) {
+		// La nave viene fatta rimbalzare
 		float deg_angolo = nave_.getRotation();
 		float angolo = nave_.getRotation() * PI / 180;
 		float s_x = cos(angolo);
@@ -290,13 +288,22 @@ void Gioco::controlloCollisioneSuperficie()
 		}
 
 		nave_.setRotation(new_angolo);
+
+		nave_.setDannoCollisione();
 	}
 }
 
 void Gioco::controlloCollisioneProiettili()
 {
+	// Vengono controllati i proiettili della Nave contro i Bunker (e viceversa)
 	nave_.controlloProiettili(mappa_.getProiettili());
-	mappa_.controlloProiettili(nave_.getProiettili());
+
+	//Viene restituiro un intoro dato che ad uno stesso ciclo possono essere stati colpiti piu bunker
+
+	//Somma 1 tante volte perche per piu render di fila da il bunker come colpito in quell'istante(?)
+	int numeroBunkerColpiti = 0;
+		numeroBunkerColpiti = mappa_.controlloProiettili(nave_.getProiettili());
+		punteggio_ += numeroBunkerColpiti;
 }
 
 void Gioco::controlloCollisioneProiettiliSuperficie()
@@ -305,75 +312,61 @@ void Gioco::controlloCollisioneProiettiliSuperficie()
 
 	while (lista_p != nullptr)
 	{
-		if (mappa_.controlloCollisioneSuperficie((*lista_p->proiettile).getPosition()))
-		{
+		sf::Vector2f posizione_proiettile = (*lista_p->proiettile).getPosition();
+
+		if (mappa_.controlloCollisioneSuperficie(posizione_proiettile))
 			lista_p = nave_.eliminaProiettile(lista_p);
-		}
 		else
-		{
 			lista_p = lista_p->next;
-		}
 	}
 }
 
 void Gioco::controlloAggiornamentoPunteggio() {
-
-	Pianeta p_attuale = *mappa_.getUniversoDiGioco().getPianetaAttuale()->pianeta_;
-	p_attuale.distrutto();
-
-	//Il controllo mappa_.isNuovoUniverso() serve per far aumentare il punteggio di 100 una sola volta per ugni sestema solare
-	if (mappa_.getUniversoDiGioco().distrutto() && mappa_.isNuovoUniverso()) {
-		punteggio_ += 100;
-		mappa_.setVecchioUniverso();
+	if (mappa_.aggiornaPunteggioBunker()) {
+		punteggio_ += 9;
 	}
-	else if (p_attuale.isDistrutto()) {
-		punteggio_ += 50;
+	else if (mappa_.aggiornaPunteggioPianeta()) {
+			punteggio_ += 49;
 	}
-	else if (p_attuale.distruzioneSingoloBunker()) {
-		punteggio_ += 10;
+	else if (mappa_.aggiornaPunteggioUniverso()) {
+		punteggio_ += 99;
 	}
-	
-	aggiornaTestoNumeri("PUNTEGGIO: ",punteggio_, punteggio_text_);
+	schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 
+}
+
+void Gioco::controlloGameOver() {
+
+	if (nave_.getDistrutto()) {
+		stato_ = GAMEOVER;
+		schermataScritte.SetGameOver();
+	}
 }
 
 void Gioco::update()
 {
 	if (stato_ == UNIVERSO) {
+		controlloGameOver();
+
 		controlloPassaggioUniverso();
 		controlloPassaggioPianeta();
 
 		movimentoNavicella();
 	}
 	else if (stato_ == PIANETA) {
+		controlloGameOver();
 		controlloAggiornamentoPunteggio();
+
 		controlloUscitaPianeta();
 
 		controlloPassaggioSuperficie();
 		controlloCollisioneSuperficie();
+
 		controlloCollisioneProiettili();
 		controlloCollisioneProiettiliSuperficie();
 
 		movimentoNavicella();
 		controlloSparo();
-
-		controlloRaggio();
-
-	}
-	else if (stato_ == GAMEOVER) {
-		start_.setString("RESTART");
-		subtitle_.setString("GAME OVER");
-		subtitle_.setPosition(LARGHEZZA / 2 - subtitle_.getGlobalBounds().width / 2, 140);
-		punteggio_text_.setPosition(LARGHEZZA / 2 - punteggio_text_.getGlobalBounds().width / 2, 210);
-	}
-	else if (stato_ == PAUSA) {
-		start_.setString("RESUME");
-	}
-	else if (stato_ == START) {
-		start_.setString("START");
-	}
-	if (stato_ == START || stato_ == PAUSA || stato_ == GAMEOVER) {
-		start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
 	}
 }
 
@@ -382,60 +375,37 @@ void Gioco::render()
 	window_.clear(sf::Color::Black);
 
 	if (stato_ == UNIVERSO || stato_ == PIANETA) {
-		aggiornaTestoNumeri("VITA: ", nave_.getVita(), vita_text_);
-		aggiornaTestoNumeri("CARBURANTE: ", nave_.getCarburante(), carburante_text_);
+		// TODO: SPOSTARE IN UN ALTRA FUNZIONE DI GESTIONE DEL GIOCO
+		schermataScritte.aggiornaTesto("VITA: ", nave_.getVita());
+		schermataScritte.aggiornaTesto("CARBURANTE: ", nave_.getCarburante());
 
 		window_.draw(mappa_);
 		nave_.drawComportamento(window_, sf::RenderStates());
 
 		window_.draw(pausa_);
-		window_.draw(punteggio_text_);
-		window_.draw(vita_text_);
-		window_.draw(carburante_text_);
+		window_.draw(schermataScritte.getPunteggio());
+		window_.draw(schermataScritte.getVita());
+		window_.draw(schermataScritte.getCarburante());
 	}
 	else {
-		window_.draw(titolo_);
-		window_.draw(start_);
-		window_.draw(exit_);
-		window_.draw(subtitle_);
+		window_.draw(schermataScritte.getTitolo());
+		window_.draw(schermataScritte.getStart());
+		window_.draw(schermataScritte.getExit());
+		window_.draw(schermataScritte.getSubtitle());
 
-		if (stato_ == GAMEOVER)
-			window_.draw(punteggio_text_);
+		if(stato_ != START)
+		window_.draw(schermataScritte.getPunteggio());
 	}
 	window_.display();
 }
 
-void Gioco::aggiornaTestoNumeri(const char stringa[], int valore, Testo &t) {
-
-	char valoreToString[10];
-	char stringaCompleta[100];
-	_itoa_s(valore, valoreToString, 10, 10);
-	strcpy_s(stringaCompleta, stringa);
-	strcat_s(stringaCompleta, valoreToString);
-	t.setString(stringaCompleta);
-}
-
 Gioco::Gioco() :
-	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar")
+	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar", sf::Style::Default, sf::ContextSettings(0, 0, 8))
 	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_2.png", "Texture/ship_2d.png",
-		sf::Vector2f(40, 40), sf::Vector2f(60, 60), 0, 350, 2.f, 10)
+		sf::Vector2f(100, 100), sf::Vector2f(60, 60), 0, 300, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
-	, clock_()
-	, punteggio_text_("PUNTEGGIO: 100",32, sf::Color::Blue, sf::Color::Magenta, 1.5, 1, sf::Vector2f(5, 0))
-	,titolo_("NON GRAVITAR", 120, sf::Color::Red, sf::Color::Yellow, 1.5, 4, sf::Vector2f(LARGHEZZA / 2 - titolo_.getGlobalBounds().width / 2, 10))
-	,subtitle_("",60, sf::Color::Red, sf::Color::Transparent, 1.5, 0, sf::Vector2f(0, 0))
-	,start_("",55, sf::Color::Green, sf::Color::Transparent, 1.5, 0, sf::Vector2f(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2))
-	,exit_("EXIT", 55, sf::Color::Magenta, sf::Color::Transparent, 1.5, 0, sf::Vector2f(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100))
-	,vita_text_("VITA: 100", 32, sf::Color::Red, sf::Color::Blue, 1.5, 1, sf::Vector2f(LARGHEZZA / 2 - 300, 0))
-	,carburante_text_("", 32, sf::Color::Red, sf::Color::Blue, 1.5, 1, sf::Vector2f(0, 0))
+	,schermataScritte(LARGHEZZA, ALTEZZA)
 {
-	titolo_.setPosition(LARGHEZZA / 2 - titolo_.getGlobalBounds().width / 2,10);
-	exit_.setPosition(LARGHEZZA / 2 - exit_.getGlobalBounds().width / 2, ALTEZZA / 2 + 100);
-	start_.setPosition(LARGHEZZA / 2 - start_.getGlobalBounds().width / 2, ALTEZZA / 2);
-
-	float distanzaPunteggioVita = vita_text_.getPosition().x - (punteggio_text_.getPosition().x + punteggio_text_.getGlobalBounds().width);
-	carburante_text_.setPosition(vita_text_.getPosition().x + vita_text_.getGlobalBounds().width + distanzaPunteggioVita, 0);
-
 	pausa_.setSize(sf::Vector2f(61.8, 64.0));
 	texture_.loadFromFile("Texture/pausa2.png");
 	texture_.setSmooth(true);
@@ -443,9 +413,9 @@ Gioco::Gioco() :
 	pausa_.setTexture(&texture_);
 
 	punteggio_ = 0;
-	aggiornaTestoNumeri("PUNTEGGIO: ", punteggio_, punteggio_text_);
+	schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 
-	float pausa_size = punteggio_text_.getGlobalBounds().height + 15;
+	float pausa_size = schermataScritte.getPunteggio().getGlobalBounds().height + 15;
 	pausa_.setSize(sf::Vector2f(pausa_size, pausa_size));
 	pausa_.setPosition(LARGHEZZA - pausa_.getSize().x, 0);
 
@@ -453,13 +423,14 @@ Gioco::Gioco() :
 	nave_rotazioneL_ = false;
 	nave_rotazioneR_ = false;
 	nave_spara_ = false;
-	nave_raggio_ = false;
+	nave_raggiotraente_ == false;
+	restart_ = false;
 
-	posizione_entrata_pianeta_ = sf::Vector2f(0, 0); // posizione della nave prima di entrare nel pianeta
+	posizione_entrata_pianeta_ = sf::Vector2f(); // posizione della nave prima di entrare nel pianeta
 
 	time_frame_ = sf::seconds(1.f / 144.f);
 
-	stato_ = UNIVERSO;
+	stato_ = START;
 }
 
 void Gioco::avviaGioco()
@@ -468,6 +439,12 @@ void Gioco::avviaGioco()
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
 	while (window_.isOpen()) {
+
+			if (restart_) {
+				refresh_.restart();
+				timeSinceLastUpdate = sf::Time::Zero;
+				restart_ = false;
+			}
 			processaEventi();
 
 			timeSinceLastUpdate += refresh_.restart();

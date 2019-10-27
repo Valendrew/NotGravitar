@@ -1,7 +1,21 @@
 #include "pianeta.h"
+#include <iostream>
 
 void Pianeta::generaSuperficie()
 {
+	sf::Color colore_superficie;
+	switch (tipo_pianeta_)
+	{
+	case 0: colore_superficie = sf::Color(66, 165, 245);
+		break;
+	case 1: colore_superficie = sf::Color(255, 112, 67);
+		break;
+	case 2: colore_superficie = sf::Color(102, 187, 106);
+		break;
+	default:
+		colore_superficie == sf::Color::Magenta;
+		break;
+	}
 	int superfici_generate = 0;
 
 	while (superfici_generate < numero_superfici_)
@@ -9,17 +23,17 @@ void Pianeta::generaSuperficie()
 		SuperficiePianeta *new_sup;
 
 		if (superfici_generate == 0) {
-			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_);
+			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, colore_superficie);
 		}
 		else if (superfici_generate == numero_superfici_ - 1) {
 			sf::Vector2f last_vertex = (*superficie_head_->superficie_item).getLastVertex();
 			sf::Vector2f first_vertex = (*superficie_tail_->superficie_item).getFirstVertex();
 
-			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, last_vertex, first_vertex);
+			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, last_vertex, first_vertex, colore_superficie);
 		}
 		else {
 			sf::Vector2f last_vertex = (*superficie_head_->superficie_item).getLastVertex();
-			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, last_vertex, sf::Vector2f());
+			new_sup = new SuperficiePianeta(larghezza_finestra_, altezza_finestra_, last_vertex, sf::Vector2f(), colore_superficie);
 		}
 
 		if (superficie_head_ == nullptr) {
@@ -42,8 +56,6 @@ void Pianeta::generaSuperficie()
 			superficie_head_ = tmp_sup;
 		}
 
-		//all'inizio bunker_precedenti conterra il valore dei bunker totali
-		bunker_precedenti_ += (*superficie_head_->superficie_item).getNumeroBunker();
 		superfici_generate++;
 	}
 }
@@ -55,23 +67,35 @@ int Pianeta::bunkerRimanenti() {
 	while (tmp_superficie != nullptr)
 	{
 		bunker_rimanenti += (*tmp_superficie->superficie_item).getNumeroBunker();
+
 		tmp_superficie = tmp_superficie->next;
 	}
 
 	return bunker_rimanenti;
 }
 
-Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra) {
-	bunker_precedenti_ = 0;
+Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[]) {
 
 	id_ = id;
-	distrutto_ = false;
 	pianeta_.setRadius(25.0);
 	pianeta_.setPointCount(100);
 	numero_superfici_ = 3;
 	pianeta_.setOrigin(0 , 0);
 	pianeta_.setPosition(posizione);
-	pianeta_.setFillColor(sf::Color(255, 0, 0, 255));
+
+	if (strcmp(tipologia, "ACQUA") == 0) {
+		tipo_pianeta_ = ACQUA;
+	}
+	else if (strcmp(tipologia, "FUOCO") == 0) {
+		tipo_pianeta_ = FUOCO;
+	}
+	else {
+		tipo_pianeta_ = ERBA;
+	}
+
+	texture_.loadFromFile(texture);
+	pianeta_.setTexture(&texture_);
+
 
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
@@ -82,49 +106,81 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	numero_superfici_ = 3;
 	generaSuperficie();
 
+	superficie_ptr superficie_tmp = superficie_head_;
+	numero_bunker_precedenti = new int();
+	*numero_bunker_precedenti = 0;
+
+	while (superficie_tmp != nullptr) {
+
+		*numero_bunker_precedenti += (*superficie_tmp->superficie_item).getNumeroBunker();
+		superficie_tmp = superficie_tmp->next;
+	}
+
 	superficie_attuale_ = superficie_tail_;
 }
 
-Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720) {}
+Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720, "ACQUA", "/Texture/acqua.png") {}
 
 float Pianeta::getRaggio() {
 	return pianeta_.getRadius();
 }
 
-sf::Vector2f Pianeta::getPosizione()
+sf::Vector2f Pianeta::getPosition()
 {
 	return pianeta_.getPosition();
 }
 
-//void Pianeta::cambiaColore() {
-//	pianeta_.setFillColor(sf::Color(255, 0, 0, pianeta_.getFillColor().a - 25));
-//}
+sf::FloatRect Pianeta::getGlobalBounds()
+{
+	return pianeta_.getGlobalBounds();
+}
 
-void Pianeta::distrutto() {
-	if (bunkerRimanenti() == 0)
-		distrutto_ = true;
+void Pianeta::cambiaColore() {
+	pianeta_.setFillColor(sf::Color(255, 0, 0, 255));
 }
 
 bool Pianeta::distruzioneSingoloBunker()
 {
-	bool ritorno = false;
+	bool distrutto = false;
+	int bunker_rimanenti_ = bunkerRimanenti();
 	//il controllo != 0 è presente poiche se il numero di bunker rimanenti è 0 siamo nel caso in cui l'intero pianeta è distrutto
-	if (bunkerRimanenti() != 0 && bunkerRimanenti() < bunker_precedenti_) {
-		ritorno = true;
-		bunker_precedenti_--;
+
+	if (bunker_rimanenti_ != 0 && bunker_rimanenti_ < *numero_bunker_precedenti) {
+		distrutto = true;
+        *numero_bunker_precedenti = bunker_rimanenti_;
 	}
-	return ritorno;
+
+	return distrutto;
 }
 
 bool Pianeta::isDistrutto()
 {
-	return distrutto_;
+	bool distrutto = true;
+
+		superficie_ptr superficie_head_tmp = superficie_head_;
+
+		while (superficie_head_tmp != nullptr && distrutto) {
+
+			if (!(*superficie_head_tmp->superficie_item).isDistrutta())
+				distrutto = false;
+
+			superficie_head_tmp = superficie_head_tmp->next;
+		}
+		
+	return distrutto;
 }
+
+bool Pianeta::getDistrutto()
+{  
+	return isDistrutto();
+}
+
+
 
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 {
 	int direzione = -1;
-	int offset = 20;
+	int offset = 0;
 
 	if (posizione.x <= 0 + offset) {
 		(*superficie_attuale_->superficie_item).resetProiettiliBunker();
@@ -154,10 +210,19 @@ int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 
 bool Pianeta::controlloCollisioneSuperficie(sf::Vector2f posizione)
 {
+	bool collisione_superficie = false;
 	if (superficie_attuale_ != nullptr) {
-		return (*superficie_attuale_->superficie_item).controlloCollisioneSuperficie(posizione);
+		collisione_superficie = (*superficie_attuale_->superficie_item).controlloCollisioneSuperficie(posizione);
 	}
-	else return false;
+	
+	return collisione_superficie;
+}
+
+void Pianeta::resetProiettiliBunker()
+{
+	if (superficie_attuale_ != nullptr) {
+		(*superficie_attuale_->superficie_item).resetProiettiliBunker();
+	}
 }
 
 proiettile_ptr Pianeta::getProiettili()
@@ -168,10 +233,11 @@ proiettile_ptr Pianeta::getProiettili()
 		return nullptr;
 }
 
-void Pianeta::controlloProiettili(proiettile_ptr lista_proiettili)
+int Pianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 {
 	if (superficie_attuale_ != nullptr)
-		(*superficie_attuale_->superficie_item).controlloProiettili(lista_proiettili);
+		return (*superficie_attuale_->superficie_item).controlloProiettili(lista_proiettili);
+	else return 0;
 }
 
 void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)

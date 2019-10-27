@@ -4,7 +4,7 @@
 #include <SFML\Graphics.hpp>
 #include "mappa.hpp"
 #include "nave.hpp"
-#include "Testo.h"
+#include "schermata_scritte.h"
 
 const int LARGHEZZA = 1280;
 const int ALTEZZA = 720;
@@ -14,18 +14,11 @@ protected:
 	sf::RenderWindow window_;
 
 	sf::Time time_frame_;
-	sf::Clock clock_;
 
 	sf::RectangleShape pausa_;
 	sf::Texture texture_;
 
-	Testo exit_;
-	Testo start_;
-	Testo titolo_;
-	Testo subtitle_;
-	Testo punteggio_text_;
-	Testo vita_text_;
-	Testo carburante_text_;
+	schermata_scritte schermataScritte;
 
 	Nave nave_;
 	Mappa mappa_;
@@ -34,7 +27,8 @@ protected:
 	bool nave_rotazioneL_;
 	bool nave_rotazioneR_;
 	bool nave_spara_;
-	bool nave_raggio_;
+	bool nave_raggiotraente_;
+	bool restart_;
 
 	int punteggio_;
 	sf::Vector2f posizione_entrata_pianeta_;
@@ -54,7 +48,6 @@ protected:
 	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);
 	void movimentoNavicella();
 	void controlloSparo();
-	void controlloRaggio();
 	void controlloPassaggioUniverso();
 	void controlloPassaggioPianeta();
 	void controlloUscitaPianeta();
@@ -67,8 +60,8 @@ protected:
 	void render();
 	int gestisciMouse();
 	void mouseClick(sf::Mouse::Button b);
-	void aggiornaTestoNumeri(const char stringa[], int valore, Testo &t);
 	void controlloAggiornamentoPunteggio();
+	void controlloGameOver();
 public:
 	Gioco();
 	void avviaGioco();

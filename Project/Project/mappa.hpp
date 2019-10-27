@@ -10,11 +10,10 @@ protected:
 	sf::Texture texture_;
 	int larghezza_finestra_;
 	int altezza_finestra_;
-	int distanza;
 
 	struct nodoMappa {
-		Universo *u;
-		coordinate c;
+		Universo *universo;
+		coordinate posizione;
 		nodoMappa *next;
 	};
 
@@ -25,7 +24,7 @@ protected:
 	listaUniversi universo_di_gioco_;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
 
 	listaUniversi addUniverso(int x, int y); //addUniveso aggiunge un universo con coordinate x,y alla lista di universi
-	bool statoAttacco;
+	bool* statoAttacco;
 	//findUniversi cerca un universo con coordinate x,y all'interno della lista e lo resistuisce (ritorna NULL se non lo trova)
 	listaUniversi findUniverso(int x, int y);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -39,21 +38,17 @@ public:
 	void uscitaPianeta();
 	/*spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
 	adiacenti a quello attuale */
-	bool spostamento(int i);
-	bool ricercaPianeta(int x_astronave, int y_astronave);
+	bool spostamento(int direzione);
+	bool ricercaPianeta(sf::Vector2f posizione);
 
 	proiettile_ptr getProiettili();
-	void controlloProiettili(proiettile_ptr lista_proiettili);
+	int controlloProiettili(proiettile_ptr lista_proiettili);
 
-	Universo getUniversoDiGioco();
-	coordinate getPosizioneAttuale();
-	coordinate getPosizioneDiGioco();
 
 	void restart(int width_, int height_);
-	bool isNuovoUniverso();
-	void setVecchioUniverso();
-
-	void controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f posRaggio);
+	bool aggiornaPunteggioBunker();
+	bool aggiornaPunteggioPianeta();
+	bool aggiornaPunteggioUniverso();
 };
 
 #endif

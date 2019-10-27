@@ -12,11 +12,10 @@ struct coordinate {
 };
 
 struct nodoPianeta {
-	Pianeta *pianeta_;
-	bool visitato;
-	nodoPianeta *next;
+	Pianeta* pianeta_;
+	nodoPianeta* next;
 };
-typedef nodoPianeta *listaPianeti;
+typedef nodoPianeta* listaPianeti;
 
 class Universo : public sf::Drawable, public sf::Transformable {
 protected:
@@ -30,43 +29,41 @@ protected:
 
 	//Dimensione delle celle dove spawneranno i pianeti rispetto alla grandezza della finestra
 	coordinate dimensioni_celle_;
-	//Booleano per verificare se è la prima volta che visito un universo o meno (in caso affermativo genero gli universi adiacenti)
-	bool visitato_;
-	int id_pianeta_;
 
-	listaPianeti generaPianeti(listaPianeti p);
-	//Precondizione: la lista p passata è = NULL
+	bool visitato_;
+	bool* distrutto_;
+	int id_pianeta_;
+	int* numPianetiPrecedenti;
+
+	void generaPianeti();
+	void ottieniTipologiaPianeta(char tipologia[], char texture[]);
+	void copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[]);
+
 	listaPianeti pianetaAttuale;
-	listaPianeti headInsert(listaPianeti L, Pianeta* p);
+	void headInsert(Pianeta* p);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
 	Universo(int larghezza_finestra, int altezza_finestra);
 	Universo();
 
-	listaPianeti distruggiPianeta(listaPianeti p);
-	listaPianeti getPianeti();
-	listaPianeti getPianetaAttuale();
+	//Provare a restutire un puntatore per settare il colore quando è distrutto
+	
 
-	coordinate getDimensioniCelle();
-	void setDimensioniCelle(int x, int y);
-
-	bool getMatriceSpawn(int i, int j);
-	int getNumeroPianeti();
-
-	bool getVisitato();
-	void setVisitato();
-
-	bool pianetaAttualeRicerca(int x_astronave, int y_astronave);
+	bool pianetaAttualeRicerca(sf::Vector2f posizione);
 	bool distrutto();
+	bool getDistrutto();
+
+	bool aggiornaPunteggioBunker();
+	bool distruzionePianetaAttuale();
+	void cambiaColorePianeta();
 
 	int controlloPassaggioSuperficie(sf::Vector2f pos);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	proiettile_ptr getProiettili();
 
 	void uscitaPianeta();
-	void controlloProiettili(proiettile_ptr lista_proiettili);
-
-	void controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f posRaggio);
+	int controlloProiettili(proiettile_ptr lista_proiettili);
+	int pianetiRimanenti();
 };
 #endif // !UNIVERSO_H

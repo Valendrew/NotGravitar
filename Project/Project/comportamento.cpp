@@ -46,18 +46,19 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 Comportamento::Comportamento() : Comportamento(1280, 720, 50, 10, 
 	"Texture/default.png", "Texture/default_d.png", sf::Vector2f(), sf::Vector2f(), 0) {}
 
-void Comportamento::restart(float vita, float cord_x, float cord_y, float angolo_rotazione){
+void Comportamento::restart(float vita, sf::Vector2f posizione, float angolo_rotazione, bool distrutto){
 	vita_ = vita;
-	entita_.setPosition(cord_x, cord_y);
+	entita_.setPosition(posizione);
 	entita_.setRotation(angolo_rotazione);
+	distrutto_ = distrutto;
 }
 
-sf::Vector2f Comportamento::getPosizione()
+sf::Vector2f Comportamento::getPosition()
 {
 	return entita_.getPosition();
 }
 
-void Comportamento::setPosizione(sf::Vector2f pos)
+void Comportamento::setPosition(sf::Vector2f pos)
 {
 	entita_.setPosition(pos);
 }
@@ -67,7 +68,7 @@ sf::FloatRect Comportamento::getGlobalBounds()
 	return entita_.getGlobalBounds();
 }
 
-sf::Vector2f Comportamento::getDimensione()
+sf::Vector2f Comportamento::getSize()
 {
 	return entita_.getSize();
 }
@@ -82,18 +83,23 @@ void Comportamento::setRotation(float rot)
 	entita_.setRotation(rot);
 }
 
-void Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
+int Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 {
+	int numerobunkerColpiti = 0;
 	while (lista_proiettili != nullptr && !distrutto_)
 	{
 		sf::FloatRect rect_proiettile = (*lista_proiettili->proiettile).getGlobalBounds();
 
 		if (entita_.getGlobalBounds().intersects(rect_proiettile)) {
-			diminuisciVita((*lista_proiettili->proiettile).getDanno());
-			(*lista_proiettili->proiettile).setDistrutto();
+			if ((*lista_proiettili->proiettile).getDanno() > 0) {
+				diminuisciVita((*lista_proiettili->proiettile).getDanno());
+				numerobunkerColpiti++;
+				(*lista_proiettili->proiettile).setDistrutto();
+			}	
 		}
 		lista_proiettili = lista_proiettili->next;
 	}
+	return numerobunkerColpiti;
 }
 
 proiettile_ptr Comportamento::eliminaProiettile(proiettile_ptr p)

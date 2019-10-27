@@ -35,17 +35,17 @@ public:
 		const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, float angolo_rotazione);
 	Comportamento();
 
-	void restart(float vita, float cord_x, float cord_y, float angolo_rotazione);
+	void restart(float vita, sf::Vector2f posizione, float angolo_rotazione, bool distrutto);
 
-	sf::Vector2f getPosizione();
-	void setPosizione(sf::Vector2f pos);
+	sf::Vector2f getPosition();
+	void setPosition(sf::Vector2f pos);
 	sf::FloatRect getGlobalBounds();
-	sf::Vector2f getDimensione();
+	sf::Vector2f getSize();
 
 	float getRotation();
 	void setRotation(float rotazione);
 
-	void controlloProiettili(proiettile_ptr lista_proiettili);
+	int controlloProiettili(proiettile_ptr lista_proiettili);
 	proiettile_ptr eliminaProiettile(proiettile_ptr p);
 	void eliminaProiettiliBordo();
 	void resetProiettili();

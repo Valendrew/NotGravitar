@@ -1,5 +1,4 @@
 #include "superficie_pianeta.h"
-#include <iostream>
 
 void SuperficiePianeta::generaVertici(sf::Vector2f first_point, sf::Vector2f last_point)
 {
@@ -67,15 +66,15 @@ void SuperficiePianeta::generaSuperficie()
 			superficie_[i].setPoint(3, sf::Vector2f(vertici_superficie_[i].position.x, altezza_finestra_));
 
 			// Impostazione del colore della superficie
-			superficie_[i].setFillColor(sf::Color::Color(0,100,0));
+			superficie_[i].setFillColor(colore_superficie_);
 		}
 }
 
 void SuperficiePianeta::generaBunker()
 {
 	// Il numero di bunker sarà compreso tra 2 e 3
-	//int numero_di_bunker = (rand() % 2) + 2;
-	int numero_di_bunker = 3;
+	int numero_di_bunker = (rand() % 2) + 2;
+	//int numero_di_bunker = 3;
 	
 	// Viene generato un solo bunker da 3 proiettili per superficie
 	int bunker_stronger = 1;
@@ -87,7 +86,7 @@ void SuperficiePianeta::generaBunker()
 		int posizione_bunker = rand() % (NUMERO_DI_LINEE - 2) + 1;
 
 		if (bunker_presenti_[posizione_bunker] == false) {
-			if (!controllaOggettiVicinanze(posizione_bunker, 2)) {
+			if (!controllaOggettiVicinanze(posizione_bunker, 1)) {
 				if (bunker_stronger > 0) {
 					aggiungiOggetto(posizione_bunker, BUNKER_STRONGER, sf::Vector2f(50, 50));
 					bunker_stronger--;
@@ -163,7 +162,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 		case BENZINA_BEST:
 		{
 			char stringa_oggetto[] = "BENZINA_BEST";
-			char stringa_texture[] = "Texture/benzina_best_1.png";
+			char stringa_texture[] = "Texture/oggetto_benzina_best_1.png";
 
 			copiaStringa(tipologia, 50, stringa_oggetto);
 			copiaStringa(texture, 50, stringa_texture);
@@ -171,7 +170,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 		case BENZINA:
 		{
 			char stringa_oggetto[] = "BENZINA";
-			char stringa_texture[] = "Texture/benzina_1.png";
+			char stringa_texture[] = "Texture/oggetto_benzina_1.png";
 
 			copiaStringa(tipologia, 50, stringa_oggetto);
 			copiaStringa(texture, 50, stringa_texture);
@@ -179,7 +178,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 		case CUORE:
 		{
 			char stringa_oggetto[] = "CUORE";
-			char stringa_texture[] = "Texture/cuore_1.png";
+			char stringa_texture[] = "Texture/oggetto_cuore_1.png";
 
 			copiaStringa(tipologia, 50, stringa_oggetto);
 			copiaStringa(texture, 50, stringa_texture);
@@ -188,7 +187,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 			break;
 		}
 
-		benzina_ = new oggetto(tipologia, texture, new_coordinate, angolo, dimensione);
+		oggetto_bonus = new Oggetto(tipologia, texture, new_coordinate, angolo, dimensione);
 	}
 }
 
@@ -234,7 +233,7 @@ void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, flo
 
 void SuperficiePianeta::generaBenzina() {
 	int tipologia_benzina = rand() % 100 + 1;
-	sf::Vector2f size(30, 25);
+	sf::Vector2f size(42, 35);
 	
 	int index;
 	bool found = false;
@@ -246,9 +245,8 @@ void SuperficiePianeta::generaBenzina() {
 		}
 	}
 
-	//da calcolare posizione e angolo
-	aggiungiOggetto(index, BENZINA, size);
-	/*if (tipologia_benzina > 30 && tipologia_benzina < 60) {
+
+	if (tipologia_benzina > 30 && tipologia_benzina < 60) {
 		aggiungiOggetto(index, BENZINA, size);
 	}
 	else if (tipologia_benzina >= 60 && tipologia_benzina < 85) {
@@ -256,7 +254,7 @@ void SuperficiePianeta::generaBenzina() {
 	}
 	else if (tipologia_benzina >= 85) {
 		aggiungiOggetto(index, CUORE, size);
-	}*/
+	}
 }
 
 void SuperficiePianeta::copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[])
@@ -277,11 +275,8 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 		target.draw(superficie_[i]);
 	}
 
-	if (benzina_ != nullptr) {
-		target.draw(*benzina_);
-		sf::CircleShape p = sf::CircleShape(5);
-		p.setPosition((*benzina_).getPosition());
-		target.draw(p);
+	if (oggetto_bonus != nullptr) {
+		target.draw(*oggetto_bonus);
 	}
 	
 	// Puntatore all'attuale struttura rappresentante i Bunker
@@ -314,7 +309,7 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 	}
 }
 
-SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto)
+SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned altezza_finestra, sf::Vector2f primo_punto, sf::Vector2f ultimo_punto, sf::Color colore)
 {
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
@@ -324,6 +319,7 @@ SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned a
 	altezza_massima_ = altezza_finestra_ * 0.70;
 
 	altezza_minima_ = altezza_finestra * 0.90;
+	colore_superficie_ = colore;
 
 	/* Vengono impostate le proprietà relative
 	al VertexArray delle linee della superficie,
@@ -343,14 +339,14 @@ SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned a
 	bunker_ = nullptr;
 
 	/* Metodo per generare i Bunker presenti sulla superficie */
-	//generaBunker();
+	generaBunker();
 	generaBenzina();
 }
 
-SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra) :
-	SuperficiePianeta(larghezza_finestra, altezza_finestra, sf::Vector2f(), sf::Vector2f()) {}
+SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra, sf::Color colore) :
+	SuperficiePianeta(larghezza_finestra, altezza_finestra, sf::Vector2f(), sf::Vector2f(), colore) {}
 
-SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(1280, 720){}
+SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(1280, 720, sf::Color::Cyan){}
 
 sf::Vector2f SuperficiePianeta::getFirstVertex()
 {
@@ -373,14 +369,14 @@ proiettile_ptr SuperficiePianeta::getProiettili()
 		proiettile_ptr tmp = (*tmp_list->bunker_item).getProiettili();
 
 		if (tmp != nullptr) {
-			proiettile_ptr tmp2 = tmp; // per scorrere la lista di proiettili ottenuta fino alla fine
-			while (tmp2->next != nullptr)
-			{
-				tmp2 = tmp2->next;
-			}
+proiettile_ptr tmp2 = tmp; // per scorrere la lista di proiettili ottenuta fino alla fine
+while (tmp2->next != nullptr)
+{
+	tmp2 = tmp2->next;
+}
 
-			tmp2->next = lista_proiettili; // il puntatore successivo della lista appena ottenuta è uguale ai proiettili già processati
-			lista_proiettili = tmp;
+tmp2->next = lista_proiettili; // il puntatore successivo della lista appena ottenuta è uguale ai proiettili già processati
+lista_proiettili = tmp;
 		}
 
 		tmp_list = tmp_list->next; // bunker successivo
@@ -449,6 +445,7 @@ sf::VertexArray SuperficiePianeta::getPosizioneLineaSuperficie(sf::Vector2f posi
 
 	return pos_linea;
 }
+
 bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
 {
 	sf::VertexArray pos_linea = getPosizioneLineaSuperficie(pos);
@@ -466,13 +463,18 @@ bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
 	return (nave_y_retta < pos.y);
 }
 
-void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
+int SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 {
 	bunker_ptr tmp_bunker = bunker_;
+	int numeroBunkerColpiti = 0;
 
 	while (tmp_bunker != nullptr)
 	{
-		(*tmp_bunker->bunker_item).controlloProiettili(lista_proiettili);
+		int numeroBunkerColpiti_tmp = (*tmp_bunker->bunker_item).controlloProiettili(lista_proiettili);
+
+		if (numeroBunkerColpiti_tmp > 0) {
+			numeroBunkerColpiti += numeroBunkerColpiti_tmp;
+		}
 		tmp_bunker = tmp_bunker->next;
 	}
 
@@ -480,79 +482,60 @@ void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 
 	while (tmp_stronger_bunker != nullptr)
 	{
-		(*tmp_stronger_bunker->bunker_item).controlloProiettili(lista_proiettili);
+		int numeroBunkerColpiti_tmp = (*tmp_stronger_bunker->bunker_item).controlloProiettili(lista_proiettili);
+
+		if (numeroBunkerColpiti_tmp > 0) {
+			numeroBunkerColpiti += numeroBunkerColpiti_tmp;
+		}
+		
 		tmp_stronger_bunker = tmp_stronger_bunker->next;
 	}
-
+	return numeroBunkerColpiti;
 }
 
-bool SuperficiePianeta::intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2)
+bool SuperficiePianeta::isDistrutta()
 {
-	int x1 = a1.x;
-	int y1 = a1.y;
-	int x2 = b1.x;
-	int y2 = b1.y;
+	bool distrutta = true;
+	bunker_ptr bunker_tmp = bunker_;
+	bunker_stronger_ptr bunker_stronger_tmp = bunker_stronger_;
 
-	int x3 = a2.x;
-	int y3 = a2.y;
-	int x4 = b2.x;
-	int y4 = b2.y;
-	if (y1 == y2)y1++;
-	if (((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4)) != 0)
-	{
-		double retX = ((x1*y2 - y1 * x2)*(x3 - x4) - (x1 - x2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
-		double retY = ((x1*y2 - y1 * x2)*(y3 - y4) - (y1 - y2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
-		return retX > x3 && ((retX <= x1 && retX >= x2) || (retX >= x1 && retX <= x2)) &&
-			((retY <= y1 && retY >= y2) || (retY >= y1 && retY <= y2));
+	while (bunker_tmp != nullptr && distrutta) {
+
+		if (!(*bunker_tmp->bunker_item).getDistrutto())
+			distrutta = false;
+
+		bunker_tmp = bunker_tmp->next;
 	}
-	return false;
+	while (bunker_stronger_tmp != nullptr && distrutta) {
+
+		if (!(*bunker_stronger_tmp->bunker_item).getDistrutto())
+			distrutta = false;
+
+		bunker_stronger_tmp = bunker_stronger_tmp->next;
+	}
+	return distrutta;
 }
 
 int SuperficiePianeta::getNumeroBunker()
 {
-	int numero_bunker = 0;
+	int numeroBunker = 0;
+	bunker_ptr bunker_tmp = bunker_;
+	bunker_stronger_ptr bunker_stronger_tmp = bunker_stronger_;
 
-	bunker_ptr tmp_bunker = bunker_;
-	bunker_stronger_ptr tmp_bunker_stronger = bunker_stronger_;
+	while (bunker_tmp != nullptr) {
 
-	while (tmp_bunker != nullptr)
-	{
-		numero_bunker++;
-		tmp_bunker = tmp_bunker->next;
+		if (!(*bunker_tmp->bunker_item).getDistrutto())
+			numeroBunker++;
+
+		bunker_tmp = bunker_tmp->next;
 	}
+	while (bunker_stronger_tmp != nullptr) {
 
-	while (tmp_bunker_stronger != nullptr)
-	{
-		numero_bunker++;
-		tmp_bunker_stronger = tmp_bunker_stronger->next;
+		if (!(*bunker_stronger_tmp->bunker_item).getDistrutto())
+			numeroBunker++;
+
+		bunker_stronger_tmp = bunker_stronger_tmp->next;
 	}
-	return numero_bunker;
-}
-
-void SuperficiePianeta::controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f ppp)
-{
-	if (benzina_ != NULL) {
-		int i = 0;
-		sf::Vector2f a = raggio.getTransform().transformPoint(raggio.getPoint(0));
-		sf::Vector2f b = raggio.getTransform().transformPoint(raggio.getPoint(1));
-		sf::Vector2f c = raggio.getTransform().transformPoint(raggio.getPoint(2));
-		sf::Vector2f d = raggio.getTransform().transformPoint(raggio.getPoint(3));
-
-
-		sf::Vector2f posBenzina = (*benzina_).getPosition();
-		sf::Vector2f posBenzina2 = (*benzina_).getPosition();
-		posBenzina2.x = posBenzina.x + 30;
-
-		if (intersezione(a, b, posBenzina, posBenzina2)) i++;
-		if (intersezione(b, c, posBenzina, posBenzina2)) i++;
-		if (intersezione(c, d, posBenzina, posBenzina2)) i++;
-		if (intersezione(d, a, posBenzina, posBenzina2)) i++;
-		
-		if (i == 1) {
-			//TODO: uso i poteri dell'oggetto
-			benzina_ = NULL;
-		}
-	}
-	
+	return numeroBunker;
 }
 

@@ -16,7 +16,7 @@ public:
 	sf::FloatRect getGlobalBounds();
 	std::string getString();
 	void setCharacterSize(int size);
-	void setPosition(float x, float y);
+	void setPosition(sf::Vector2f pos);
 	sf::Vector2f getPosition();
 };
 
