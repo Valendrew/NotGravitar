@@ -229,9 +229,7 @@ bool Universo::distruzionePianetaAttuale()
 	int pianetiRimanenti_ = pianetiRimanenti();
 	bool distrutto = false;
 
-	std::cout << "\n" << pianetiRimanenti_ << "  " << *numPianetiPrecedenti;
 	if (pianetiRimanenti_ != 0 && pianetiRimanenti_ < *numPianetiPrecedenti) {
-		std::cout << "\n" << "OK";
 		*numPianetiPrecedenti = pianetiRimanenti_;
 		distrutto = true;
 	}
