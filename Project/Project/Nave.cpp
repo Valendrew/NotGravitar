@@ -136,6 +136,10 @@ void Nave::passaggioAmbiente(sf::Vector2f posizione)
 	setPosition(posizione);
 }
 
+void Nave::setDannoCollisione() {
+	diminuisciVita(5.0f);
+}
+
 sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghezza/2 generici
 	float coeff_x = entita_.getSize().x / 2;
 	float coeff_y = entita_.getSize().y / 2;

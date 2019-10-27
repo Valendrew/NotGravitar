@@ -281,6 +281,8 @@ void Gioco::controlloCollisioneSuperficie()
 		}
 
 		nave_.setRotation(new_angolo);
+
+		nave_.setDannoCollisione();
 	}
 }
 
@@ -395,7 +397,6 @@ Gioco::Gioco() :
 	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_2.png", "Texture/ship_2d.png",
 		sf::Vector2f(100, 100), sf::Vector2f(60, 60), 0, 300, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
-	, clock_()
 	,schermataScritte(LARGHEZZA, ALTEZZA)
 {
 	pausa_.setSize(sf::Vector2f(61.8, 64.0));

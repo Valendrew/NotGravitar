@@ -33,6 +33,7 @@ public:
 	
 	void muovi(sf::Time deltaTime, bool movimento);
 	void passaggioAmbiente(sf::Vector2f posizione);
+	void setDannoCollisione();
 
 	sf::Vector2f getPosition();
 	void setPosition(sf::Vector2f pos);
