@@ -23,6 +23,7 @@ public:
 	oggetto(const char tipo[], const char nomefile[], sf::Vector2f pos, float angolo_rotazione, sf::Vector2f size);
 	tipologia getTipologia();
 	float getCapacita();
+	sf::Vector2f getPosition();
 };
 
 #endif

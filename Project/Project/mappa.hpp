@@ -52,6 +52,8 @@ public:
 	void restart(int width_, int height_);
 	bool isNuovoUniverso();
 	void setVecchioUniverso();
+
+	void controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f posRaggio);
 };
 
 #endif

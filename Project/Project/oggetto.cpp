@@ -30,6 +30,10 @@ float oggetto::getCapacita()
 {
 	return capacita_;
 }
+sf::Vector2f oggetto::getPosition()
+{
+	return entita_.getPosition();
+}
 void oggetto::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 
 		target.draw(entita_);

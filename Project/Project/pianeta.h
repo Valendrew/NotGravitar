@@ -50,5 +50,7 @@ public:
 	proiettile_ptr getProiettili();
 	void controlloProiettili(proiettile_ptr lista_proiettili);
 	void drawSuperficie(sf::RenderTarget& target, sf::RenderStates states);
+
+	void controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f posRaggio);
 };
 #endif // !PIANETA_H

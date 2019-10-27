@@ -87,6 +87,11 @@ void Mappa::setVecchioUniverso(){
 	(*universo_di_gioco_->u).setVisitato();
 }
 
+void Mappa::controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f posRaggio)
+{
+	if (posizione_attuale_ != nullptr) (*posizione_attuale_->u).controlloRaggioTraente(raggio,posRaggio);
+}
+
 bool Mappa::controlloCollisioneSuperficie(sf::Vector2f pos) {
 	bool ritorno = false;
 	if (posizione_attuale_ != nullptr) {

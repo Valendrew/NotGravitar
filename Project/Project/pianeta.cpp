@@ -180,6 +180,13 @@ void Pianeta::drawSuperficie(sf::RenderTarget & target, sf::RenderStates states)
 		target.draw((*superficie_attuale_->superficie_item));
 }
 
+void Pianeta::controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f posRaggio)
+{
+	if (superficie_attuale_ != nullptr)
+		(*superficie_attuale_->superficie_item).controlloRaggioTraente(raggio, posRaggio);
+
+}
+
 void Pianeta::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(pianeta_);

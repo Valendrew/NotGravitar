@@ -141,6 +141,9 @@ void Gioco::controlloSparo()
 void Gioco::controlloRaggio()
 {
 	nave_.attivaRaggio(nave_raggio_);
+	sf::ConvexShape raggio = nave_.getRaggio();
+	raggio.setPosition(nave_.getPosizioneRaggio());
+	if(nave_raggio_) mappa_.controlloRaggioTraente(raggio,nave_.getPosizioneRaggio());
 }
 
 void Gioco::controlloPassaggioUniverso()
@@ -355,6 +358,7 @@ void Gioco::update()
 		controlloSparo();
 
 		controlloRaggio();
+
 	}
 	else if (stato_ == GAMEOVER) {
 		start_.setString("RESTART");

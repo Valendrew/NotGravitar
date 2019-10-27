@@ -66,5 +66,7 @@ public:
 
 	void uscitaPianeta();
 	void controlloProiettili(proiettile_ptr lista_proiettili);
+
+	void controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f posRaggio);
 };
 #endif // !UNIVERSO_H

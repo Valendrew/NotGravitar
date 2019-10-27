@@ -1,4 +1,5 @@
 #include "superficie_pianeta.h"
+#include <iostream>
 
 void SuperficiePianeta::generaVertici(sf::Vector2f first_point, sf::Vector2f last_point)
 {
@@ -246,8 +247,8 @@ void SuperficiePianeta::generaBenzina() {
 	}
 
 	//da calcolare posizione e angolo
-
-	if (tipologia_benzina > 30 && tipologia_benzina < 60) {
+	aggiungiOggetto(index, BENZINA, size);
+	/*if (tipologia_benzina > 30 && tipologia_benzina < 60) {
 		aggiungiOggetto(index, BENZINA, size);
 	}
 	else if (tipologia_benzina >= 60 && tipologia_benzina < 85) {
@@ -255,7 +256,7 @@ void SuperficiePianeta::generaBenzina() {
 	}
 	else if (tipologia_benzina >= 85) {
 		aggiungiOggetto(index, CUORE, size);
-	}
+	}*/
 }
 
 void SuperficiePianeta::copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[])
@@ -278,6 +279,9 @@ void SuperficiePianeta::draw(sf::RenderTarget & target, sf::RenderStates states)
 
 	if (benzina_ != nullptr) {
 		target.draw(*benzina_);
+		sf::CircleShape p = sf::CircleShape(5);
+		p.setPosition((*benzina_).getPosition());
+		target.draw(p);
 	}
 	
 	// Puntatore all'attuale struttura rappresentante i Bunker
@@ -339,7 +343,7 @@ SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned a
 	bunker_ = nullptr;
 
 	/* Metodo per generare i Bunker presenti sulla superficie */
-	generaBunker();
+	//generaBunker();
 	generaBenzina();
 }
 
@@ -482,6 +486,28 @@ void SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 
 }
 
+bool SuperficiePianeta::intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2)
+{
+	int x1 = a1.x;
+	int y1 = a1.y;
+	int x2 = b1.x;
+	int y2 = b1.y;
+
+	int x3 = a2.x;
+	int y3 = a2.y;
+	int x4 = b2.x;
+	int y4 = b2.y;
+	if (y1 == y2)y1++;
+	if (((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4)) != 0)
+	{
+		double retX = ((x1*y2 - y1 * x2)*(x3 - x4) - (x1 - x2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
+		double retY = ((x1*y2 - y1 * x2)*(y3 - y4) - (y1 - y2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
+		return retX > x3 && ((retX <= x1 && retX >= x2) || (retX >= x1 && retX <= x2)) &&
+			((retY <= y1 && retY >= y2) || (retY >= y1 && retY <= y2));
+	}
+	return false;
+}
+
 int SuperficiePianeta::getNumeroBunker()
 {
 	int numero_bunker = 0;
@@ -502,3 +528,31 @@ int SuperficiePianeta::getNumeroBunker()
 	}
 	return numero_bunker;
 }
+
+void SuperficiePianeta::controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f ppp)
+{
+	if (benzina_ != NULL) {
+		int i = 0;
+		sf::Vector2f a = raggio.getTransform().transformPoint(raggio.getPoint(0));
+		sf::Vector2f b = raggio.getTransform().transformPoint(raggio.getPoint(1));
+		sf::Vector2f c = raggio.getTransform().transformPoint(raggio.getPoint(2));
+		sf::Vector2f d = raggio.getTransform().transformPoint(raggio.getPoint(3));
+
+
+		sf::Vector2f posBenzina = (*benzina_).getPosition();
+		sf::Vector2f posBenzina2 = (*benzina_).getPosition();
+		posBenzina2.x = posBenzina.x + 30;
+
+		if (intersezione(a, b, posBenzina, posBenzina2)) i++;
+		if (intersezione(b, c, posBenzina, posBenzina2)) i++;
+		if (intersezione(c, d, posBenzina, posBenzina2)) i++;
+		if (intersezione(d, a, posBenzina, posBenzina2)) i++;
+		
+		if (i == 1) {
+			//TODO: uso i poteri dell'oggetto
+			benzina_ = NULL;
+		}
+	}
+	
+}
+

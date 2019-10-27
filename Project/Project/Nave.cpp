@@ -86,9 +86,9 @@ void Nave::riempiCarburante(int carburante) {
 	carburante_ += carburante;
 }
 
-void Nave::controlloRaggioTraente()
+sf::Vector2f Nave::getPosizioneRaggio()
 {
-
+	return raggio_.getPosition();
 }
 
 void Nave::aggiornaRaggio()

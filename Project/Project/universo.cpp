@@ -233,3 +233,10 @@ void Universo::controlloProiettili(proiettile_ptr lista_proiettili)
 		(*pianetaAttuale->pianeta_).controlloProiettili(lista_proiettili);
 	}
 }
+
+void Universo::controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f posRaggio)
+{
+	if (pianetaAttuale != nullptr) {
+		(*pianetaAttuale->pianeta_).controlloRaggioTraente(raggio, posRaggio);
+	}
+}

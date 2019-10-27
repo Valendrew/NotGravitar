@@ -29,7 +29,7 @@ public:
 	void setCarburante(int carburante);
 	void riempiCarburante(int carburante);
 
-	void controlloRaggioTraente();
+	sf::Vector2f getPosizioneRaggio();
 	void aggiornaRaggio();
 	sf::ConvexShape getRaggio();
 	void attivaRaggio(bool attiva);

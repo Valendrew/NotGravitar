@@ -46,6 +46,16 @@ protected:
 		BunkerStronger *bunker_item;
 		BunkerStrongerNode *next;
 	};
+
+	struct Line {
+		sf::Vector2f p1;
+		sf::Vector2f p2;
+
+		bool contains(sf::Vector2f point) const {
+			float margin = 0.1;
+			return true;// std::abs((distance(p1, point) + distance(point, p2)) - distance(p1, p2)) < margin;
+		}
+	};
 	// typedef del puntatore del BunkerNode
 	typedef BunkerStrongerNode* bunker_stronger_ptr;
 
@@ -77,6 +87,11 @@ public:
 	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	void controlloProiettili(proiettile_ptr lista_proiettili);
+	bool intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2);
 	int getNumeroBunker();
+
+	void controlloRaggioTraente(sf::ConvexShape raggio, sf::Vector2f ppp);
+
+	void controlloRaggioTraente(sf::ConvexShape raggio);
 };
 #endif // !SUPERFICIE_PIANETA_H
