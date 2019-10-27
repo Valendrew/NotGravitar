@@ -9,6 +9,7 @@ Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float
 	carburante_movimento_ = 0.001f;
 
 	velocita_movimento_ = velocita_movimento;
+	velocita_attuale_movimento_ = 0.0f;
 	velocita_rotazione_ = velocita_rotazione;
 
 	// viene impostato il punto di origine 
@@ -18,6 +19,7 @@ Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float
 Nave::Nave() : Comportamento() {
 	carburante_ = 10;
 	velocita_movimento_ = 100.f;
+	velocita_attuale_movimento_ = 0.0f;
 	velocita_rotazione_ = 10.f;
 
 	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
@@ -86,13 +88,31 @@ sf::VertexArray Nave::getPosizioneFrontale()
 	return vertex;
 }
 
-void Nave::muovi(sf::Time deltaTime) {
+void Nave::muovi(sf::Time deltaTime, bool movimento) {
 	if (carburante_ <= 0) {
 		Comportamento::setDistrutto();
 	}
 	else {
-		float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
-		float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
+		float accelerazione = 2.5f;
+		cambiaTextureMovimento(movimento);
+		if (movimento) {
+			if (velocita_attuale_movimento_ <= velocita_movimento_ - accelerazione)
+				velocita_attuale_movimento_ += accelerazione;
+			else
+				velocita_attuale_movimento_ = velocita_movimento_;
+		}
+		else {
+			if (velocita_attuale_movimento_ >= accelerazione)
+				velocita_attuale_movimento_ -= accelerazione;
+			else
+				velocita_attuale_movimento_ = 0.0f;
+		}
+		
+
+		//float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
+		float velX = deltaTime.asSeconds() * velocita_attuale_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
+		//float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
+		float velY = deltaTime.asSeconds() * -velocita_attuale_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 
 		entita_.move(velX, velY);
 

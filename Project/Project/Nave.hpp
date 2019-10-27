@@ -9,8 +9,11 @@ protected:
 	//proiettiliP proiettilil;
 	float carburante_;
 	float carburante_movimento_;
+	float velocita_attuale_movimento_;
 	float velocita_movimento_;
 	float velocita_rotazione_;
+
+	void cambiaTextureMovimento(bool movimento);
 public:
 	Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float vita, float danno,
 		const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, 
@@ -28,8 +31,7 @@ public:
 
 	sf::VertexArray getPosizioneFrontale();
 	
-	void muovi(sf::Time deltaTime);
-	void cambiaTextureMovimento(bool movimento);
+	void muovi(sf::Time deltaTime, bool movimento);
 	void passaggioAmbiente(sf::Vector2f posizione);
 
 	sf::Vector2f getPosition();

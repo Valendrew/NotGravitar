@@ -90,7 +90,7 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 	if (key == sf::Keyboard::W) {
 		nave_movimento_ = isPressed;
 
-		nave_.cambiaTextureMovimento(nave_movimento_);
+		//nave_.cambiaTextureMovimento(nave_movimento_);
 	}
 	else if (key == sf::Keyboard::A) {
 		nave_rotazioneL_ = isPressed;
@@ -108,9 +108,7 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 
 void Gioco::movimentoNavicella()
 {
-	if (nave_movimento_) {
-		nave_.muovi(time_frame_);
-	}
+	nave_.muovi(time_frame_, nave_movimento_);
 	if (nave_rotazioneL_) {
 		nave_.ruotaSinistra();
 	}
