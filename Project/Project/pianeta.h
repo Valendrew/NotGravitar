@@ -16,12 +16,11 @@ protected:
 	int larghezza_finestra_;
 	int altezza_finestra_;
 	int id_;
-	int* numero_bunker_precedenti;
+	int numero_bunker_precedenti;
 	sf::CircleShape pianeta_;
 	sf::Texture texture_;
 	TipologiaPianeta tipo_pianeta_;
 
-	bool* distrutto_;
 	int numero_superfici_;
 
 	struct SuperficieNode {

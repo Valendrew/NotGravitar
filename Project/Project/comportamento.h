@@ -44,7 +44,7 @@ public:
 		const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, float angolo_rotazione);
 	Comportamento();
 
-	void restart(float vita, float cord_x, float cord_y, float angolo_rotazione, bool distrutto);
+	void restart(float vita, sf::Vector2f posizione, float angolo_rotazione, bool distrutto);
 
 	sf::Vector2f getPosition();
 	void setPosition(sf::Vector2f pos);
