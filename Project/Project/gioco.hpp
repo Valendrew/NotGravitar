@@ -7,7 +7,7 @@
 #include "schermata_scritte.h"
 
 const int LARGHEZZA = 1280;
-const int ALTEZZA = 720;
+const int ALTEZZA = 960;
 
 class Gioco {
 protected: 

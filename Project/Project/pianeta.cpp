@@ -8,7 +8,7 @@ void Pianeta::generaSuperficie()
 	{
 	case 0: colore_superficie = sf::Color(66, 191, 232);
 		break;
-	case 1: colore_superficie = sf::Color(185, 69, 29);
+	case 1: colore_superficie = sf::Color(232, 138, 54);
 		break;
 	case 2: colore_superficie = sf::Color(66, 164, 89);
 		break;
