@@ -44,6 +44,7 @@ public:
 	proiettile_ptr getProiettili();
 	int controlloProiettili(proiettile_ptr lista_proiettili);
 
+	void controlloRaggio(sf::ConvexShape raggio);
 
 	void restart(int width_, int height_);
 	bool aggiornaPunteggioBunker();

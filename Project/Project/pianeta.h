@@ -53,6 +53,7 @@ public:
 	bool getDistrutto();
 	int controlloPassaggioSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f posizione);
+	void controlloRaggio(sf::ConvexShape raggio);
 	void resetProiettiliBunker();
 	proiettile_ptr getProiettili();
 	int controlloProiettili(proiettile_ptr lista_proiettili);

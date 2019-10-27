@@ -12,6 +12,8 @@ protected:
 	float velocita_attuale_movimento_;
 	float velocita_movimento_;
 	float velocita_rotazione_;
+	sf::ConvexShape raggio_;
+	bool raggio_attivato_;
 
 	void cambiaTextureMovimento(bool movimento);
 public:
@@ -19,6 +21,8 @@ public:
 		const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, 
 		float angolo_rotazione, float velocita_movimento, float velocita_rotazione, float carburante);
 	Nave();
+
+	void drawComportamento(sf::RenderTarget & target, sf::RenderStates states);
 
 	void ruotaSinistra();
 	void ruotaDestra();
@@ -28,6 +32,10 @@ public:
 	int getCarburante();
 	void setCarburante(int carburante);
 	void riempiCarburante(int carburante);
+
+	void aggiornaRaggio();
+	sf::ConvexShape getRaggio();
+	void attivaRaggio(bool attiva);
 
 	sf::VertexArray getPosizioneFrontale();
 	

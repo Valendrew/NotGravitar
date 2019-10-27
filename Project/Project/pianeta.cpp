@@ -216,6 +216,12 @@ bool Pianeta::controlloCollisioneSuperficie(sf::Vector2f posizione)
 	return collisione_superficie;
 }
 
+void Pianeta::controlloRaggio(sf::ConvexShape raggio)
+{
+	if (superficie_attuale_ != nullptr)
+		(*superficie_attuale_).superficie_item->controlloRaggio(raggio);
+}
+
 void Pianeta::resetProiettiliBunker()
 {
 	if (superficie_attuale_ != nullptr) {

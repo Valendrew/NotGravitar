@@ -200,6 +200,12 @@ int Mappa::controlloProiettili(proiettile_ptr lista_proiettili)
 	return (*posizione_attuale_->universo).controlloProiettili(lista_proiettili);
 }
 
+void Mappa::controlloRaggio(sf::ConvexShape raggio)
+{
+	if (posizione_attuale_ != NULL)
+		(*posizione_attuale_).universo->controlloRaggio(raggio);
+}
+
 
 void Mappa::restart(int width_, int height_) {
 

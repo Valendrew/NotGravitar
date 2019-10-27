@@ -27,7 +27,7 @@ protected:
 	bool nave_rotazioneL_;
 	bool nave_rotazioneR_;
 	bool nave_spara_;
-	bool nave_raggiotraente_;
+	bool nave_raggio_;
 	bool restart_;
 
 	int punteggio_;
@@ -48,6 +48,7 @@ protected:
 	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);
 	void movimentoNavicella();
 	void controlloSparo();
+	void controlloRaggio();
 	void controlloPassaggioUniverso();
 	void controlloPassaggioPianeta();
 	void controlloUscitaPianeta();

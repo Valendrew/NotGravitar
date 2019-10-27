@@ -492,6 +492,53 @@ int SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 	}
 	return numeroBunkerColpiti;
 }
+bool SuperficiePianeta::intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2) {
+	int x1 = a1.x;
+	int y1 = a1.y;
+	int x2 = b1.x;
+	int y2 = b1.y;
+
+	int x3 = a2.x;
+	int y3 = a2.y;
+	int x4 = b2.x;
+	int y4 = b2.y;
+	if (y1 == y2)y1++;
+	if (((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4)) != 0)
+	{
+		double retX = ((x1*y2 - y1 * x2)*(x3 - x4) - (x1 - x2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
+		double retY = ((x1*y2 - y1 * x2)*(y3 - y4) - (y1 - y2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
+		return retX > x3 && ((retX <= x1 && retX >= x2) || (retX >= x1 && retX <= x2)) &&
+			((retY <= y1 && retY >= y2) || (retY >= y1 && retY <= y2));
+	}
+	return false;
+
+}
+void SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
+{
+	if (oggetto_bonus != NULL) {
+		int i = 0;
+		sf::Vector2f a = raggio.getTransform().transformPoint(raggio.getPoint(0));
+		sf::Vector2f b = raggio.getTransform().transformPoint(raggio.getPoint(1));
+		sf::Vector2f c = raggio.getTransform().transformPoint(raggio.getPoint(2));
+		sf::Vector2f d = raggio.getTransform().transformPoint(raggio.getPoint(3));
+
+
+		sf::Vector2f posBenzina = (*oggetto_bonus).getPosition();
+		sf::Vector2f posBenzina2 = (*oggetto_bonus).getPosition();
+		posBenzina2.x = posBenzina.x + 30;
+
+		if (intersezione(a, b, posBenzina, posBenzina2)) i++;
+		if (intersezione(b, c, posBenzina, posBenzina2)) i++;
+		if (intersezione(c, d, posBenzina, posBenzina2)) i++;
+		if (intersezione(d, a, posBenzina, posBenzina2)) i++;
+
+		if (i == 1) {
+			//TODO: uso i poteri dell'oggetto
+			oggetto_bonus = NULL;
+		}
+	}
+
+}
 
 bool SuperficiePianeta::isDistrutta()
 {

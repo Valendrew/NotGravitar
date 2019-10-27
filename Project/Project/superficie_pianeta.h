@@ -63,6 +63,7 @@ protected:
 	void inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo, sf::Vector2f dimensione);
 	void generaBenzina();
 	void copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[]);
+	bool intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
@@ -80,6 +81,7 @@ public:
 	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	int controlloProiettili(proiettile_ptr lista_proiettili);
+	void controlloRaggio(sf::ConvexShape raggio);
 	bool isDistrutta();
 	int getNumeroBunker();
 };
