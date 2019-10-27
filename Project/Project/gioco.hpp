@@ -14,7 +14,6 @@ protected:
 	sf::RenderWindow window_;
 
 	sf::Time time_frame_;
-	sf::Clock clock_;
 
 	sf::RectangleShape pausa_;
 	sf::Texture texture_;
