@@ -113,9 +113,6 @@ sf::VertexArray Nave::getPosizioneFrontale()
 	float angolo = entita_.getRotation();
 	angolo = angolo * PI_G / 180;
 
-	float delta_x = getPosition().x + (entita_.getSize().x / 2) * cos(angolo);
-	float delta_y = getPosition().y + (entita_.getSize().y / 2) * sin(angolo);
-
 	vertex[0].position = sf::Vector2f(getPosition().x, getPosition().y);
 
 	vertex[1].position.x = vertex[0].position.x + entita_.getSize().x * cos(angolo);
@@ -172,7 +169,7 @@ void Nave::passaggioAmbiente(sf::Vector2f posizione)
 }
 
 void Nave::setDannoCollisione() {
-	diminuisciVita(5.0f);
+	diminuisciVita(3.0f);
 }
 
 void Nave::aggiungiVita(int vita_aggiunta) {
