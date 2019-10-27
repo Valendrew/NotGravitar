@@ -11,6 +11,7 @@ Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float
 	velocita_movimento_ = velocita_movimento;
 	velocita_attuale_movimento_ = 0.0f;
 	velocita_rotazione_ = velocita_rotazione;
+	colore_proiettile_ = sf::Color(0, 113, 0, 255);
 
 	// viene impostato il punto di origine 
 	entita_.setOrigin(sf::Vector2f(dimensione.x / 2.f, dimensione.y / 2.f));
@@ -21,6 +22,7 @@ Nave::Nave() : Comportamento() {
 	velocita_movimento_ = 100.f;
 	velocita_attuale_movimento_ = 0.0f;
 	velocita_rotazione_ = 10.f;
+	colore_proiettile_ = sf::Color(0, 113, 0, 255);
 
 	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
 }
@@ -38,19 +40,18 @@ void Nave::ruotaDestra()
 void Nave::spara()
 {
 	float angolo = getRotation();
-	float velocita = 2.f;
 
 	if (clock_.getElapsedTime().asMilliseconds() > 400) {
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {
 			proiettili_ = new ProiettileNode();
-			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita_sparo_, danno_, colore_proiettile_); //crea una nuovo proiettile e lo mette in cima alla lista
 			proiettili_->next = nullptr;
 		}
 		else {
 			proiettile_ptr p = new ProiettileNode;
-			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita_sparo_, danno_, colore_proiettile_); //crea una nuovo proiettile e lo mette in cima alla lista
 			p->next = proiettili_;
 			proiettili_ = p;
 		}

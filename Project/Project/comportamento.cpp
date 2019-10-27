@@ -26,6 +26,8 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 	danno_ = danno;
 	distrutto_ = false;
 
+	velocita_sparo_ = 1.5f;
+
 	proiettili_ = nullptr;
 
 	

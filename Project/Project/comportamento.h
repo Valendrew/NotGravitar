@@ -18,6 +18,7 @@ protected:
 	float vita_;
 	float danno_;
 	bool distrutto_;
+	float velocita_sparo_;
 
 	char nomeFile_[50];
 	char nomeFileDistrutto_[50];
@@ -25,6 +26,7 @@ protected:
 	sf::RectangleShape entita_;
 	sf::Texture texture_;
 	sf::Texture texture_distrutto_;
+	sf::Color colore_proiettile_;
 
 	sf::Clock clock_;
 	proiettile_ptr proiettili_;

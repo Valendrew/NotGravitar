@@ -9,13 +9,13 @@ void Bunker::spara()
 
 		//crea una nuovo proiettile e lo mette in cima alla lista
 		proiettile_ptr p = new ProiettileNode;
-		p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), posizione, entita_.getRotation() + angolo_sparo_, .8f, danno_);
+		p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), posizione, entita_.getRotation() + angolo_sparo_, velocita_sparo_, danno_, colore_proiettile_);
 		p->next = proiettili_;
 		proiettili_ = p;
 
 		//crea una nuovo proiettile e lo mette in cima alla lista
 		proiettile_ptr p2 = new ProiettileNode;
-		p2->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), posizione, entita_.getRotation() - angolo_sparo_, .8f, danno_);
+		p2->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), posizione, entita_.getRotation() - angolo_sparo_, velocita_sparo_, danno_, colore_proiettile_);
 		p2->next = proiettili_;
 		proiettili_ = p2;
 	}
@@ -72,6 +72,7 @@ Bunker::Bunker(unsigned int larghezza_finestra, unsigned int altezza_finestra, f
 	angolo_sparo_ = 25;
 	entita_.setOrigin(0, 0 + dimensione.y);
 	vita_massima_ = vita;
+	colore_proiettile_ = sf::Color(0, 0, 243, 255);
 	
 	vita_rimanente_.setFillColor(sf::Color::Blue);
 	vita_eliminta_.setFillColor(sf::Color::Red);
@@ -81,4 +82,5 @@ Bunker::Bunker(unsigned int larghezza_finestra, unsigned int altezza_finestra, f
 Bunker::Bunker() : Comportamento() {
 	angolo_sparo_ = 25;
 	entita_.setOrigin(0, 0 + 25);
+	colore_proiettile_ = sf::Color(0, 0, 243, 255);
 }
