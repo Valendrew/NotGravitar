@@ -25,7 +25,7 @@ public:
 
 	void spara();
 
-	int getCarburante();
+	float getCarburante();
 	void setCarburante(int carburante);
 	void riempiCarburante(int carburante);
 

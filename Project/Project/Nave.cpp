@@ -58,7 +58,7 @@ void Nave::spara()
 	}
 }
 
-int Nave::getCarburante() {
+float Nave::getCarburante() {
 	return carburante_;
 }
 
