@@ -18,6 +18,7 @@ protected:
 	float vita_;
 	float danno_;
 	bool distrutto_;
+	float velocita_sparo_;
 
 	char nomeFile_[50];
 	char nomeFileDistrutto_[50];
@@ -25,8 +26,16 @@ protected:
 	sf::RectangleShape entita_;
 	sf::Texture texture_;
 	sf::Texture texture_distrutto_;
+	sf::Color colore_proiettile_;
+
+	sf::RectangleShape esplosione_;
+	sf::Texture texture_esplosione_;
+	bool mostra_esplosione_;
+	int esplosione_corrente_;
 
 	sf::Clock clock_;
+
+	sf::Clock clock_esplosione_;
 	proiettile_ptr proiettili_;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -54,6 +63,7 @@ public:
 	bool getDistrutto();
 	void setDistrutto();
 	void diminuisciVita(float danno);
+	void cambiaTextureEsplosione();
 	void drawComportamento(sf::RenderTarget& target, sf::RenderStates states);
 };
 #endif // !_COMPORTAMENTO_H
