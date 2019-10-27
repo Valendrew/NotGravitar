@@ -77,7 +77,7 @@ int Pianeta::bunkerRimanenti() {
 Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[]) {
 
 	id_ = id;
-	pianeta_.setRadius(25.0);
+	pianeta_.setRadius(40.0);
 	pianeta_.setPointCount(100);
 	numero_superfici_ = 3;
 	pianeta_.setOrigin(0 , 0);
@@ -134,7 +134,11 @@ sf::FloatRect Pianeta::getGlobalBounds()
 }
 
 void Pianeta::cambiaColore() {
-	pianeta_.setFillColor(sf::Color(255, 0, 0, 255));
+	
+	if (tipo_pianeta_ == ACQUA) {
+		texture_.loadFromFile("Texture/pianeta_acqua_1_distrutto.png");
+		pianeta_.setTexture(&texture_);
+	}
 }
 
 bool Pianeta::distruzioneSingoloBunker()

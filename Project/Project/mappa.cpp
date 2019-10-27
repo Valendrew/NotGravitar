@@ -83,13 +83,12 @@ bool Mappa::aggiornaPunteggioBunker()
 
 bool Mappa::aggiornaPunteggioPianeta()
 {
-	/*if ((*posizione_attuale_->universo).distruzionePianetaAttuale()) {
+	if ((*posizione_attuale_->universo).distruzionePianetaAttuale()) {
 
 		(*posizione_attuale_->universo).cambiaColorePianeta();
 		return true;
 	}
-	else return false;*/
-	return (*posizione_attuale_->universo).distruzionePianetaAttuale();
+	else return false;
 }
 
 bool Mappa::aggiornaPunteggioUniverso()
