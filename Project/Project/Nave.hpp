@@ -35,7 +35,7 @@ public:
 	sf::Vector2f getPosition();
 	void setPosition(sf::Vector2f pos);
 	proiettile_ptr getProiettili();
-	void restart(float vita, float cord_x, float cord_y, float angolo_rotazione, float carburante, bool distrutto);
+	void restart(float vita, sf::Vector2f posizione, float angolo_rotazione, float carburante, bool distrutto);
 };
 
 #endif

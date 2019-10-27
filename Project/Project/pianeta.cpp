@@ -77,8 +77,6 @@ int Pianeta::bunkerRimanenti() {
 Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[]) {
 
 	id_ = id;
-	distrutto_ = new bool();
-	*distrutto_ = false;
 	pianeta_.setRadius(25.0);
 	pianeta_.setPointCount(100);
 	numero_superfici_ = 3;
@@ -158,31 +156,23 @@ bool Pianeta::distruzioneSingoloBunker()
 bool Pianeta::isDistrutto()
 {
 	bool distrutto = true;
-	//Questo metodo mi deve ritornare true solo una volta, appena ho distrutto il pianeta
-	//successivamente, anche se il pianeta è effettivamente distrutto mi deve tornare false altrimenti il punteggio salirebbe all'infinito
-		if (*distrutto_)
-			distrutto = false;
-		else {
-			superficie_ptr superficie_head_tmp = superficie_head_;
 
-			while (superficie_head_tmp != nullptr && distrutto) {
+		superficie_ptr superficie_head_tmp = superficie_head_;
 
-				if (!(*superficie_head_tmp->superficie_item).isDistrutta())
-					distrutto = false;
+		while (superficie_head_tmp != nullptr && distrutto) {
 
-				superficie_head_tmp = superficie_head_tmp->next;
-			}
+			if (!(*superficie_head_tmp->superficie_item).isDistrutta())
+				distrutto = false;
 
-			if (distrutto)
-				*distrutto_ = true;
+			superficie_head_tmp = superficie_head_tmp->next;
 		}
-
+		
 	return distrutto;
 }
 
 bool Pianeta::getDistrutto()
 {  
-	return *distrutto_;
+	return isDistrutto();
 }
 
 

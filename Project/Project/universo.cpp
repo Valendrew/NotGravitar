@@ -158,6 +158,8 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 	}
 
 	 generaPianeti();
+	 numPianetiPrecedenti = new int();
+	 *numPianetiPrecedenti = numero_pianeti_;
 }
 
 Universo::Universo() :Universo(1280, 720) {}
@@ -216,25 +218,6 @@ bool Universo::getDistrutto()
 	return *distrutto_;
 }
 
-bool Universo::restaUnSoloPianeta()
-{
-	bool un_solo_pianeta = false;
-	int count_pianeti_distrutti = 0;
-	listaPianeti lista_pianeti_tmp = lista_Pianeti;
-
-	while (lista_pianeti_tmp != nullptr) {
-
-		if ((*lista_pianeti_tmp->pianeta_).getDistrutto())
-			count_pianeti_distrutti++;
-
-		lista_pianeti_tmp = lista_pianeti_tmp->next;
-	}
-
-	if (count_pianeti_distrutti == numero_pianeti_ - 1)
-		un_solo_pianeta = true;
-
-	return un_solo_pianeta;
-}
 
 bool Universo::aggiornaPunteggioBunker()
 {
@@ -243,9 +226,16 @@ bool Universo::aggiornaPunteggioBunker()
 
 bool Universo::distruzionePianetaAttuale()
 {
-	return (*pianetaAttuale->pianeta_).isDistrutto();
+	int pianetiRimanenti_ = pianetiRimanenti();
+	bool distrutto = false;
 
-
+	std::cout << "\n" << pianetiRimanenti_ << "  " << *numPianetiPrecedenti;
+	if (pianetiRimanenti_ != 0 && pianetiRimanenti_ < *numPianetiPrecedenti) {
+		std::cout << "\n" << "OK";
+		*numPianetiPrecedenti = pianetiRimanenti_;
+		distrutto = true;
+	}
+	return distrutto;
 }
 
 void Universo::cambiaColorePianeta()
@@ -292,5 +282,21 @@ int Universo::controlloProiettili(proiettile_ptr lista_proiettili)
 		return (*pianetaAttuale->pianeta_).controlloProiettili(lista_proiettili);
 	}
 	else return 0;
+}
+
+int Universo::pianetiRimanenti()
+{
+	int numPianetiRimanenti = 0;
+	listaPianeti lista_pianeti_tmp = lista_Pianeti;
+
+	while (lista_pianeti_tmp != nullptr) {
+
+		if (!(*lista_pianeti_tmp->pianeta_).getDistrutto()) {
+			numPianetiRimanenti++;
+		 }
+
+		lista_pianeti_tmp = lista_pianeti_tmp->next;
+	}
+	return numPianetiRimanenti;
 }
 

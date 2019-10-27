@@ -46,9 +46,9 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 Comportamento::Comportamento() : Comportamento(1280, 720, 50, 10, 
 	"Texture/default.png", "Texture/default_d.png", sf::Vector2f(), sf::Vector2f(), 0) {}
 
-void Comportamento::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, bool distrutto){
+void Comportamento::restart(float vita, sf::Vector2f posizione, float angolo_rotazione, bool distrutto){
 	vita_ = vita;
-	entita_.setPosition(cord_x, cord_y);
+	entita_.setPosition(posizione);
 	entita_.setRotation(angolo_rotazione);
 	distrutto_ = distrutto;
 }

@@ -82,22 +82,24 @@ bool Mappa::aggiornaPunteggioBunker()
 
 bool Mappa::aggiornaPunteggioPianeta()
 {
-	if (!(*posizione_attuale_->universo).restaUnSoloPianeta() && (*posizione_attuale_->universo).distruzionePianetaAttuale()) {
+	/*if ((*posizione_attuale_->universo).distruzionePianetaAttuale()) {
 
 		(*posizione_attuale_->universo).cambiaColorePianeta();
 		return true;
 	}
-	else return false;
+	else return false;*/
+	return (*posizione_attuale_->universo).distruzionePianetaAttuale();
 }
 
 bool Mappa::aggiornaPunteggioUniverso()
 {
-	if ((*posizione_attuale_->universo).distrutto()) {
+	/*if ((*posizione_attuale_->universo).distrutto()) {
 		
 		(*posizione_attuale_->universo).cambiaColorePianeta();
 		return true;
 	}
-	else return false;
+	else return false;*/
+	return (*posizione_attuale_->universo).distrutto();
 }
 
 bool Mappa::controlloCollisioneSuperficie(sf::Vector2f pos) {

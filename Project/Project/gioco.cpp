@@ -42,10 +42,17 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 		if (stringa_start.compare("RESTART") == 0) {
 			mappa_.restart(LARGHEZZA, ALTEZZA);
 			punteggio_ = 0;
-			nave_.restart(100, 100, 100, 0, 10, false);
+			nave_.restart(100, sf::Vector2f(100, 100), 0, 10, false);
 			stato_ = UNIVERSO;
 			schermataScritte.setPunteggio();
 			schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
+			nave_movimento_ = false;
+			nave_rotazioneL_ = false;
+			nave_rotazioneR_ = false;
+			nave_spara_ = false;
+			nave_raggiotraente_ = false;
+			restart_ = true;
+			posizione_entrata_pianeta_ = sf::Vector2f();
 		}
 		else if (stringa_start.compare("START") == 0) {
 			stato_ = UNIVERSO;
@@ -316,13 +323,13 @@ void Gioco::controlloCollisioneProiettiliSuperficie()
 
 void Gioco::controlloAggiornamentoPunteggio() {
 	if (mappa_.aggiornaPunteggioBunker()) {
-		punteggio_ += 10;
+		punteggio_ += 9;
 	}
 	else if (mappa_.aggiornaPunteggioPianeta()) {
-			punteggio_ += 50;
+			punteggio_ += 49;
 	}
 	else if (mappa_.aggiornaPunteggioUniverso()) {
-		punteggio_ += 100;
+		punteggio_ += 99;
 	}
 	schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 
@@ -418,6 +425,7 @@ Gioco::Gioco() :
 	nave_rotazioneR_ = false;
 	nave_spara_ = false;
 	nave_raggiotraente_ == false;
+	restart_ = false;
 
 	posizione_entrata_pianeta_ = sf::Vector2f(); // posizione della nave prima di entrare nel pianeta
 
@@ -432,6 +440,12 @@ void Gioco::avviaGioco()
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
 	while (window_.isOpen()) {
+
+			if (restart_) {
+				refresh_.restart();
+				timeSinceLastUpdate = sf::Time::Zero;
+				restart_ = false;
+			}
 			processaEventi();
 
 			timeSinceLastUpdate += refresh_.restart();

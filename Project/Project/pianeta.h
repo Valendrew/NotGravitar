@@ -21,7 +21,6 @@ protected:
 	sf::Texture texture_;
 	TipologiaPianeta tipo_pianeta_;
 
-	bool* distrutto_;
 	int numero_superfici_;
 
 	struct SuperficieNode {

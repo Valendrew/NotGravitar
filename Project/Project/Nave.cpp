@@ -144,8 +144,8 @@ proiettile_ptr Nave::getProiettili()
 	return proiettili_;
 }
 
-void Nave::restart(float vita, float cord_x, float cord_y, float angolo_rotazione, float carburante, bool distrutto) {
-	Comportamento::restart(vita, cord_x, cord_y, angolo_rotazione, distrutto);
+void Nave::restart(float vita, sf::Vector2f posizione, float angolo_rotazione, float carburante, bool distrutto) {
+	Comportamento::restart(vita, posizione, angolo_rotazione, distrutto);
 	carburante_ = carburante;	
 	resetProiettili();
 }
