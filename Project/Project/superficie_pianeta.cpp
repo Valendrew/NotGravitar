@@ -86,13 +86,13 @@ void SuperficiePianeta::generaBunker()
 		int posizione_bunker = rand() % (NUMERO_DI_LINEE - 2) + 1;
 
 		if (bunker_presenti_[posizione_bunker] == false) {
-			if (!controllaOggettiVicinanze(posizione_bunker, 1)) {
+			if (!controllaOggettiVicinanze(posizione_bunker, 2)) {
 				if (bunker_stronger > 0) {
-					aggiungiOggetto(posizione_bunker, BUNKER_STRONGER, sf::Vector2f(50, 50));
+					aggiungiOggetto(posizione_bunker, BUNKER_STRONGER, sf::Vector2f(40, 40));
 					bunker_stronger--;
 				}
 				else {
-					aggiungiOggetto(posizione_bunker, BUNKER, sf::Vector2f(50, 50)); // metodo per aggiungere il bunker alla struttura
+					aggiungiOggetto(posizione_bunker, BUNKER, sf::Vector2f(40, 40)); // metodo per aggiungere il bunker alla struttura
 				}
 				numero_di_bunker--;
 				// Posizione impostata a true, per indicare che adesso è occupata da un bunker
@@ -196,7 +196,7 @@ void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angol
 	float vita = 50;
 	float danno = 12;
 
-	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_1.png", "Texture/bunker_1d.png", coordinate, dimensione, angolo);
+	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_2.png", "Texture/bunker_2d.png", coordinate, dimensione, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_ = new BunkerNode();
@@ -216,7 +216,7 @@ void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, flo
 	float vita = 70;
 	float danno = 16;
 
-	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_s_1.png", "Texture/bunker_s_1d.png", coordinate, dimensione, angolo);
+	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_s_2.png", "Texture/bunker_s_2d.png", coordinate, dimensione, angolo);
 
 	if (bunker_ == nullptr) {
 		bunker_stronger_ = new BunkerStrongerNode();

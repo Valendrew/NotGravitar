@@ -1,5 +1,5 @@
 #include "schermata_scritte.h"
-
+#include <iostream>
 
 
 
@@ -22,13 +22,23 @@ schermata_scritte::schermata_scritte(int LARGHEZZA, int ALTEZZA) :
 	carburante_text_.setPosition(sf::Vector2f(vita_text_.getPosition().x + vita_text_.getGlobalBounds().width + distanzaPunteggioVita, 0));
 }
 
-void schermata_scritte::aggiornaTesto(const char stringa[], int valore) {
+
+void schermata_scritte::aggiornaTesto(const char stringa[], float valore) {
 
 	char valoreToString[10];
+	char parteDecimaleToString[10];
 	char stringaCompleta[100];
+
+	
+
+	
+
 	_itoa_s(valore, valoreToString, 10, 10);
+	
+
 	strcpy_s(stringaCompleta, stringa);
 	strcat_s(stringaCompleta, valoreToString);
+
 	
 	if (strcmp(stringa, "VITA: ") == 0) {
 		vita_text_.setString(stringaCompleta);
@@ -37,6 +47,11 @@ void schermata_scritte::aggiornaTesto(const char stringa[], int valore) {
 		punteggio_text_.setString(stringaCompleta);
 	}
 	else if (strcmp(stringa, "CARBURANTE: ") == 0) {
+
+		int parteDecimale = (valore - (int)valore) * 100;
+		_itoa_s(parteDecimale, parteDecimaleToString, 10, 10);
+		strcat_s(stringaCompleta, ",");
+		strcat_s(stringaCompleta, parteDecimaleToString);
 		carburante_text_.setString(stringaCompleta);
 	}
 

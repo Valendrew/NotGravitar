@@ -17,7 +17,7 @@ private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
-	Proiettile(sf::Vector2f dimensione, sf::Vector2f posizione, float angolo, float velocita, float danno);
+	Proiettile(sf::Vector2f dimensione, sf::Vector2f posizione, float angolo, float velocita, float danno, sf::Color colore);
 	Proiettile();
 	void setDistrutto();
 	float getDanno();

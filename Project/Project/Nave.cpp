@@ -11,6 +11,7 @@ Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float
 	velocita_movimento_ = velocita_movimento;
 	velocita_attuale_movimento_ = 0.0f;
 	velocita_rotazione_ = velocita_rotazione;
+	colore_proiettile_ = sf::Color(32, 181, 98);
 
 	raggio_.setPointCount(4);
 	raggio_.setPoint(0, sf::Vector2f(-dimensione.x, 0));
@@ -29,6 +30,7 @@ Nave::Nave() : Comportamento() {
 	velocita_movimento_ = 100.f;
 	velocita_attuale_movimento_ = 0.0f;
 	velocita_rotazione_ = 10.f;
+	colore_proiettile_ = sf::Color(0, 113, 0, 255);
 
 	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
 }
@@ -55,19 +57,18 @@ void Nave::ruotaDestra()
 void Nave::spara()
 {
 	float angolo = getRotation();
-	float velocita = 2.f;
 
-	if (clock_.getElapsedTime().asMilliseconds() > 400) {
+	if (clock_.getElapsedTime().asMilliseconds() > 300) {
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {
 			proiettili_ = new ProiettileNode();
-			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			proiettili_->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita_sparo_, danno_, colore_proiettile_); //crea una nuovo proiettile e lo mette in cima alla lista
 			proiettili_->next = nullptr;
 		}
 		else {
 			proiettile_ptr p = new ProiettileNode;
-			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita, danno_); //crea una nuovo proiettile e lo mette in cima alla lista
+			p->proiettile = new Proiettile(sf::Vector2f(5.f, 5.f), entita_.getPosition(), angolo, velocita_sparo_, danno_, colore_proiettile_); //crea una nuovo proiettile e lo mette in cima alla lista
 			p->next = proiettili_;
 			proiettili_ = p;
 		}
@@ -75,7 +76,7 @@ void Nave::spara()
 	}
 }
 
-int Nave::getCarburante() {
+float Nave::getCarburante() {
 	return carburante_;
 }
 
@@ -133,6 +134,7 @@ void Nave::muovi(sf::Time deltaTime, bool movimento) {
 				velocita_attuale_movimento_ += accelerazione;
 			else
 				velocita_attuale_movimento_ = velocita_movimento_;
+			carburante_ -= carburante_movimento_;
 		}
 		else {
 			if (velocita_attuale_movimento_ >= accelerazione)
@@ -148,8 +150,6 @@ void Nave::muovi(sf::Time deltaTime, bool movimento) {
 		float velY = deltaTime.asSeconds() * -velocita_attuale_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 
 		entita_.move(velX, velY);
-
-		carburante_ -= carburante_movimento_;
 	}
 }
 

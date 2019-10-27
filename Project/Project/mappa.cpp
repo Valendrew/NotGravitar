@@ -46,11 +46,12 @@ Mappa::Mappa(int larghezza_finestra, int altezza_finestra) {
 	//entita_.setSize(sf::Vector2f(width_, height_));
 
 	// texture dell'oggetto
-	if (!texture_.loadFromFile("Texture/universo.jpg")) {
+	if (!texture_.loadFromFile("Texture/universo_1.png")) {
 
 	}
 	texture_.setRepeated(true);
 	sfondo_ = sf::Sprite(texture_, sf::IntRect(0, 0, larghezza_finestra, altezza_finestra));
+	//sfondo_.setScale(sf::Vector2f(2, 2));
 
 	srand(time(0));
 
