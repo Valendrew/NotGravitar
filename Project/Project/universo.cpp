@@ -267,10 +267,13 @@ void Universo::uscitaPianeta() {
 	pianetaAttuale = nullptr;
 }
 
-void Universo::controlloRaggio(sf::ConvexShape raggio)
+Oggetto Universo::controlloRaggio(sf::ConvexShape raggio)
 {
 	if (pianetaAttuale != NULL)
-		(*pianetaAttuale).pianeta_->controlloRaggio(raggio);
+		return (*pianetaAttuale->pianeta_).controlloRaggio(raggio);
+	else {
+		return Oggetto();
+	}
 }
 
 int Universo::controlloProiettili(proiettile_ptr lista_proiettili)

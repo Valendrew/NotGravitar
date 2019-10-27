@@ -201,10 +201,13 @@ int Mappa::controlloProiettili(proiettile_ptr lista_proiettili)
 	return (*posizione_attuale_->universo).controlloProiettili(lista_proiettili);
 }
 
-void Mappa::controlloRaggio(sf::ConvexShape raggio)
+Oggetto Mappa::controlloRaggio(sf::ConvexShape raggio)
 {
 	if (posizione_attuale_ != NULL)
-		(*posizione_attuale_).universo->controlloRaggio(raggio);
+		return (*posizione_attuale_->universo).controlloRaggio(raggio);
+	else {
+		return Oggetto();
+	}
 }
 
 

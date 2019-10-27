@@ -25,11 +25,38 @@ Oggetto::Oggetto(const char tipo[], const char nomeFile[],sf::Vector2f pos, floa
 	entita_.setOrigin(0, 0 + size.y);
 }
 
-Oggetto::Oggetto() {}
+Oggetto::Oggetto() {
+	tipo_ = BENZINA_BEST;
+	capacita_ = 0;
+}
 
-Oggetto::tipologia Oggetto::getTipologia()
+void Oggetto::copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[])
 {
-	return tipo_;
+	int i = 0;
+	while (stringa_da_copiare[i] != '\0')
+	{
+		stringa[i] = stringa_da_copiare[i];
+		i++;
+	}
+	stringa[i] = '\0';
+}
+
+void Oggetto::getTipologia(char tipologia_[])
+{
+	
+	if (tipo_ == CUORE) {
+		char stringa_oggetto[] = "CUORE";
+		copiaStringa(tipologia_, 50, stringa_oggetto);
+	}
+	else if (tipo_ == BENZINA) {
+		char stringa_oggetto[] = "BENZINA";
+		copiaStringa(tipologia_, 50, stringa_oggetto);
+	}
+	else if (tipo_ == BENZINA_BEST) {
+		char stringa_oggetto[] = "BENZINA_BEST";
+		copiaStringa(tipologia_, 50, stringa_oggetto);
+	}
+		
 }
 
 float Oggetto::getCapacita()

@@ -50,7 +50,7 @@ void schermata_scritte::aggiornaTesto(const char stringa[], float valore) {
 
 		int parteDecimale = (valore - (int)valore) * 100;
 		_itoa_s(parteDecimale, parteDecimaleToString, 10, 10);
-		strcat_s(stringaCompleta, ",");
+		strcat_s(stringaCompleta, ".");
 		strcat_s(stringaCompleta, parteDecimaleToString);
 		carburante_text_.setString(stringaCompleta);
 	}

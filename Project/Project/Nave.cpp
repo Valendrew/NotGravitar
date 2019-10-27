@@ -80,12 +80,14 @@ float Nave::getCarburante() {
 	return carburante_;
 }
 
-void Nave::setCarburante(int carburante_) {
-	carburante_ = carburante_;
+void Nave::setCarburante(int carbu_) {
+	carburante_ = carbu_;
 }
 
-void Nave::riempiCarburante(int carburante) {
-	carburante_ += carburante;
+void Nave::riempiCarburante(float carburante) {
+	if(carburante_ + carburante > 10)
+	carburante_ = 10;
+	else carburante_ += carburante;
 }
 
 void Nave::aggiornaRaggio()
@@ -171,6 +173,12 @@ void Nave::passaggioAmbiente(sf::Vector2f posizione)
 
 void Nave::setDannoCollisione() {
 	diminuisciVita(5.0f);
+}
+
+void Nave::aggiungiVita(int vita_aggiunta) {
+	if (vita_ + vita_aggiunta > 100)
+		vita_ = 100;
+	else vita_ += vita_aggiunta;
 }
 
 sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghezza/2 generici

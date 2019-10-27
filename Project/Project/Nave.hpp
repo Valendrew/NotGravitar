@@ -31,7 +31,7 @@ public:
 
 	float getCarburante();
 	void setCarburante(int carburante);
-	void riempiCarburante(int carburante);
+	void riempiCarburante(float carburante);
 
 	void aggiornaRaggio();
 	sf::ConvexShape getRaggio();
@@ -43,6 +43,7 @@ public:
 	void passaggioAmbiente(sf::Vector2f posizione);
 	void setDannoCollisione();
 
+	void aggiungiVita(int vita_aggiunta);
 	sf::Vector2f getPosition();
 	void setPosition(sf::Vector2f pos);
 	proiettile_ptr getProiettili();

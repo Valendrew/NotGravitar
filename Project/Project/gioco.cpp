@@ -134,7 +134,22 @@ void Gioco::controlloSparo()
 void Gioco::controlloRaggio()
 {
 	nave_.attivaRaggio(nave_raggio_);
-	if (nave_raggio_) mappa_.controlloRaggio(nave_.getRaggio());
+
+	if (nave_raggio_) {
+
+		Oggetto oggetto_assorbito;
+		oggetto_assorbito = mappa_.controlloRaggio(nave_.getRaggio());
+
+		char stringa_oggetto[15];
+		oggetto_assorbito.getTipologia(stringa_oggetto);
+
+		if (strcmp(stringa_oggetto, "CUORE") == 0) {
+			nave_.aggiungiVita(oggetto_assorbito.getCapacita());
+		}
+		else {
+			nave_.riempiCarburante(oggetto_assorbito.getCapacita());
+		}
+	}
 }
 
 void Gioco::controlloPassaggioUniverso()

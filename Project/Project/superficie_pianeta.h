@@ -81,7 +81,7 @@ public:
 	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	int controlloProiettili(proiettile_ptr lista_proiettili);
-	void controlloRaggio(sf::ConvexShape raggio);
+	Oggetto controlloRaggio(sf::ConvexShape raggio);
 	bool isDistrutta();
 	int getNumeroBunker();
 };

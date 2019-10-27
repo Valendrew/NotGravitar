@@ -62,7 +62,7 @@ public:
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	proiettile_ptr getProiettili();
 
-	void controlloRaggio(sf::ConvexShape raggio);
+	Oggetto controlloRaggio(sf::ConvexShape raggio);
 
 	void uscitaPianeta();
 	int controlloProiettili(proiettile_ptr lista_proiettili);

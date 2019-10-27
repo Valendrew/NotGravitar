@@ -232,7 +232,7 @@ void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, flo
 }
 
 void SuperficiePianeta::generaBenzina() {
-	int tipologia_benzina = rand() % 100 + 1;
+	int tipologia_oggetto = rand() % 100 + 1;
 	sf::Vector2f size(42, 35);
 	
 	int index;
@@ -246,13 +246,13 @@ void SuperficiePianeta::generaBenzina() {
 	}
 
 
-	if (tipologia_benzina > 30 && tipologia_benzina < 60) {
+	if (tipologia_oggetto > 30 && tipologia_oggetto < 60) {
 		aggiungiOggetto(index, BENZINA, size);
 	}
-	else if (tipologia_benzina >= 60 && tipologia_benzina < 85) {
+	else if (tipologia_oggetto >= 60 && tipologia_oggetto < 85) {
 		aggiungiOggetto(index, BENZINA_BEST, size);
 	}
-	else if (tipologia_benzina >= 85) {
+	else if (tipologia_oggetto >= 85) {
 		aggiungiOggetto(index, CUORE, size);
 	}
 }
@@ -513,8 +513,10 @@ bool SuperficiePianeta::intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vecto
 	return false;
 
 }
-void SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
+Oggetto SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
 {
+	Oggetto oggetto_assorbito = Oggetto();
+
 	if (oggetto_bonus != NULL) {
 		int i = 0;
 		sf::Vector2f a = raggio.getTransform().transformPoint(raggio.getPoint(0));
@@ -533,10 +535,11 @@ void SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
 		if (intersezione(d, a, posBenzina, posBenzina2)) i++;
 
 		if (i == 1) {
-			//TODO: uso i poteri dell'oggetto
+			oggetto_assorbito = *oggetto_bonus;
 			oggetto_bonus = NULL;
 		}
 	}
+	return oggetto_assorbito;
 
 }
 
