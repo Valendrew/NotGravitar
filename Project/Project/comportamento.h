@@ -24,7 +24,6 @@ protected:
 
 	sf::RectangleShape entita_;
 	sf::Texture texture_;
-	sf::Texture texture_distrutto_;
 
 	sf::Clock clock_;
 	proiettile_ptr proiettili_;
@@ -35,20 +34,17 @@ public:
 		const char nomeFile[], const char nomeFileDistrutto[], sf::Vector2f posizione, sf::Vector2f dimensione, float angolo_rotazione);
 	Comportamento();
 
-	void restart(float vita, sf::Vector2f posizione, float angolo_rotazione, bool distrutto);
-
-	sf::Vector2f getPosition();
-	void setPosition(sf::Vector2f pos);
+	sf::Vector2f getPosizione();
+	void setPosizione(sf::Vector2f pos);
 	sf::FloatRect getGlobalBounds();
-	sf::Vector2f getSize();
+	sf::Vector2f getDimensione();
 
 	float getRotation();
 	void setRotation(float rotazione);
 
-	int controlloProiettili(proiettile_ptr lista_proiettili);
+	void controlloProiettili(proiettile_ptr lista_proiettili);
 	proiettile_ptr eliminaProiettile(proiettile_ptr p);
 	void eliminaProiettiliBordo();
-	void resetProiettili();
 
 	float getVita();
 	bool getDistrutto();
