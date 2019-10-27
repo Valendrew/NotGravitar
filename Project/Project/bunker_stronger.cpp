@@ -3,7 +3,7 @@
 
 void BunkerStronger::spara()
 {
-	if (clock_.getElapsedTime().asMilliseconds() > 2000 && !distrutto_) {
+	if (clock_.getElapsedTime().asMilliseconds() > 1500 && !distrutto_) {
 		clock_.restart();
 
 		sf::Vector2f posizione(entita_.getPosition().x, entita_.getPosition().y - entita_.getSize().y);

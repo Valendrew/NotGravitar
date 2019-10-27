@@ -39,21 +39,21 @@ void Universo::ottieniTipologiaPianeta(char tipologia[], char texture[])
 	{
 	case 0: {
 		char tipo_copy[] = "ACQUA";
-		char texture_copy[] = "Texture/pianeta_acqua.png";
+		char texture_copy[] = "Texture/pianeta_acqua_1.png";
 
 		copiaStringa(tipologia, 50, tipo_copy);
 		copiaStringa(texture, 50, texture_copy);
 	} break;
 	case 1: {
 		char tipo_copy[] = "FUOCO";
-		char texture_copy[] = "Texture/pianeta_fuoco.png";
+		char texture_copy[] = "Texture/pianeta_fuoco_1.png";
 
 		copiaStringa(tipologia, 50, tipo_copy);
 		copiaStringa(texture, 50, texture_copy);
 	} break;
 	case 2: {
 		char tipo_copy[] = "ERBA";
-		char texture_copy[] = "Texture/pianeta_erba.png";
+		char texture_copy[] = "Texture/pianeta_erba_1.png";
 
 		copiaStringa(tipologia, 50, tipo_copy);
 		copiaStringa(texture, 50, texture_copy);

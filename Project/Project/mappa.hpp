@@ -5,7 +5,6 @@
 
 class Mappa : public sf::Drawable, public sf::Transformable  {
 protected:
-	//sf::RectangleShape entita_;
 	sf::Sprite sfondo_;
 	sf::Texture texture_;
 	int larghezza_finestra_;

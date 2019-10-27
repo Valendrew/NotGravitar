@@ -6,11 +6,11 @@ void Pianeta::generaSuperficie()
 	sf::Color colore_superficie;
 	switch (tipo_pianeta_)
 	{
-	case 0: colore_superficie = sf::Color(66, 165, 245);
+	case 0: colore_superficie = sf::Color(66, 191, 232);
 		break;
-	case 1: colore_superficie = sf::Color(255, 112, 67);
+	case 1: colore_superficie = sf::Color(185, 69, 29);
 		break;
-	case 2: colore_superficie = sf::Color(102, 187, 106);
+	case 2: colore_superficie = sf::Color(66, 164, 89);
 		break;
 	default:
 		colore_superficie == sf::Color::Magenta;
@@ -184,8 +184,6 @@ bool Pianeta::getDistrutto()
 {  
 	return *distrutto_;
 }
-
-
 
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 {

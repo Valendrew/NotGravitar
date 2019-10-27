@@ -11,7 +11,7 @@ Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float
 	velocita_movimento_ = velocita_movimento;
 	velocita_attuale_movimento_ = 0.0f;
 	velocita_rotazione_ = velocita_rotazione;
-	colore_proiettile_ = sf::Color(0, 113, 0, 255);
+	colore_proiettile_ = sf::Color(32, 181, 98);
 
 	// viene impostato il punto di origine 
 	entita_.setOrigin(sf::Vector2f(dimensione.x / 2.f, dimensione.y / 2.f));
@@ -41,7 +41,7 @@ void Nave::spara()
 {
 	float angolo = getRotation();
 
-	if (clock_.getElapsedTime().asMilliseconds() > 400) {
+	if (clock_.getElapsedTime().asMilliseconds() > 300) {
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {

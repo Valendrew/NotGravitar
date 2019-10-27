@@ -2,7 +2,7 @@
 
 void Bunker::spara()
 {
-	if (clock_.getElapsedTime().asMilliseconds() > 1600 && !distrutto_) {
+	if (clock_.getElapsedTime().asMilliseconds() > 1200 && !distrutto_) {
 		clock_.restart();
 		
 		sf::Vector2f posizione(entita_.getPosition().x, entita_.getPosition().y - entita_.getSize().y);
@@ -61,6 +61,10 @@ proiettile_ptr Bunker::getProiettili()
 
 void Bunker::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
+	if (distrutto_ && !mostra_esplosione_) {
+		target.draw(esplosione_);
+	}
+
 	target.draw(vita_rimanente_);
 	target.draw(vita_eliminta_);
 }
