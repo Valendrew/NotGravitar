@@ -31,9 +31,9 @@ protected:
 	coordinate dimensioni_celle_;
 
 	bool visitato_;
-	bool* distrutto_;
+	bool distrutto_;
 	int id_pianeta_;
-	int* numPianetiPrecedenti;
+	int numPianetiPrecedenti;
 
 	void generaPianeti();
 	void ottieniTipologiaPianeta(char tipologia[], char texture[]);

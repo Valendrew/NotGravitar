@@ -107,12 +107,10 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	generaSuperficie();
 
 	superficie_ptr superficie_tmp = superficie_head_;
-	numero_bunker_precedenti = new int();
-	*numero_bunker_precedenti = 0;
 
 	while (superficie_tmp != nullptr) {
 
-		*numero_bunker_precedenti += (*superficie_tmp->superficie_item).getNumeroBunker();
+		numero_bunker_precedenti += (*superficie_tmp->superficie_item).getNumeroBunker();
 		superficie_tmp = superficie_tmp->next;
 	}
 
@@ -145,9 +143,9 @@ bool Pianeta::distruzioneSingoloBunker()
 	int bunker_rimanenti_ = bunkerRimanenti();
 	//il controllo != 0 è presente poiche se il numero di bunker rimanenti è 0 siamo nel caso in cui l'intero pianeta è distrutto
 
-	if (bunker_rimanenti_ != 0 && bunker_rimanenti_ < *numero_bunker_precedenti) {
+	if (bunker_rimanenti_ != 0 && bunker_rimanenti_ < numero_bunker_precedenti) {
 		distrutto = true;
-        *numero_bunker_precedenti = bunker_rimanenti_;
+        numero_bunker_precedenti = bunker_rimanenti_;
 	}
 
 	return distrutto;
