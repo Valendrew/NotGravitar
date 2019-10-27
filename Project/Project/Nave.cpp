@@ -101,6 +101,7 @@ void Nave::muovi(sf::Time deltaTime, bool movimento) {
 				velocita_attuale_movimento_ += accelerazione;
 			else
 				velocita_attuale_movimento_ = velocita_movimento_;
+			carburante_ -= carburante_movimento_;
 		}
 		else {
 			if (velocita_attuale_movimento_ >= accelerazione)
@@ -116,8 +117,6 @@ void Nave::muovi(sf::Time deltaTime, bool movimento) {
 		float velY = deltaTime.asSeconds() * -velocita_attuale_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 
 		entita_.move(velX, velY);
-
-		carburante_ -= carburante_movimento_;
 	}
 }
 
