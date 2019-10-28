@@ -13,6 +13,9 @@ Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float
 	velocita_rotazione_ = velocita_rotazione;
 	colore_proiettile_ = sf::Color(32, 181, 98);
 
+	/*creazione del raggio traente come convex shape di forma
+	trapezoidale con la base minore della larghezza della
+	dimensione della shape della nave*/
 	raggio_.setPointCount(4);
 	raggio_.setPoint(0, sf::Vector2f(-dimensione.x, 0));
 	raggio_.setPoint(1, sf::Vector2f(0, 0));
@@ -21,7 +24,7 @@ Nave::Nave(unsigned int larghezza_finestra, unsigned int altezza_finestra, float
 	raggio_.setPosition(getPosition());
 	raggio_.setFillColor(sf::Color(0, 255, 255, 100));
 
-	// viene impostato il punto di origine 
+	// viene impostato il punto di origine al centro per ruotare correttamente
 	entita_.setOrigin(sf::Vector2f(dimensione.x / 2.f, dimensione.y / 2.f));
 }
 
@@ -32,12 +35,13 @@ Nave::Nave() : Comportamento() {
 	velocita_rotazione_ = 10.f;
 	colore_proiettile_ = sf::Color(0, 113, 0, 255);
 
-	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f));
+	entita_.setOrigin(sf::Vector2f(25 / 2.f, 25 / 2.f)); 
 }
 
 void Nave::drawComportamento(sf::RenderTarget& target, sf::RenderStates states)
 {
 	Comportamento::drawComportamento(target, states);
+	//disegna e aggiorna il raggio traente
 	if (raggio_attivato_) {
 		aggiornaRaggio();
 		target.draw(raggio_);
@@ -57,8 +61,8 @@ void Nave::ruotaDestra()
 void Nave::spara()
 {
 	float angolo = getRotation();
-
-	if (clock_.getElapsedTime().asMilliseconds() > 300) {
+	/*aggiunge alla lista proiettili un nuovo proiettile*/
+	if (clock_.getElapsedTime().asMilliseconds() > 300) { //proiettili creati a non meno di 300 ms uno dall'altro
 		clock_.restart();
 
 		if (proiettili_ == nullptr) {
@@ -93,7 +97,7 @@ void Nave::riempiCarburante(float carburante) {
 void Nave::aggiornaRaggio()
 {
 	raggio_.setPosition(getPosition());
-	raggio_.setRotation(getRotation() + 180);
+	raggio_.setRotation(getRotation() + 180); //raggio ruotato di 180 per poterlo vedere davanti alla nave
 }
 
 sf::ConvexShape Nave::getRaggio()
@@ -108,6 +112,8 @@ void Nave::attivaRaggio(bool attiva)
 
 sf::VertexArray Nave::getPosizioneFrontale()
 {
+	/*calcola la posizione frontale della nave,
+	la posizione "originale" è stata settata al centro*/
 	sf::VertexArray vertex(sf::Points, 2);
 
 	float angolo = entita_.getRotation();
@@ -122,10 +128,13 @@ sf::VertexArray Nave::getPosizioneFrontale()
 }
 
 void Nave::muovi(sf::Time deltaTime, bool movimento) {
+	
 	if (carburante_ <= 0) {
 		Comportamento::setDistrutto();
 	}
 	else {
+		/*velocità modificata accellerando (fino a un massimo)
+		o decellerando (fino a 0)*/
 		float accelerazione = 2.5f;
 		cambiaTextureMovimento(movimento);
 		if (movimento) {
@@ -142,10 +151,9 @@ void Nave::muovi(sf::Time deltaTime, bool movimento) {
 				velocita_attuale_movimento_ = 0.0f;
 		}
 		
-
-		//float velX = deltaTime.asSeconds() * velocita_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
+		/*velocità calcolata rispetto al deltaTime dell'ultima 
+		chiamata, per evitare possibili rallentamenti*/
 		float velX = deltaTime.asSeconds() * velocita_attuale_movimento_ * sin(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse x calcolato rispetto al seno
-		//float velY = deltaTime.asSeconds() * -velocita_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 		float velY = deltaTime.asSeconds() * -velocita_attuale_movimento_ * cos(entita_.getRotation()*PI_G / 180.f); // movimento da fare sull'asse y calcolato rispetto al coseno
 
 		entita_.move(velX, velY);
