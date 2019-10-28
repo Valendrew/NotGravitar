@@ -3,14 +3,16 @@
 
 void Pianeta::generaSuperficie()
 {
+	/* Viene assegnato un colore alle superfici in base
+	alla tipologia del pianeta (acqua, fuoco, erba) */
 	sf::Color colore_superficie;
 	switch (tipo_pianeta_)
 	{
-	case 0: colore_superficie = sf::Color(66, 191, 232);
+	case ACQUA: colore_superficie = sf::Color(66, 191, 232);
 		break;
-	case 1: colore_superficie = sf::Color(232, 138, 54);
+	case FUOCO: colore_superficie = sf::Color(232, 138, 54);
 		break;
-	case 2: colore_superficie = sf::Color(66, 164, 89);
+	case ERBA: colore_superficie = sf::Color(66, 164, 89);
 		break;
 	default:
 		colore_superficie == sf::Color::Magenta;
@@ -74,7 +76,7 @@ int Pianeta::bunkerRimanenti() {
 	return bunker_rimanenti;
 }
 
-Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[]) {
+Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]) {
 
 	id_ = id;
 	pianeta_.setRadius(40.0);
@@ -96,6 +98,7 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	texture_.loadFromFile(texture);
 	pianeta_.setTexture(&texture_);
 
+	texture_distrutto_.loadFromFile(texture_distrutto);
 
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
@@ -117,7 +120,7 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	superficie_attuale_ = superficie_tail_;
 }
 
-Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720, "ACQUA", "/Texture/acqua.png") {}
+Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720, "ACQUA", "/Texture/acqua.png", "/Texture/acqua_d.png") {}
 
 float Pianeta::getRaggio() {
 	return pianeta_.getRadius();
@@ -135,10 +138,7 @@ sf::FloatRect Pianeta::getGlobalBounds()
 
 void Pianeta::cambiaColore() {
 	
-	if (tipo_pianeta_ == ACQUA) {
-		texture_.loadFromFile("Texture/pianeta_acqua_1_distrutto.png");
-		pianeta_.setTexture(&texture_);
-	}
+	pianeta_.setTexture(&texture_distrutto_);
 }
 
 bool Pianeta::distruzioneSingoloBunker()

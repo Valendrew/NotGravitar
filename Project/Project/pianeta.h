@@ -19,6 +19,7 @@ protected:
 	int numero_bunker_precedenti;
 	sf::CircleShape pianeta_;
 	sf::Texture texture_;
+	sf::Texture texture_distrutto_;
 	TipologiaPianeta tipo_pianeta_;
 
 	int numero_superfici_;
@@ -40,7 +41,7 @@ protected:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public: 
-	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[]);
+	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]);
 	Pianeta();
 	float getRaggio();
 

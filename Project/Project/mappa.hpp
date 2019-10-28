@@ -22,10 +22,10 @@ protected:
 	listaUniversi posizione_attuale_; //puntatore  dove si trova l'astronave
 	listaUniversi universo_di_gioco_;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
 
-	listaUniversi addUniverso(int x, int y); //addUniveso aggiunge un universo con coordinate x,y alla lista di universi
-	bool* statoAttacco;
+	listaUniversi aggiungiUniverso(int x, int y); //addUniveso aggiunge un universo con coordinate x,y alla lista di universi
+	bool* stato_attacco;
 	//findUniversi cerca un universo con coordinate x,y all'interno della lista e lo resistuisce (ritorna NULL se non lo trova)
-	listaUniversi findUniverso(int x, int y);
+	listaUniversi cercaUniverso(int x, int y);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
 	Mappa(int larghezza_finestra, int altezza_finestra);
@@ -37,7 +37,7 @@ public:
 	void uscitaPianeta();
 	/*spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
 	adiacenti a quello attuale */
-	bool spostamento(int direzione);
+	bool spostamentoUniverso(int direzione);
 	bool ricercaPianeta(sf::Vector2f posizione);
 
 	proiettile_ptr getProiettili();
@@ -45,10 +45,10 @@ public:
 
 	Oggetto controlloRaggio(sf::ConvexShape raggio);
 
-	void restart(int width_, int height_);
 	bool aggiornaPunteggioBunker();
 	bool aggiornaPunteggioPianeta();
 	bool aggiornaPunteggioUniverso();
+	void restart(int width_, int height_);
 };
 
 #endif

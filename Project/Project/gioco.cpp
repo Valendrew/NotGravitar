@@ -171,7 +171,7 @@ void Gioco::controlloPassaggioUniverso()
 
 	if (direzione_universo != -1) {
 		// Se è possibile spostare la navicella in un altro universo
-		if (mappa_.spostamento(direzione_universo)) {
+		if (mappa_.spostamentoUniverso(direzione_universo)) {
 			switch (direzione_universo)
 			{
 			case 0: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getSize().y));

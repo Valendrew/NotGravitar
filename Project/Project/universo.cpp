@@ -13,10 +13,11 @@ void Universo::generaPianeti() {
 			{
 				char tipologia_pianeta[50];
 				char texture_pianeta[50];
+				char texture_pianeta_distrutto[50];
 
-				ottieniTipologiaPianeta(tipologia_pianeta, texture_pianeta);
+				ottieniTipologiaPianeta(tipologia_pianeta, texture_pianeta, texture_pianeta_distrutto);
 
-				Pianeta* pi = new Pianeta(id_pianeta_, sf::Vector2f(spawn_x, spawn_y), larghezza_finestra_, altezza_finestra_, tipologia_pianeta, texture_pianeta);
+				Pianeta* pi = new Pianeta(id_pianeta_, sf::Vector2f(spawn_x, spawn_y), larghezza_finestra_, altezza_finestra_, tipologia_pianeta, texture_pianeta, texture_pianeta_distrutto);
 				id_pianeta_++;
 
 				headInsert(pi);
@@ -31,7 +32,7 @@ void Universo::generaPianeti() {
 	}
 }
 
-void Universo::ottieniTipologiaPianeta(char tipologia[], char texture[])
+void Universo::ottieniTipologiaPianeta(char tipologia[], char texture[], char texture_d[])
 {
 	int tipo = rand() % 3;
 
@@ -40,23 +41,29 @@ void Universo::ottieniTipologiaPianeta(char tipologia[], char texture[])
 	case 0: {
 		char tipo_copy[] = "ACQUA";
 		char texture_copy[] = "Texture/pianeta_acqua_1.png";
+		char texture_d_copy[] = "Texture/pianeta_acqua_1d.png";
 
 		copiaStringa(tipologia, 50, tipo_copy);
 		copiaStringa(texture, 50, texture_copy);
+		copiaStringa(texture_d, 50, texture_d_copy);
 	} break;
 	case 1: {
 		char tipo_copy[] = "FUOCO";
 		char texture_copy[] = "Texture/pianeta_fuoco_1.png";
+		char texture_d_copy[] = "Texture/pianeta_fuoco_1d.png";
 
 		copiaStringa(tipologia, 50, tipo_copy);
 		copiaStringa(texture, 50, texture_copy);
+		copiaStringa(texture_d, 50, texture_d_copy);
 	} break;
 	case 2: {
 		char tipo_copy[] = "ERBA";
 		char texture_copy[] = "Texture/pianeta_erba_1.png";
+		char texture_d_copy[] = "Texture/pianeta_erba_1d.png";
 
 		copiaStringa(tipologia, 50, tipo_copy);
 		copiaStringa(texture, 50, texture_copy);
+		copiaStringa(texture_d, 50, texture_d_copy);
 	} break;
 	default:
 		break;
@@ -185,7 +192,6 @@ bool Universo::distrutto() {
 	bool distrutto = true;
 	listaPianeti lista_pianeti_tmp = lista_Pianeti;
 
-
 	if (!(distrutto_)) {
 
 		while (lista_pianeti_tmp != nullptr && distrutto) {
@@ -210,7 +216,6 @@ bool Universo::getDistrutto()
 {
 	return distrutto_;
 }
-
 
 bool Universo::aggiornaPunteggioBunker()
 {

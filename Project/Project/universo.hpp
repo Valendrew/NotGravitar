@@ -36,7 +36,7 @@ protected:
 	int numPianetiPrecedenti;
 
 	void generaPianeti();
-	void ottieniTipologiaPianeta(char tipologia[], char texture[]);
+	void ottieniTipologiaPianeta(char tipologia[], char texture[], char texture_d[]);
 	void copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[]);
 
 	listaPianeti pianetaAttuale;
