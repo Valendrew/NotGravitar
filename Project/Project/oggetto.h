@@ -9,12 +9,11 @@ class Oggetto : public sf::Drawable, public sf::Transformable {
 private:
 	
 	enum tipologia {
-		BENZINA = 4,
-		BENZINA_BEST = 8,
-		CUORE = 100
+		BENZINA = 3,
+		BENZINA_BEST = 6,
+		CUORE = 60
 	};
 	float capacita_;
-	char nomeFile_[50];
 
 	tipologia tipo_;
 	sf::RectangleShape entita_;

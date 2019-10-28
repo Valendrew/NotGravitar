@@ -19,8 +19,8 @@ private:
 public:
 	schermata_scritte(int LARGHEZZA, int ALTEZZA);
 	void aggiornaTesto(const char stringa[], float valore);
-	void SetGameOver();
-	void SetPausa();
+	void setGameOver();
+	void setPausa();
 	
 	Testo getExit();
 	Testo getStart();

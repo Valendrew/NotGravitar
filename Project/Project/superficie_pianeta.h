@@ -18,6 +18,7 @@ protected:
 	// larghezza e altezza della finestra
 	int larghezza_finestra_;
 	int altezza_finestra_;
+	bool distrutta_;
 	int altezza_massima_; // altezza massima di generazione della superficie
 	int altezza_minima_;
 	Oggetto *oggetto_bonus;
@@ -64,7 +65,7 @@ protected:
 	void generaBenzina();
 	void copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[]);
 	bool intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2);
-
+	void isDistrutta();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:	
 	
@@ -82,7 +83,7 @@ public:
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	int controlloProiettili(proiettile_ptr lista_proiettili);
 	Oggetto controlloRaggio(sf::ConvexShape raggio);
-	bool isDistrutta();
+	bool getDistrutta();
 	int getNumeroBunker();
 };
 #endif // !SUPERFICIE_PIANETA_H

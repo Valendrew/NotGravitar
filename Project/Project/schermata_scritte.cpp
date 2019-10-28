@@ -57,7 +57,7 @@ void schermata_scritte::aggiornaTesto(const char stringa[], float valore) {
 
 }
 
-void schermata_scritte::SetGameOver()
+void schermata_scritte::setGameOver()
 {
 	start_.setString("RESTART");
 	subtitle_.setString("GAME OVER");
@@ -66,7 +66,7 @@ void schermata_scritte::SetGameOver()
 	start_.setPosition(sf::Vector2f(LARGHEZZA_ / 2 - start_.getGlobalBounds().width / 2, ALTEZZA_ / 2));
 }
 
-void schermata_scritte::SetPausa() {
+void schermata_scritte::setPausa() {
 	start_.setString("RESUME");
 	start_.setPosition(sf::Vector2f(LARGHEZZA_ / 2 - start_.getGlobalBounds().width / 2, ALTEZZA_ / 2));
 	punteggio_text_.setPosition(sf::Vector2f(LARGHEZZA_ / 2 - punteggio_text_.getGlobalBounds().width / 2, 210));

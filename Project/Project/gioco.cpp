@@ -66,7 +66,7 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 	else if (gestioneMouse == 2) {
 		salva_stato_ = stato_;
 		stato_ = PAUSA;
-		schermataScritte.SetPausa();
+		schermataScritte.setPausa();
 	}
 	
 	
@@ -360,7 +360,7 @@ void Gioco::controlloGameOver() {
 
 	if (nave_.getDistrutto()) {
 		stato_ = GAMEOVER;
-		schermataScritte.SetGameOver();
+		schermataScritte.setGameOver();
 	}
 }
 

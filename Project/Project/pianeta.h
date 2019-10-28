@@ -16,6 +16,7 @@ protected:
 	int larghezza_finestra_;
 	int altezza_finestra_;
 	int id_;
+	bool distrutto_;
 	int numero_bunker_precedenti;
 	sf::CircleShape pianeta_;
 	sf::Texture texture_;
@@ -38,7 +39,7 @@ protected:
 
 	void generaSuperficie();
 	int bunkerRimanenti();
-
+	void isDistrutto();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public: 
 	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]);
@@ -48,9 +49,8 @@ public:
 	sf::Vector2f getPosition();
 	sf::FloatRect getGlobalBounds();
 
-	void cambiaColore();
 	bool distruzioneSingoloBunker();
-	bool isDistrutto();
+	
 	bool getDistrutto();
 	int controlloPassaggioSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f posizione);
@@ -59,5 +59,6 @@ public:
 	proiettile_ptr getProiettili();
 	int controlloProiettili(proiettile_ptr lista_proiettili);
 	void drawSuperficie(sf::RenderTarget& target, sf::RenderStates states);
+	
 };
 #endif // !PIANETA_H

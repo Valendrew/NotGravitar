@@ -22,7 +22,8 @@ protected:
 	int larghezza_finestra_;
 	int altezza_finestra_;
 
-	listaPianeti lista_Pianeti;
+	listaPianeti pianeta_attuale_;
+	listaPianeti lista_pianeti_;
 	int numero_pianeti_;
 
 	bool matrice_spawn_[18][24];
@@ -33,13 +34,11 @@ protected:
 	bool visitato_;
 	bool distrutto_;
 	int id_pianeta_;
-	int numPianetiPrecedenti;
+	int numero_pianeti_precedenti_;
 
 	void generaPianeti();
 	void ottieniTipologiaPianeta(char tipologia[], char texture[], char texture_d[]);
 	void copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[]);
-
-	listaPianeti pianetaAttuale;
 	void headInsert(Pianeta* p);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -56,7 +55,6 @@ public:
 
 	bool aggiornaPunteggioBunker();
 	bool distruzionePianetaAttuale();
-	void cambiaColorePianeta();
 
 	int controlloPassaggioSuperficie(sf::Vector2f pos);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
