@@ -134,7 +134,11 @@ sf::FloatRect Pianeta::getGlobalBounds()
 }
 
 void Pianeta::cambiaColore() {
-	pianeta_.setFillColor(sf::Color(255, 0, 0, 255));
+	
+	if (tipo_pianeta_ == ACQUA) {
+		texture_.loadFromFile("Texture/pianeta_acqua_1_distrutto.png");
+		pianeta_.setTexture(&texture_);
+	}
 }
 
 bool Pianeta::distruzioneSingoloBunker()
