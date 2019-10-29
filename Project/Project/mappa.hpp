@@ -9,7 +9,7 @@ protected:
 	sf::Texture texture_;
 	int larghezza_finestra_;
 	int altezza_finestra_;
-
+	bool stato_attacco_;
 	struct nodoMappa {
 		Universo *universo;
 		coordinate posizione;
@@ -23,7 +23,7 @@ protected:
 	listaUniversi universo_di_gioco_;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
 
 	listaUniversi aggiungiUniverso(int x, int y); //addUniveso aggiunge un universo con coordinate x,y alla lista di universi
-	bool* stato_attacco;
+	
 	//findUniversi cerca un universo con coordinate x,y all'interno della lista e lo resistuisce (ritorna NULL se non lo trova)
 	listaUniversi cercaUniverso(int x, int y);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

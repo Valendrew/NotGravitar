@@ -79,6 +79,7 @@ int Pianeta::bunkerRimanenti() {
 Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]) {
 
 	id_ = id;
+	distrutto_ = false;
 	pianeta_.setRadius(40.0);
 	pianeta_.setPointCount(100);
 	numero_superfici_ = 3;
@@ -136,10 +137,6 @@ sf::FloatRect Pianeta::getGlobalBounds()
 	return pianeta_.getGlobalBounds();
 }
 
-void Pianeta::cambiaColore() {
-	
-	pianeta_.setTexture(&texture_distrutto_);
-}
 
 bool Pianeta::distruzioneSingoloBunker()
 {
@@ -155,7 +152,7 @@ bool Pianeta::distruzioneSingoloBunker()
 	return distrutto;
 }
 
-bool Pianeta::isDistrutto()
+void Pianeta::isDistrutto()
 {
 	bool distrutto = true;
 
@@ -163,18 +160,24 @@ bool Pianeta::isDistrutto()
 
 		while (superficie_head_tmp != nullptr && distrutto) {
 
-			if (!(*superficie_head_tmp->superficie_item).isDistrutta())
+			if (!(*superficie_head_tmp->superficie_item).getDistrutta())
 				distrutto = false;
 
 			superficie_head_tmp = superficie_head_tmp->next;
 		}
-		
-	return distrutto;
+		if (distrutto) {
+			distrutto_ = true;
+			pianeta_.setTexture(&texture_distrutto_);
+		}
+
 }
 
 bool Pianeta::getDistrutto()
 {  
-	return isDistrutto();
+	if (!distrutto_) 
+		isDistrutto();
+
+	return distrutto_;
 }
 
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
@@ -223,7 +226,8 @@ Oggetto Pianeta::controlloRaggio(sf::ConvexShape raggio)
 	if (superficie_attuale_ != nullptr)
 		return (*superficie_attuale_->superficie_item).controlloRaggio(raggio);
 	else {
-		return Oggetto();
+		Oggetto oggetto_nullo("BENZINA", "", sf::Vector2f(), 0, sf::Vector2f());
+		return oggetto_nullo;
 	}
 }
 

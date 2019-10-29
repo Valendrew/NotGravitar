@@ -314,6 +314,8 @@ SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned a
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
 
+	distrutta_ = false;
+
 	/* L'altezza massima della superficie può essere
 	il 30% dell'altezza della finestra*/
 	altezza_massima_ = altezza_finestra_ * 0.70;
@@ -543,7 +545,7 @@ Oggetto SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
 
 }
 
-bool SuperficiePianeta::isDistrutta()
+void SuperficiePianeta::isDistrutta()
 {
 	bool distrutta = true;
 	bunker_ptr bunker_tmp = bunker_;
@@ -563,7 +565,14 @@ bool SuperficiePianeta::isDistrutta()
 
 		bunker_stronger_tmp = bunker_stronger_tmp->next;
 	}
-	return distrutta;
+	if (distrutta) distrutta_ = true;
+}
+
+bool SuperficiePianeta::getDistrutta() {
+	if (!distrutta_)
+		isDistrutta();
+	
+	return distrutta_;
 }
 
 int SuperficiePianeta::getNumeroBunker()
