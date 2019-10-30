@@ -6,10 +6,12 @@
 
 #include <SFML/Graphics.hpp>
 
-struct coordinate {
-	int x;
-	int y;
-};
+
+
+
+class Universo : public sf::Drawable, public sf::Transformable {
+protected:
+
 
 struct nodoPianeta {
 	Pianeta* pianeta_;
@@ -17,19 +19,15 @@ struct nodoPianeta {
 };
 typedef nodoPianeta* listaPianeti;
 
-class Universo : public sf::Drawable, public sf::Transformable {
-protected:
 	int larghezza_finestra_;
 	int altezza_finestra_;
 
 	listaPianeti pianeta_attuale_;
 	listaPianeti lista_pianeti_;
 	int numero_pianeti_;
-
-	bool matrice_spawn_[18][24];
-
-	//Dimensione delle celle dove spawneranno i pianeti rispetto alla grandezza della finestra
-	coordinate dimensioni_celle_;
+	const static int colonne_ = 13;
+	const static int righe_ = 10;
+	bool matrice_spawn_[righe_][colonne_];
 
 	bool visitato_;
 	bool distrutto_;
@@ -60,7 +58,7 @@ public:
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	proiettile_ptr getProiettili();
 
-	Oggetto controlloRaggio(sf::ConvexShape raggio);
+	Tipologia controlloRaggio(sf::ConvexShape raggio);
 
 	void uscitaPianeta();
 	int controlloProiettili(proiettile_ptr lista_proiettili);

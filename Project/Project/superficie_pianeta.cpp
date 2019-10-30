@@ -153,41 +153,7 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 	else if (tipoOggetto == BUNKER)
 		inserisciNodoBunker(new_coordinate, angolo, dimensione);
 	else {
-		
-		char tipologia[50];
-		char texture[50];
-
-		switch (tipoOggetto)
-		{
-		case BENZINA_BEST:
-		{
-			char stringa_oggetto[] = "BENZINA_BEST";
-			char stringa_texture[] = "Texture/oggetto_benzina_best_1.png";
-
-			copiaStringa(tipologia, 50, stringa_oggetto);
-			copiaStringa(texture, 50, stringa_texture);
-		} break;
-		case BENZINA:
-		{
-			char stringa_oggetto[] = "BENZINA";
-			char stringa_texture[] = "Texture/oggetto_benzina_1.png";
-
-			copiaStringa(tipologia, 50, stringa_oggetto);
-			copiaStringa(texture, 50, stringa_texture);
-		} break;
-		case CUORE:
-		{
-			char stringa_oggetto[] = "CUORE";
-			char stringa_texture[] = "Texture/oggetto_cuore_1.png";
-
-			copiaStringa(tipologia, 50, stringa_oggetto);
-			copiaStringa(texture, 50, stringa_texture);
-		} break;
-		default:
-			break;
-		}
-
-		oggetto_bonus = new Oggetto(tipologia, texture, new_coordinate, angolo, dimensione);
+		inserisciOggettoBonus(new_coordinate, angolo, dimensione);
 	}
 }
 
@@ -231,8 +197,53 @@ void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, flo
 	}
 }
 
-void SuperficiePianeta::generaBenzina() {
+void SuperficiePianeta::inserisciOggettoBonus(sf::Vector2f coordinate, float angolo, sf::Vector2f dimensione)
+{
 	int tipologia_oggetto = rand() % 100 + 1;
+	Tipologia oggetto_assorbito = DEFAULT;
+
+	if (tipologia_oggetto > 30 && tipologia_oggetto < 60) {
+		oggetto_assorbito = BENZINA;
+	}
+	else if (tipologia_oggetto >= 60 && tipologia_oggetto < 85) {
+		oggetto_assorbito = BENZINA_BEST;
+	}
+	else if (tipologia_oggetto >= 85) {
+		oggetto_assorbito = CUORE;
+	}
+
+	char texture[50];
+
+	switch (oggetto_assorbito)
+	{
+	case BENZINA_BEST:
+	{
+		char stringa_texture[] = "Texture/oggetto_benzina_best_1.png";
+
+		copiaStringa(texture, 50, stringa_texture);
+	} break;
+	case BENZINA:
+	{
+		char stringa_texture[] = "Texture/oggetto_benzina_1.png";
+
+		copiaStringa(texture, 50, stringa_texture);
+	} break;
+	case CUORE:
+	{
+		char stringa_texture[] = "Texture/oggetto_cuore_1.png";
+
+		copiaStringa(texture, 50, stringa_texture);
+	} break;
+	default:
+		break;
+	}
+
+	if (oggetto_assorbito != DEFAULT) 
+		oggetto_bonus = new Oggetto(oggetto_assorbito, texture, coordinate, angolo, dimensione);
+}
+
+void SuperficiePianeta::generaOggettoBonus() {
+	
 	sf::Vector2f size(42, 35);
 	
 	int index;
@@ -244,17 +255,7 @@ void SuperficiePianeta::generaBenzina() {
 			found = true;
 		}
 	}
-
-
-	if (tipologia_oggetto > 30 && tipologia_oggetto < 60) {
-		aggiungiOggetto(index, BENZINA, size);
-	}
-	else if (tipologia_oggetto >= 60 && tipologia_oggetto < 85) {
-		aggiungiOggetto(index, BENZINA_BEST, size);
-	}
-	else if (tipologia_oggetto >= 85) {
-		aggiungiOggetto(index, CUORE, size);
-	}
+	aggiungiOggetto(index, OGGETTO_BONUS, size);
 }
 
 void SuperficiePianeta::copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[])
@@ -342,7 +343,7 @@ SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned a
 
 	/* Metodo per generare i Bunker presenti sulla superficie */
 	generaBunker();
-	generaBenzina();
+	generaOggettoBonus();
 }
 
 SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned int altezza_finestra, sf::Color colore) :
@@ -515,10 +516,9 @@ bool SuperficiePianeta::intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vecto
 	return false;
 
 }
-Oggetto SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
+Tipologia SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
 {
-	Oggetto oggetto_assorbito = Oggetto();
-
+	Tipologia oggetto_assorbito = DEFAULT;
 	if (oggetto_bonus != NULL) {
 		int i = 0;
 		sf::Vector2f a = raggio.getTransform().transformPoint(raggio.getPoint(0));
@@ -537,8 +537,9 @@ Oggetto SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
 		if (intersezione(d, a, posBenzina, posBenzina2)) i++;
 
 		if (i == 1) {
-			oggetto_assorbito = *oggetto_bonus;
-			oggetto_bonus = NULL;
+			oggetto_assorbito = (*oggetto_bonus).getTipologia();
+			delete oggetto_bonus;
+			oggetto_bonus = nullptr;
 		}
 	}
 	return oggetto_assorbito;
