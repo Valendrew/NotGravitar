@@ -137,18 +137,19 @@ void Gioco::controlloRaggio()
 
 	if (nave_raggio_) {
 
-		Oggetto oggetto_assorbito;
+		Tipologia oggetto_assorbito = DEFAULT;
 		oggetto_assorbito = mappa_.controlloRaggio(nave_.getRaggio());
 
-		char stringa_oggetto[15];
-		oggetto_assorbito.getTipologia(stringa_oggetto);
+		if (oggetto_assorbito != DEFAULT) {
 
-		if (strcmp(stringa_oggetto, "CUORE") == 0) {
-			nave_.aggiungiVita(oggetto_assorbito.getCapacita());
+			if (oggetto_assorbito == CUORE) {
+				nave_.aggiungiVita(oggetto_assorbito);
+			}
+			else {
+				nave_.riempiCarburante(oggetto_assorbito);
+			}
 		}
-		else {
-			nave_.riempiCarburante(oggetto_assorbito.getCapacita());
-		}
+		
 	}
 }
 

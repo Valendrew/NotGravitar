@@ -180,14 +180,15 @@ int Mappa::controlloProiettili(proiettile_ptr lista_proiettili)
 	else return 0;
 }
 
-Oggetto Mappa::controlloRaggio(sf::ConvexShape raggio)
+Tipologia Mappa::controlloRaggio(sf::ConvexShape raggio)
 {
+	Tipologia aggetto_assorbito = DEFAULT;
+
 	if (posizione_attuale_ != nullptr)
-		return (*posizione_attuale_->universo).controlloRaggio(raggio);
-	else {
-		Oggetto oggetto_nullo("BENZINA","",sf::Vector2f(),0,sf::Vector2f());
-		return oggetto_nullo;
-	}
+		aggetto_assorbito = (*posizione_attuale_->universo).controlloRaggio(raggio);
+
+	return aggetto_assorbito;
+	
 }
 
 bool Mappa::aggiornaPunteggioBunker()

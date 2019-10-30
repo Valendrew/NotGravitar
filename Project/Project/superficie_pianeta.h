@@ -23,12 +23,10 @@ protected:
 	int altezza_minima_;
 	Oggetto *oggetto_bonus;
 
-	enum TipologiaOggetto {
+	enum TipologiaOggetto{
 		BUNKER_STRONGER,
 		BUNKER,
-		BENZINA_BEST,
-		BENZINA,
-		CUORE
+		OGGETTO_BONUS
 	};
 
 	sf::VertexArray vertici_superficie_;
@@ -62,7 +60,8 @@ protected:
 	void aggiungiOggetto(int index, TipologiaOggetto tipoOggetto, sf::Vector2f dimensione);
 	void inserisciNodoBunker(sf::Vector2f coordinate, float angolo, sf::Vector2f dimensione);
 	void inserisciNodoBunkerStronger(sf::Vector2f coordinate, float angolo, sf::Vector2f dimensione);
-	void generaBenzina();
+	void inserisciOggettoBonus(sf::Vector2f coordinate, float angolo, sf::Vector2f dimensione);
+	void generaOggettoBonus();
 	void copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[]);
 	bool intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2);
 	void isDistrutta();
@@ -82,7 +81,7 @@ public:
 	sf::VertexArray getPosizioneLineaSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 	int controlloProiettili(proiettile_ptr lista_proiettili);
-	Oggetto controlloRaggio(sf::ConvexShape raggio);
+	Tipologia controlloRaggio(sf::ConvexShape raggio);
 	bool getDistrutta();
 	int getNumeroBunker();
 };

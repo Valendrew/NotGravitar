@@ -76,11 +76,12 @@ int Pianeta::bunkerRimanenti() {
 	return bunker_rimanenti;
 }
 
-Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]) {
+Pianeta::Pianeta(float raggio, int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]) {
 
+	std::cout << "\n" << posizione.x << " " << posizione.y;
 	id_ = id;
 	distrutto_ = false;
-	pianeta_.setRadius(40.0);
+	pianeta_.setRadius(raggio);
 	pianeta_.setPointCount(100);
 	numero_superfici_ = 3;
 	pianeta_.setOrigin(0 , 0);
@@ -121,7 +122,7 @@ Pianeta::Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra
 	superficie_attuale_ = superficie_tail_;
 }
 
-Pianeta::Pianeta() :Pianeta(0, sf::Vector2f(), 1280, 720, "ACQUA", "/Texture/acqua.png", "/Texture/acqua_d.png") {}
+Pianeta::Pianeta() :Pianeta(0, 0, sf::Vector2f(), 1280, 720, "ACQUA", "/Texture/acqua.png", "/Texture/acqua_d.png") {}
 
 float Pianeta::getRaggio() {
 	return pianeta_.getRadius();
@@ -221,14 +222,15 @@ bool Pianeta::controlloCollisioneSuperficie(sf::Vector2f posizione)
 	return collisione_superficie;
 }
 
-Oggetto Pianeta::controlloRaggio(sf::ConvexShape raggio)
+Tipologia Pianeta::controlloRaggio(sf::ConvexShape raggio)
 {
+	Tipologia aggetto_assorbito = DEFAULT;
+
 	if (superficie_attuale_ != nullptr)
-		return (*superficie_attuale_->superficie_item).controlloRaggio(raggio);
-	else {
-		Oggetto oggetto_nullo("BENZINA", "", sf::Vector2f(), 0, sf::Vector2f());
-		return oggetto_nullo;
-	}
+		aggetto_assorbito = (*superficie_attuale_->superficie_item).controlloRaggio(raggio);
+	
+	return aggetto_assorbito;
+	
 }
 
 void Pianeta::resetProiettiliBunker()

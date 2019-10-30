@@ -42,7 +42,7 @@ protected:
 	void isDistrutto();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public: 
-	Pianeta(int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]);
+	Pianeta(float raggio, int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]);
 	Pianeta();
 	float getRaggio();
 
@@ -54,7 +54,7 @@ public:
 	bool getDistrutto();
 	int controlloPassaggioSuperficie(sf::Vector2f posizione);
 	bool controlloCollisioneSuperficie(sf::Vector2f posizione);
-	Oggetto controlloRaggio(sf::ConvexShape raggio);
+	Tipologia controlloRaggio(sf::ConvexShape raggio);
 	void resetProiettiliBunker();
 	proiettile_ptr getProiettili();
 	int controlloProiettili(proiettile_ptr lista_proiettili);

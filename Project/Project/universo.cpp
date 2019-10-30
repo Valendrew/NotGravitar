@@ -1,32 +1,44 @@
 #include "universo.hpp";
 #include <iostream>
+#include <stdlib.h>
 
 void Universo::generaPianeti() {
-	int spawn_x = dimensioni_celle_.x;
-	int spawn_y = dimensioni_celle_.y;
+	int spawn_x = larghezza_finestra_ / colonne_;
+	int spawn_y = altezza_finestra_ / righe_;
 	int i = 1, j = 1;
-	while (i < 17)
+	while (i < righe_ - 1)
 	{
-		while (j < 23)
+		while (j < colonne_ - 1)
 		{
 			if (matrice_spawn_[i][j])
 			{
+				
 				char tipologia_pianeta[50];
 				char texture_pianeta[50];
 				char texture_pianeta_distrutto[50];
 
 				ottieniTipologiaPianeta(tipologia_pianeta, texture_pianeta, texture_pianeta_distrutto);
 
-				Pianeta* pi = new Pianeta(id_pianeta_, sf::Vector2f(spawn_x, spawn_y), larghezza_finestra_, altezza_finestra_, tipologia_pianeta, texture_pianeta, texture_pianeta_distrutto);
+				float raggio_pianeta = (larghezza_finestra_ / colonne_) / 2;
+
+				if (altezza_finestra_ / righe_ < larghezza_finestra_ / colonne_)
+					raggio_pianeta = (altezza_finestra_ / righe_) / 2;
+
+				//aggiungo un offset che varia da -(dimensioneCella/3) a +(dimensioneCella/3) per far sembrare i pianeti messi in modo casuale
+				//e non inseriti in una tabella
+				float offset_x_ = rand() % (((larghezza_finestra_ / colonne_) / 3) * 2 + 1) - (larghezza_finestra_ / colonne_) / 3;
+				float offset_y_ = rand() % (((altezza_finestra_ / righe_) / 3) * 2 + 1) - (altezza_finestra_ / righe_) / 3;
+				
+				Pianeta* pi = new Pianeta(raggio_pianeta, id_pianeta_, sf::Vector2f(spawn_x + offset_x_, spawn_y + offset_y_), larghezza_finestra_, altezza_finestra_, tipologia_pianeta, texture_pianeta, texture_pianeta_distrutto);
 				id_pianeta_++;
 
 				headInsert(pi);
 			}
-			spawn_x += dimensioni_celle_.x;
+			spawn_x += larghezza_finestra_ / colonne_;
 			j++;
 		}
 		spawn_x = 0;
-		spawn_y += dimensioni_celle_.y;
+		spawn_y += altezza_finestra_ / righe_;
 		j = 0;
 		i++;
 	}
@@ -113,57 +125,59 @@ void Universo::draw(sf::RenderTarget & target, sf::RenderStates states) const
 Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
-	dimensioni_celle_.x = larghezza_finestra / 24;
-	dimensioni_celle_.y = altezza_finestra / 18;
 
 	numero_pianeti_ = rand() % 2 + 4; //Pianeti da 4 a 5
+	std::cout << numero_pianeti_;
 	//numero_pianeti_ = 1;
 	visitato_ = false;
 	distrutto_ = false;
 	id_pianeta_ = 0;
 	//setto tutta la matrice di spawn a false (i pianeti saranno generati dove avro true)
-	for (int i = 0; i < 24; i++)
-		for (int j = 0; j < 18; j++)
+	for (int i = 0; i < colonne_; i++)
+		for (int j = 0; j < righe_; j++)
 			matrice_spawn_[j][i] = false;
 
-	int col = 0;
-	int row = 0;
+	int colonna_ = 0;
+	int riga_ = 0;
 	int i = 0;
 	int j = 0;
-	int numPianeti = numero_pianeti_;
+	int numero_pianeti_tmp = numero_pianeti_;
 	//ciclo tante volte quanti sono i pianeti
-	while (numPianeti > 0) {
-
-		//col e row assumono un valore che dipende dalla distanza (d=2) che si vuole avere tra i vari pianeti escludendo inoltre
-		//la cornice e le celle sottostanti la cornice cosi da evitare che i pianeti sforino dallo schermo o che vengano 
+	while (numero_pianeti_tmp > 0) {
+		int distanza = 1;
+		//col e row assumono un valore che dipende dalla distanza che si vuole avere tra i vari pianeti escludendo inoltre
+		//la cornice cosi da evitare che i pianeti sforino dallo schermo o che vengano 
 		//attaccati al bordo (sarebbe brutto)
-		col = rand() % (22) + (1);
-		row = rand() % (16) + (1);
-		i = 2;
-		bool ok = true;
+		do {
+			colonna_ = rand() % (colonne_ - distanza);
+			riga_ = rand() % (righe_ - distanza);
+		} while (colonna_ <= distanza || riga_ <= distanza);
+		
+		i = distanza;
+		bool posizione_corretta_ = true;
 		//i due while scorrono una matrice di dimensione [d*2 +1] [d*2 +1] con "al centro" il valore di matriceSpawn[row][col]
 		//cosi da verificare che ne la posizione generata ne le posizioni attorno siano gia occupate da un true
 		//questo serve per non far venire i pianeti attaccati
-		while (i >= -2 && ok)
+		while (i >= -distanza && posizione_corretta_)
 		{
-			j = 2;
-			while (j >= -2 && ok)
+			j = distanza;
+			while (j >= -distanza && posizione_corretta_)
 			{
-				if (matrice_spawn_[row - i][col - j])
-					ok = false;
+				if (matrice_spawn_[riga_ - i][colonna_ - j])
+					posizione_corretta_ = false;
 				j--;
 			}
 			i--;
 		}
 		//se la variabile ok è ancora a true significa che true puo essere assegnato alla posizione matriceSpawn[row][col]
 		//rispettando comunque il vincolo della distanza
-		if (ok) {
-			matrice_spawn_[row][col] = true;
-			numPianeti--;
+		if (posizione_corretta_) {
+			matrice_spawn_[riga_][colonna_] = true;
+			numero_pianeti_tmp--;
 		}
 	}
 
-	 generaPianeti();
+	generaPianeti();
 	numero_pianeti_precedenti_ = numero_pianeti_;
 }
 
@@ -270,14 +284,15 @@ void Universo::uscitaPianeta() {
 	pianeta_attuale_ = nullptr;
 }
 
-Oggetto Universo::controlloRaggio(sf::ConvexShape raggio)
+Tipologia Universo::controlloRaggio(sf::ConvexShape raggio)
 {
+	Tipologia aggetto_assorbito = DEFAULT;
+
 	if (pianeta_attuale_ != nullptr)
-		return (*pianeta_attuale_->pianeta_).controlloRaggio(raggio);
-	else {
-		Oggetto oggetto_nullo("BENZINA", "", sf::Vector2f(), 0, sf::Vector2f());
-		return oggetto_nullo;
-	}
+		aggetto_assorbito = (*pianeta_attuale_->pianeta_).controlloRaggio(raggio);
+
+	return aggetto_assorbito;
+
 }
 
 int Universo::controlloProiettili(proiettile_ptr lista_proiettili)

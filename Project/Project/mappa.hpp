@@ -5,6 +5,12 @@
 
 class Mappa : public sf::Drawable, public sf::Transformable  {
 protected:
+
+	struct coordinate {
+		int x;
+		int y;
+	};
+
 	sf::Sprite sfondo_;
 	sf::Texture texture_;
 	int larghezza_finestra_;
@@ -43,7 +49,7 @@ public:
 	proiettile_ptr getProiettili();
 	int controlloProiettili(proiettile_ptr lista_proiettili);
 
-	Oggetto controlloRaggio(sf::ConvexShape raggio);
+	Tipologia controlloRaggio(sf::ConvexShape raggio);
 
 	bool aggiornaPunteggioBunker();
 	bool aggiornaPunteggioPianeta();
