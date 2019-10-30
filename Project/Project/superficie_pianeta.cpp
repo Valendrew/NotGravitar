@@ -72,9 +72,14 @@ void SuperficiePianeta::generaSuperficie()
 
 void SuperficiePianeta::generaBunker()
 {
-	// Il numero di bunker sarà compreso tra 2 e 3
-	int numero_di_bunker = (rand() % 2) + 2;
+	int ratio = larghezza_finestra_ / NUMERO_DI_LINEE;
+	sf::Vector2f grandezza_bunker(ratio * 0.5, ratio * 0.5);
+	sf::Vector2f grandezza_bunker_stronger(ratio * 0.6, ratio * 0.6);
+
+	// Il numero di bunker sarà compreso tra 2 e 4
+	int numero_di_bunker = (rand() % 3) + 2;
 	//int numero_di_bunker = 3;
+	int distanza = 4;
 	
 	// Viene generato un solo bunker da 3 proiettili per superficie
 	int bunker_stronger = 1;
@@ -86,18 +91,20 @@ void SuperficiePianeta::generaBunker()
 		int posizione_bunker = rand() % (NUMERO_DI_LINEE - 2) + 1;
 
 		if (bunker_presenti_[posizione_bunker] == false) {
-			if (!controllaOggettiVicinanze(posizione_bunker, 2)) {
+			if (!controllaOggettiVicinanze(posizione_bunker, distanza)) {
 				if (bunker_stronger > 0) {
-					aggiungiOggetto(posizione_bunker, BUNKER_STRONGER, sf::Vector2f(40, 40));
+					aggiungiOggetto(posizione_bunker, BUNKER_STRONGER, grandezza_bunker_stronger);
 					bunker_stronger--;
 				}
 				else {
-					aggiungiOggetto(posizione_bunker, BUNKER, sf::Vector2f(40, 40)); // metodo per aggiungere il bunker alla struttura
+					aggiungiOggetto(posizione_bunker, BUNKER, grandezza_bunker); // metodo per aggiungere il bunker alla struttura
 				}
 				numero_di_bunker--;
 				// Posizione impostata a true, per indicare che adesso è occupata da un bunker
 				bunker_presenti_[posizione_bunker] = true;
 			}
+			else if (distanza > 0)
+				distanza -= 1;
 		}
 	}
 }
@@ -122,8 +129,7 @@ bool SuperficiePianeta::controllaOggettiVicinanze(int posizione, int distanza)
 void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto, sf::Vector2f dimensione)
 {
 	// Vettore che rappresenta la coppia (x,y)
-	sf::Vector2f new_coordinate;
-	float coordinate[2];
+	sf::Vector2f coordinate;
 	
 	/* Viene calcolato l'angolo tra i due punti. Per prima cosa deve essere
 	calcolato il coefficiente_angolare, che poi viene utilizzato per calcolare 
@@ -139,21 +145,17 @@ void SuperficiePianeta::aggiungiOggetto(int index, TipologiaOggetto tipoOggetto,
 	sia oltre la linea, dato che la posizione è riferita all'angolo in alto a destra. Per ottenere l'ordinata sarà
 	prima ottenuta l'ordinata all'origine della linea, ed infine, tramite l'equazione della retta, si otterrà 
 	il valore dell'ordinata*/
-	float ordinata_origine = vertici_superficie_[index].position.y - vertici_superficie_[index].position.x * coefficiente_angolare;
-	int offset = 15;
 
-	coordinate[0] = rand() % ((int) dimensione.x) + offset + vertici_superficie_[index].position.x;
-	coordinate[1] = coordinate[0] * coefficiente_angolare + ordinata_origine;
-
-	new_coordinate.x = rand() % ((int) dimensione.x)+offset + vertici_superficie_[index].position.x;
-	new_coordinate.y = new_coordinate.x * coefficiente_angolare + ordinata_origine;;
+	float punto_meta = (vertici_superficie_[index].position.x + vertici_superficie_[index + 1].position.x) / 2;
+	coordinate.x = punto_meta - (dimensione.x / 2) * (sqrt(1 / 1 + pow(coefficiente_angolare, 2)));
+	coordinate.y = vertici_superficie_[index].position.y + coefficiente_angolare * (coordinate.x - vertici_superficie_[index].position.x);
 
 	if (tipoOggetto == BUNKER_STRONGER)
-		inserisciNodoBunkerStronger(new_coordinate, angolo, dimensione);
+		inserisciNodoBunkerStronger(coordinate, angolo, dimensione);
 	else if (tipoOggetto == BUNKER)
-		inserisciNodoBunker(new_coordinate, angolo, dimensione);
+		inserisciNodoBunker(coordinate, angolo, dimensione);
 	else {
-		inserisciOggettoBonus(new_coordinate, angolo, dimensione);
+		inserisciOggettoBonus(coordinate, angolo, dimensione);
 	}
 }
 
@@ -243,19 +245,23 @@ void SuperficiePianeta::inserisciOggettoBonus(sf::Vector2f coordinate, float ang
 }
 
 void SuperficiePianeta::generaOggettoBonus() {
-	
-	sf::Vector2f size(42, 35);
+	int ratio = larghezza_finestra_ / NUMERO_DI_LINEE;
+	sf::Vector2f size(ratio * 0.4, ratio * 0.4);
 	
 	int index;
-	bool found = false;
-	while (!found)
+	int distanza = 2;
+	bool aggiunto_oggetto = false;
+
+	while (!aggiunto_oggetto)
 	{
 		index = rand() % (NUMERO_DI_LINEE - 2) + 1;
-		if (!controllaOggettiVicinanze(index, 0)) {
-			found = true;
+		if (!controllaOggettiVicinanze(index, distanza)) {
+			aggiungiOggetto(index, OGGETTO_BONUS, size);
+			aggiunto_oggetto = true;
 		}
+		else if (distanza > 0)
+			distanza -= 1;
 	}
-	aggiungiOggetto(index, OGGETTO_BONUS, size);
 }
 
 void SuperficiePianeta::copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[])
