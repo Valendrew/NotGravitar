@@ -3,8 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 
-
-
 class Oggetto : public sf::Drawable, public sf::Transformable {
 private:
 	

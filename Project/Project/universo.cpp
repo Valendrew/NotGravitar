@@ -20,7 +20,7 @@ void Universo::generaPianeti() {
 				Pianeta* pi = new Pianeta(id_pianeta_, sf::Vector2f(spawn_x, spawn_y), larghezza_finestra_, altezza_finestra_, tipologia_pianeta, texture_pianeta, texture_pianeta_distrutto);
 				id_pianeta_++;
 
-				headInsert(pi);
+				inserimentoLista(pi);
 			}
 			spawn_x += dimensioni_celle_.x;
 			j++;
@@ -81,7 +81,7 @@ void Universo::copiaStringa(char stringa[], int lunghezza, char stringa_da_copia
 	stringa[i] = '\0';
 }
 
-void Universo::headInsert(Pianeta* p) {
+void Universo::inserimentoLista(Pianeta* p) {
 	if (lista_pianeti_ == nullptr) {
 		lista_pianeti_ = new nodoPianeta;
 		lista_pianeti_->pianeta_ = p;
@@ -169,7 +169,7 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 
 Universo::Universo() :Universo(1280, 720) {}
 
-bool Universo::pianetaAttualeRicerca(sf::Vector2f posizione) {
+bool Universo::ricercaPianetaAttuale(sf::Vector2f posizione) {
 	listaPianeti lista_pianeti_tmp = lista_pianeti_;
 	pianeta_attuale_ = nullptr;
 	bool found = false;
@@ -226,20 +226,20 @@ bool Universo::aggiornaPunteggioBunker()
 
 bool Universo::distruzionePianetaAttuale()
 {
-	int pianetiRimanenti_ = pianetiRimanenti();
+	int pianeti_rimanenti = pianetiRimanenti();
 	bool distrutto = false;
 
-	if (pianetiRimanenti_ != 0 && pianetiRimanenti_ < numero_pianeti_precedenti_) {
-		numero_pianeti_precedenti_ = pianetiRimanenti_;
+	if (pianeti_rimanenti != 0 && pianeti_rimanenti < numero_pianeti_precedenti_) {
+		numero_pianeti_precedenti_ = pianeti_rimanenti;
 		distrutto = true;
 	}
 	return distrutto;
 }
 
-
 int Universo::controlloPassaggioSuperficie(sf::Vector2f pos)
 {
 	int direzione = -1;
+
 	if (pianeta_attuale_ != nullptr) {
 		direzione = (*pianeta_attuale_->pianeta_).controlloPassaggioSuperficie(pos);
 	}
@@ -247,12 +247,12 @@ int Universo::controlloPassaggioSuperficie(sf::Vector2f pos)
 }
 
 bool Universo::controlloCollisioneSuperficie(sf::Vector2f pos) {
-	bool ritorno = false;
+	bool collisione = false;
 
 	if (pianeta_attuale_ != nullptr) {
-		ritorno = (*pianeta_attuale_->pianeta_).controlloCollisioneSuperficie(pos);
+		collisione = (*pianeta_attuale_->pianeta_).controlloCollisioneSuperficie(pos);
 	}
-	return ritorno;
+	return collisione;
 }
 
 proiettile_ptr Universo::getProiettili()
@@ -290,17 +290,17 @@ int Universo::controlloProiettili(proiettile_ptr lista_proiettili)
 
 int Universo::pianetiRimanenti()
 {
-	int numPianetiRimanenti = 0;
+	int num_pianeti_rimanenti = 0;
 	listaPianeti lista_pianeti_tmp = lista_pianeti_;
 
 	while (lista_pianeti_tmp != nullptr) {
 
 		if (!(*lista_pianeti_tmp->pianeta_).getDistrutto()) {
-			numPianetiRimanenti++;
+			num_pianeti_rimanenti++;
 		 }
 
 		lista_pianeti_tmp = lista_pianeti_tmp->next;
 	}
-	return numPianetiRimanenti;
+	return num_pianeti_rimanenti;
 }
 

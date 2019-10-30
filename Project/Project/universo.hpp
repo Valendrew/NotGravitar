@@ -39,7 +39,7 @@ protected:
 	void generaPianeti();
 	void ottieniTipologiaPianeta(char tipologia[], char texture[], char texture_d[]);
 	void copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[]);
-	void headInsert(Pianeta* p);
+	void inserimentoLista(Pianeta* p);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
@@ -49,7 +49,7 @@ public:
 	//Provare a restutire un puntatore per settare il colore quando è distrutto
 	
 
-	bool pianetaAttualeRicerca(sf::Vector2f posizione);
+	bool ricercaPianetaAttuale(sf::Vector2f posizione);
 	bool distrutto();
 	bool getDistrutto();
 

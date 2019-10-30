@@ -160,7 +160,7 @@ bool Mappa::spostamentoUniverso(int direzione) {
 bool Mappa::ricercaPianeta(sf::Vector2f posizione) {
 
 	if(posizione_attuale_ != nullptr)
-	return (*posizione_attuale_->universo).pianetaAttualeRicerca(posizione);
+	return (*posizione_attuale_->universo).ricercaPianetaAttuale(posizione);
 	else return false;
 }
 

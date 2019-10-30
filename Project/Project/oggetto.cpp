@@ -27,7 +27,7 @@ Oggetto::Oggetto(const char tipo[], const char nomeFile[],sf::Vector2f pos, floa
 
 Oggetto::Oggetto() {
 	tipo_ = BENZINA_BEST;
-	capacita_ = 0;
+	capacita_ = 10;
 }
 
 void Oggetto::copiaStringa(char stringa[], int lunghezza, char stringa_da_copiare[])
