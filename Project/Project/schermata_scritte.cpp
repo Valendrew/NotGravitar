@@ -3,7 +3,7 @@
 
 
 
-schermata_scritte::schermata_scritte(int LARGHEZZA, int ALTEZZA) :
+SchermataScritte::SchermataScritte(int LARGHEZZA, int ALTEZZA) :
 	punteggio_text_("PUNTEGGIO: 100", 32, sf::Color::Blue, sf::Color::Magenta, 1.5, 1, sf::Vector2f(5, 0))
 	, titolo_("NON GRAVITAR", 120, sf::Color::Red, sf::Color::Yellow, 1.5, 4, sf::Vector2f(0, 0))
 	, subtitle_("", 60, sf::Color::Red, sf::Color::Transparent, 1.5, 0, sf::Vector2f(0, 0))
@@ -23,7 +23,7 @@ schermata_scritte::schermata_scritte(int LARGHEZZA, int ALTEZZA) :
 }
 
 
-void schermata_scritte::aggiornaTesto(const char stringa[], float valore) {
+void SchermataScritte::aggiornaTesto(const char stringa[], float valore) {
 
 	char valoreToString[10];
 	char parteDecimaleToString[10];
@@ -57,7 +57,7 @@ void schermata_scritte::aggiornaTesto(const char stringa[], float valore) {
 
 }
 
-void schermata_scritte::setGameOver()
+void SchermataScritte::setGameOver()
 {
 	start_.setString("RESTART");
 	subtitle_.setString("GAME OVER");
@@ -66,48 +66,48 @@ void schermata_scritte::setGameOver()
 	start_.setPosition(sf::Vector2f(LARGHEZZA_ / 2 - start_.getGlobalBounds().width / 2, ALTEZZA_ / 2));
 }
 
-void schermata_scritte::setPausa() {
+void SchermataScritte::setPausa() {
 	start_.setString("RESUME");
 	start_.setPosition(sf::Vector2f(LARGHEZZA_ / 2 - start_.getGlobalBounds().width / 2, ALTEZZA_ / 2));
 	punteggio_text_.setPosition(sf::Vector2f(LARGHEZZA_ / 2 - punteggio_text_.getGlobalBounds().width / 2, 210));
 }
 
-Testo schermata_scritte::getExit()
+Testo SchermataScritte::getExit()
 {
 	return exit_;
 }
 
-Testo schermata_scritte::getStart()
+Testo SchermataScritte::getStart()
 {
 	return start_;
 }
 
-Testo schermata_scritte::getTitolo()
+Testo SchermataScritte::getTitolo()
 {
 	return titolo_;
 }
 
-Testo schermata_scritte::getSubtitle()
+Testo SchermataScritte::getSubtitle()
 {
 	return subtitle_;
 }
 
-Testo schermata_scritte::getPunteggio()
+Testo SchermataScritte::getPunteggio()
 {
 	return punteggio_text_;
 }
 
-Testo schermata_scritte::getVita()
+Testo SchermataScritte::getVita()
 {
 	return vita_text_;
 }
 
-Testo schermata_scritte::getCarburante()
+Testo SchermataScritte::getCarburante()
 {
 	return carburante_text_;
 }
 
-int schermata_scritte::gestioneMouse(sf::Vector2i posizioneMouse) {
+int SchermataScritte::gestioneMouse(sf::Vector2i posizioneMouse) {
 	int pulsantePremuto = -1;
 	if (start_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
 		start_.setCharacterSize(60);
@@ -127,12 +127,12 @@ int schermata_scritte::gestioneMouse(sf::Vector2i posizioneMouse) {
 	return pulsantePremuto;
 }
 
-void schermata_scritte::setStart() {
+void SchermataScritte::setStart() {
 
 	start_.setCharacterSize(55);
 	start_.setPosition(sf::Vector2f(LARGHEZZA_ / 2 - start_.getGlobalBounds().width / 2, ALTEZZA_ / 2));
 }
 
-void schermata_scritte::setPunteggio() {
+void SchermataScritte::setPunteggio() {
 	punteggio_text_.setPosition(sf::Vector2f(5, 0));
 }

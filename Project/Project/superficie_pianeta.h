@@ -53,7 +53,7 @@ protected:
 
 	bunker_ptr bunker_;
 	bunker_stronger_ptr bunker_stronger_;
-	bool bunker_presenti_[NUMERO_DI_LINEE];
+	bool oggetti_presenti_[NUMERO_DI_LINEE];
 
 	void generaBunker();
 	bool controllaOggettiVicinanze(int posizione, int distanza);

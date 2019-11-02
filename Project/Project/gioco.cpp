@@ -37,15 +37,15 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 	}
 	else if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 0) {
 
-		std::string stringa_start = schermataScritte.getStart().getString();
+		std::string stringa_start = schermata_scritte_.getStart().getString();
 		//compare torna 0 se le due stringhe sono uguali
 		if (stringa_start.compare("RESTART") == 0) {
 			mappa_.restart(LARGHEZZA, ALTEZZA);
 			punteggio_ = 0;
 			nave_.restart(100, sf::Vector2f(100, 100), 0, 10, false);
 			stato_ = UNIVERSO;
-			schermataScritte.setPunteggio();
-			schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
+			schermata_scritte_.setPunteggio();
+			schermata_scritte_.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 			nave_movimento_ = false;
 			nave_rotazioneL_ = false;
 			nave_rotazioneR_ = false;
@@ -59,14 +59,14 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 		}
 		else if (stringa_start.compare("RESUME") == 0) {
 			stato_ = salva_stato_;
-			schermataScritte.setPunteggio();
+			schermata_scritte_.setPunteggio();
 		}
-		schermataScritte.setStart();
+		schermata_scritte_.setStart();
 	}
 	else if (gestioneMouse == 2) {
 		salva_stato_ = stato_;
 		stato_ = PAUSA;
-		schermataScritte.setPausa();
+		schermata_scritte_.setPausa();
 	}
 	
 	
@@ -78,7 +78,7 @@ int Gioco::gestisciMouse() {
 	int pulsantePremuto = -1;
 
 	if (stato_ == GAMEOVER || stato_ == PAUSA || stato_ == START) {
-		pulsantePremuto = schermataScritte.gestioneMouse(posizioneMouse);
+		pulsantePremuto = schermata_scritte_.gestioneMouse(posizioneMouse);
 	}
 	else {
 		if (pausa_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
@@ -353,7 +353,7 @@ void Gioco::controlloAggiornamentoPunteggio() {
 	else if (mappa_.aggiornaPunteggioUniverso()) {
 		punteggio_ += 99;
 	}
-	schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
+	schermata_scritte_.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 
 }
 
@@ -361,7 +361,7 @@ void Gioco::controlloGameOver() {
 
 	if (nave_.getDistrutto()) {
 		stato_ = GAMEOVER;
-		schermataScritte.setGameOver();
+		schermata_scritte_.setGameOver();
 	}
 }
 
@@ -400,25 +400,25 @@ void Gioco::render()
 
 	if (stato_ == UNIVERSO || stato_ == PIANETA) {
 		// TODO: SPOSTARE IN UN ALTRA FUNZIONE DI GESTIONE DEL GIOCO
-		schermataScritte.aggiornaTesto("VITA: ", nave_.getVita());
-		schermataScritte.aggiornaTesto("CARBURANTE: ", nave_.getCarburante());
+		schermata_scritte_.aggiornaTesto("VITA: ", nave_.getVita());
+		schermata_scritte_.aggiornaTesto("CARBURANTE: ", nave_.getCarburante());
 
 		window_.draw(mappa_);
 		nave_.drawComportamento(window_, sf::RenderStates());
 
 		window_.draw(pausa_);
-		window_.draw(schermataScritte.getPunteggio());
-		window_.draw(schermataScritte.getVita());
-		window_.draw(schermataScritte.getCarburante());
+		window_.draw(schermata_scritte_.getPunteggio());
+		window_.draw(schermata_scritte_.getVita());
+		window_.draw(schermata_scritte_.getCarburante());
 	}
 	else {
-		window_.draw(schermataScritte.getTitolo());
-		window_.draw(schermataScritte.getStart());
-		window_.draw(schermataScritte.getExit());
-		window_.draw(schermataScritte.getSubtitle());
+		window_.draw(schermata_scritte_.getTitolo());
+		window_.draw(schermata_scritte_.getStart());
+		window_.draw(schermata_scritte_.getExit());
+		window_.draw(schermata_scritte_.getSubtitle());
 
 		if(stato_ != START)
-		window_.draw(schermataScritte.getPunteggio());
+		window_.draw(schermata_scritte_.getPunteggio());
 	}
 	window_.display();
 }
@@ -428,7 +428,7 @@ Gioco::Gioco() :
 	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_1.png", "Texture/ship_1d.png",
 		sf::Vector2f(50, 50), sf::Vector2f(52, 52), 0, 300, 2.f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
-	,schermataScritte(LARGHEZZA, ALTEZZA)
+	,schermata_scritte_(LARGHEZZA, ALTEZZA)
 {
 	pausa_.setSize(sf::Vector2f(61.8, 64.0));
 	texture_.loadFromFile("Texture/pausa2.png");
@@ -437,9 +437,9 @@ Gioco::Gioco() :
 	pausa_.setTexture(&texture_);
 
 	punteggio_ = 0;
-	schermataScritte.aggiornaTesto("PUNTEGGIO: ", punteggio_);
+	schermata_scritte_.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 
-	float pausa_size = schermataScritte.getPunteggio().getGlobalBounds().height + 15;
+	float pausa_size = schermata_scritte_.getPunteggio().getGlobalBounds().height + 15;
 	pausa_.setSize(sf::Vector2f(pausa_size, pausa_size));
 	pausa_.setPosition(LARGHEZZA - pausa_.getSize().x, 0);
 

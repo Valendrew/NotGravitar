@@ -138,7 +138,6 @@ sf::FloatRect Pianeta::getGlobalBounds()
 	return pianeta_.getGlobalBounds();
 }
 
-
 bool Pianeta::distruzioneSingoloBunker()
 {
 	bool distrutto = false;

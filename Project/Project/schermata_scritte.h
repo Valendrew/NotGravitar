@@ -4,7 +4,7 @@
 #include <SFML\Graphics.hpp>
 #include "Testo.h";
 
-class schermata_scritte {
+class SchermataScritte {
 private:
 	Testo exit_;
 	Testo start_;
@@ -17,7 +17,7 @@ private:
 	int ALTEZZA_;
 
 public:
-	schermata_scritte(int LARGHEZZA, int ALTEZZA);
+	SchermataScritte(int LARGHEZZA, int ALTEZZA);
 	void aggiornaTesto(const char stringa[], float valore);
 	void setGameOver();
 	void setPausa();

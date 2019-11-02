@@ -18,7 +18,7 @@ protected:
 	sf::RectangleShape pausa_;
 	sf::Texture texture_;
 
-	schermata_scritte schermataScritte;
+	SchermataScritte schermata_scritte_;
 
 	Nave nave_;
 	Mappa mappa_;

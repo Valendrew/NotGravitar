@@ -90,7 +90,7 @@ void SuperficiePianeta::generaBunker()
 	while (numero_di_bunker > 0) {
 		int posizione_bunker = rand() % (NUMERO_DI_LINEE - 2) + 1;
 
-		if (bunker_presenti_[posizione_bunker] == false) {
+		if (oggetti_presenti_[posizione_bunker] == false) {
 			if (!controllaOggettiVicinanze(posizione_bunker, distanza)) {
 				if (bunker_stronger > 0) {
 					aggiungiOggetto(posizione_bunker, BUNKER_STRONGER, grandezza_bunker_stronger);
@@ -101,7 +101,7 @@ void SuperficiePianeta::generaBunker()
 				}
 				numero_di_bunker--;
 				// Posizione impostata a true, per indicare che adesso è occupata da un bunker
-				bunker_presenti_[posizione_bunker] = true;
+				oggetti_presenti_[posizione_bunker] = true;
 			}
 			else if (distanza > 0)
 				distanza -= 1;
@@ -120,7 +120,7 @@ bool SuperficiePianeta::controllaOggettiVicinanze(int posizione, int distanza)
 	int i = startIndex;
 
 	while (!found && i <= finishIndex) {
-		if (bunker_presenti_[i] == true) found = true;
+		if (oggetti_presenti_[i] == true) found = true;
 		i++;
 	}
 	return found;
@@ -344,7 +344,7 @@ SuperficiePianeta::SuperficiePianeta(unsigned int larghezza_finestra, unsigned a
 
 	/* Il vettore di booleani rappresentante i bunker presenti
 	viene impostato tutto a false */
-	for (int i = 0; i < NUMERO_DI_LINEE; i++) bunker_presenti_[i] = false;
+	for (int i = 0; i < NUMERO_DI_LINEE; i++) oggetti_presenti_[i] = false;
 	bunker_ = nullptr;
 
 	/* Metodo per generare i Bunker presenti sulla superficie */
