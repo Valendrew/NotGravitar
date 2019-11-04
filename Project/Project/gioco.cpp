@@ -32,15 +32,21 @@ void Gioco::processaEventi()
 void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 	/*Metodo per la gestione del click del mouse nei menu di inizio, pausa e restart*/
 
-	int gestioneMouse = gestisciMouse();
-	if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 1) {
+	int gestione_mouse_ = gestisciMouse();
+	
+
+	//caso exit: chiudo il gioco
+	if (bottoneMouse == sf::Mouse::Button::Left && gestione_mouse_ == 1) {
 		window_.close();
 	}
-	else if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 0) {
+	//caso start, restart o resume
+	else if (bottoneMouse == sf::Mouse::Button::Left && gestione_mouse_ == 0) {
 
-		std::string stringa_start = schermata_scritte_.getStart().getString();
+		std::string stringa_start_ = schermata_scritte_.getStart().getString();
 		//compare torna 0 se le due stringhe sono uguali
-		if (stringa_start.compare("RESTART") == 0) {
+
+		//caso restart: reinizializzo gli attributi e richiamo il restart di mappa e nave
+		if (stringa_start_.compare("RESTART") == 0) {
 			mappa_.restart(LARGHEZZA, ALTEZZA);
 			punteggio_ = 0;
 			nave_.restart(100, sf::Vector2f(100, 100), 0, 10, false);
@@ -55,16 +61,19 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 			restart_ = true;
 			posizione_entrata_pianeta_ = sf::Vector2f();
 		}
-		else if (stringa_start.compare("START") == 0) {
+		//caso start: il gico ha inizio
+		else if (stringa_start_.compare("START") == 0) {
 			stato_ = UNIVERSO;
 		}
-		else if (stringa_start.compare("RESUME") == 0) {
+		//caso resume: riprendo il gioco dopo la pausa
+		else if (stringa_start_.compare("RESUME") == 0) {
 			stato_ = salva_stato_;
 			schermata_scritte_.setPunteggio();
 		}
 		schermata_scritte_.setStart();
 	}
-	else if (gestioneMouse == 2) {
+	//caso pausa: metto il gioco in pausa
+	else if (gestione_mouse_ == 2) {
 		salva_stato_ = stato_;
 		stato_ = PAUSA;
 		schermata_scritte_.setPausa();
@@ -74,23 +83,27 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 }
 
 int Gioco::gestisciMouse() {
-	/*Metodo per sapere quale scritta è stata premuta*/
-
-	sf::Vector2i posizioneMouse = sf::Mouse::getPosition(window_);
-	int pulsantePremuto = -1;
+	/*Metodo per sapere quale scritta è stata premuta restituisco un intero (compreso fra -1 e 2)
+	-1: non ho cliccato nulla
+	 0: ho cliccato il pulsante di start, restart o resume
+	 1: ho cliccato il pulsante di exit
+	 2: ho cliccato il pulsante di pausa
+	 */
+	sf::Vector2i posizione_mouse_ = sf::Mouse::getPosition(window_);
+	int pulsante_premuto_ = -1;
 
 	if (stato_ == GAMEOVER || stato_ == PAUSA || stato_ == START) {
-		pulsantePremuto = schermata_scritte_.gestioneMouse(posizioneMouse);
+		pulsante_premuto_ = schermata_scritte_.gestioneMouse(posizione_mouse_);
 	}
 	else {
-		if (pausa_.getGlobalBounds().contains(posizioneMouse.x, posizioneMouse.y)) {
-			pulsantePremuto = 2;
+		if (pausa_.getGlobalBounds().contains(posizione_mouse_.x, posizione_mouse_.y)) {
+			pulsante_premuto_ = 2;
 			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 255));
 		}
 		else
 			pausa_.setFillColor(sf::Color::Color(255, 255, 255, 160));
 	}
-	return pulsantePremuto;
+	return pulsante_premuto_;
 
 }
 
