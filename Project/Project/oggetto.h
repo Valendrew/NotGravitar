@@ -2,7 +2,8 @@
 #define _OGGETTO_H
 
 #include <SFML/Graphics.hpp>
-
+/*Enumeratore della tipologia di oggetto che verra creato. Una realizzazione di questo tipo permette di aggiungere agilmente
+	nuovi oggetti raccoglibili*/
 enum Tipologia {
 	BENZINA = 3,
 	BENZINA_BEST = 6,

@@ -42,14 +42,14 @@ protected:
 		PAUSA
 	};
 	Stato stato_;
-	Stato salva_stato_;//serve per la pausa, cosi se ero nel pianeta ci sono di nuovo e se ero nell'universo ci sono di nuovo
+	Stato salva_stato_;//serve per la pausa, cosi se ero nello stato pianeta ci sono di nuovo e se ero in quello universo ci sono di nuovo
 
 	void processaEventi();
 	void gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed);
 	void movimentoNavicella();
 	void controlloSparo();
 	void controlloRaggio();
-	void controlloPassaggioUniverso();
+	void controlloPassaggioSistemaSolare();
 	void controlloPassaggioPianeta();
 	void controlloUscitaPianeta();
 	void controlloPassaggioSuperficie();

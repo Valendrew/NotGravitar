@@ -3,7 +3,7 @@
 
 #include <SFML\Graphics.hpp>
 #include "Testo.h";
-
+/*La classe serve a gestire le scritte presenti nel gioco*/
 class SchermataScritte {
 private:
 	Testo exit_;

@@ -17,11 +17,11 @@ struct nodoPianeta {
 	Pianeta* pianeta_;
 	nodoPianeta* next;
 };
+
 typedef nodoPianeta* listaPianeti;
 
 	int larghezza_finestra_;
 	int altezza_finestra_;
-
 	listaPianeti pianeta_attuale_;
 	listaPianeti lista_pianeti_;
 	int numero_pianeti_;
@@ -43,8 +43,6 @@ typedef nodoPianeta* listaPianeti;
 public:
 	Universo(int larghezza_finestra, int altezza_finestra);
 	Universo();
-
-	//Provare a restutire un puntatore per settare il colore quando è distrutto
 	
 
 	bool ricercaPianetaAttuale(sf::Vector2f posizione);
