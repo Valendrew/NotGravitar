@@ -4,6 +4,8 @@
 
 void Gioco::processaEventi()
 {
+	/* Vengono gestiti gli input da parte dell'utente, 
+	per poter controllare le azioni dell'astronave */
 	sf::Event event;
 
 	while (window_.pollEvent(event)) {
@@ -459,6 +461,10 @@ Gioco::Gioco() :
 
 void Gioco::avviaGioco()
 {
+	/*
+	In questa funzione vengono richiamati i principali metodi
+	per la gestione del gioco, ossia processaEventi, update e render
+	*/
 	sf::Clock refresh_;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
@@ -469,9 +475,13 @@ void Gioco::avviaGioco()
 				timeSinceLastUpdate = sf::Time::Zero;
 				restart_ = false;
 			}
+
 			processaEventi();
 
 			timeSinceLastUpdate += refresh_.restart();
+			/*
+			Questa condizione serve per garantire che il gioco
+			sia aggiornato con un framerate costante*/
 			if (timeSinceLastUpdate > time_frame_) {
 				timeSinceLastUpdate -= time_frame_;
 				processaEventi();
