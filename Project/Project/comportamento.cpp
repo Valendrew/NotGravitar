@@ -47,7 +47,7 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 
 	esplosione_corrente_ = 0;
 
-	texture_esplosione_.loadFromFile("Texture/bunker_esplosione_1.png");
+	texture_esplosione_.loadFromFile("Texture/bunker_esplosione_1.png"); //imposta texture
 	esplosione_ = sf::RectangleShape(dimensione);
 	esplosione_.setTexture(&texture_esplosione_);
 	esplosione_.setTextureRect(sf::IntRect(esplosione_corrente_ * 96, 0, 96, 96));
@@ -101,6 +101,7 @@ void Comportamento::setRotation(float rot)
 
 int Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 {
+	/*controllo se colpito da un proiettile*/
 	int numerobunkerColpiti = 0;
 	while (lista_proiettili != nullptr && !distrutto_)
 	{
@@ -120,6 +121,7 @@ int Comportamento::controlloProiettili(proiettile_ptr lista_proiettili)
 
 proiettile_ptr Comportamento::eliminaProiettile(proiettile_ptr p)
 {
+	/*eliminazione di un elemento dalla lista*/
 	proiettile_ptr i = proiettili_;
 	if (i != NULL && p != proiettili_) {
 		while (i->next != NULL) {
@@ -143,7 +145,7 @@ proiettile_ptr Comportamento::eliminaProiettile(proiettile_ptr p)
 void Comportamento::eliminaProiettiliBordo()
 {
 	proiettile_ptr tmp_proiettili = proiettili_;
-
+	/*controlla se il proiettile esce dal bordo e in caso lo elimina*/
 	while (tmp_proiettili != nullptr)
 	{
 		sf::Vector2f pos_proiettile = (*tmp_proiettili->proiettile).getPosition();
@@ -167,9 +169,10 @@ void Comportamento::eliminaProiettiliBordo()
 
 void Comportamento::resetProiettili()
 {
+	/*elimina la lista dei proiettili*/
 	proiettile_ptr del_ptr = proiettili_;
 
-	while (del_ptr != nullptr)
+	while (del_ptr != nullptr) //scorre la lista e cancella
 	{
 		proiettili_ = proiettili_->next;
 		delete del_ptr;
@@ -200,6 +203,7 @@ void Comportamento::setDistrutto()
 
 void Comportamento::diminuisciVita(float danno)
 {
+	/*diminuisce la vita, se 0, imposta a distrutto*/
 	if (vita_ > danno) {
 		vita_ -= danno;
 	}
@@ -212,7 +216,7 @@ void Comportamento::diminuisciVita(float danno)
 void Comportamento::cambiaTextureEsplosione()
 {
 	esplosione_corrente_ += 1;
-	esplosione_.setTextureRect(sf::IntRect(esplosione_corrente_ * 96, 0, 96, 96));
+	esplosione_.setTextureRect(sf::IntRect(esplosione_corrente_ * 96, 0, 96, 96)); //imposta texture
 }
 
 void Comportamento::drawComportamento(sf::RenderTarget & target, sf::RenderStates states)
@@ -231,9 +235,8 @@ void Comportamento::drawComportamento(sf::RenderTarget & target, sf::RenderState
 	eliminaProiettiliBordo();
 
 	proiettile_ptr p = proiettili_;
-	while (p != NULL)	// Aggiorna la li posizione della lista dei proiettili, forse da spostare in funzione a parte!!
+	while (p != NULL)	// scorre la lista dei proiettili, li disegna e aggiorna la posizione
 	{
-		//target.draw((*p->proiettile).getProiettile());
 		target.draw(*p->proiettile);
 		(*p->proiettile).muovi();
 		p = p->next;

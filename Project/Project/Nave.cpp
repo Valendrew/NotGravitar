@@ -186,11 +186,12 @@ void Nave::aggiungiVita(int vita_aggiunta) {
 	else vita_ += vita_aggiunta;
 }
 
-sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghezza/2 generici
+sf::Vector2f Nave::getPosition() { 
+	/*ritorna la posizione dell'angolo davanti a sinistra della nave*/
 	float coeff_x = entita_.getSize().x / 2;
 	float coeff_y = entita_.getSize().y / 2;
 
-
+	//calcola a partire dal centro dell'entita l'angolo tenendo conto della rotazione
 	float x1 = entita_.getPosition().x - cos(entita_.getRotation()*PI_G / 180.f)* coeff_x;
 	float y1 = entita_.getPosition().y - sin(entita_.getRotation()*PI_G / 180.f)* coeff_y;
 	float x2 = x1 + sin(entita_.getRotation()*PI_G / 180.f)* coeff_x;
@@ -198,7 +199,8 @@ sf::Vector2f Nave::getPosition() { //da modificare i 12.5 con altezza/2 e larghe
 	return sf::Vector2f(x2, y2);
 }
 
-void Nave::setPosition(sf::Vector2f pos) { //non testata
+void Nave::setPosition(sf::Vector2f pos) { 
+	/*imposta la posizione della nave, pos = all'angolo in alto a sinistra*/
 	float coeff_x = entita_.getSize().x / 2;
 	float coeff_y = entita_.getSize().y / 2;
 
