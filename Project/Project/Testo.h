@@ -2,7 +2,7 @@
 #define TESTO_H
 
 #include <SFML/Graphics.hpp>
-
+/*Classe per gestire facilmente i testi nel gioco con relativo font*/
 class Testo : public sf::Drawable, public sf::Transformable {
 private:
 	sf::Text testo_;

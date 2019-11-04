@@ -30,6 +30,7 @@ void Gioco::processaEventi()
 }
 
 void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
+	/*Metodo per la gestione del click del mouse nei menu di inizio, pausa e restart*/
 
 	int gestioneMouse = gestisciMouse();
 	if (bottoneMouse == sf::Mouse::Button::Left && gestioneMouse == 1) {
@@ -73,6 +74,7 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 }
 
 int Gioco::gestisciMouse() {
+	/*Metodo per sapere quale scritta è stata premuta*/
 
 	sf::Vector2i posizioneMouse = sf::Mouse::getPosition(window_);
 	int pulsantePremuto = -1;
@@ -153,7 +155,7 @@ void Gioco::controlloRaggio()
 	}
 }
 
-void Gioco::controlloPassaggioUniverso()
+void Gioco::controlloPassaggioSistemaSolare()
 {	
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
@@ -172,7 +174,7 @@ void Gioco::controlloPassaggioUniverso()
 
 	if (direzione_universo != -1) {
 		// Se è possibile spostare la navicella in un altro universo
-		if (mappa_.spostamentoUniverso(direzione_universo)) {
+		if (mappa_.spostamentoSistemaSolare(direzione_universo)) {
 			switch (direzione_universo)
 			{
 			case 0: nave_.passaggioAmbiente(sf::Vector2f(nave_.getPosition().x, ALTEZZA - nave_.getSize().y));
@@ -320,9 +322,8 @@ void Gioco::controlloCollisioneProiettili()
 	// Vengono controllati i proiettili della Nave contro i Bunker (e viceversa)
 	nave_.controlloProiettili(mappa_.getProiettili());
 
-	//Viene restituiro un intoro dato che ad uno stesso ciclo possono essere stati colpiti piu bunker
+	//Viene restituiro un intero dato che ad uno stesso ciclo possono essere stati colpiti piu bunker
 
-	//Somma 1 tante volte perche per piu render di fila da il bunker come colpito in quell'istante(?)
 	int numeroBunkerColpiti = 0;
 		numeroBunkerColpiti = mappa_.controlloProiettili(nave_.getProiettili());
 		punteggio_ += numeroBunkerColpiti;
@@ -344,6 +345,8 @@ void Gioco::controlloCollisioneProiettiliSuperficie()
 }
 
 void Gioco::controlloAggiornamentoPunteggio() {
+	/*Viene aggiornato il punteggio*/
+
 	if (mappa_.aggiornaPunteggioBunker()) {
 		punteggio_ += 9;
 	}
@@ -370,7 +373,7 @@ void Gioco::update()
 	if (stato_ == UNIVERSO) {
 		controlloGameOver();
 
-		controlloPassaggioUniverso();
+		controlloPassaggioSistemaSolare();
 		controlloPassaggioPianeta();
 
 		movimentoNavicella();
@@ -463,7 +466,8 @@ void Gioco::avviaGioco()
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 
 	while (window_.isOpen()) {
-
+			/*restart_ è a true se ho perso e ho premuto restart nel menu apposito. Vengono quindi reinizializzate
+			le variabili refresh_ e timeSinceLastUpdate*/
 			if (restart_) {
 				refresh_.restart();
 				timeSinceLastUpdate = sf::Time::Zero;

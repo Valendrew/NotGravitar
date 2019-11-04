@@ -3,6 +3,9 @@
 #include <stdlib.h>
 
 void Universo::generaPianeti() {
+	/*Scorro la matrice di spawn settata all'interno del costruttore e quando 
+	trovo una cella a true genero nelle giuste coordinate un nuovo pianeta*/
+
 	int spawn_x = larghezza_finestra_ / colonne_;
 	int spawn_y = altezza_finestra_ / righe_;
 	int i = 1, j = 1;
@@ -127,8 +130,6 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 	altezza_finestra_ = altezza_finestra;
 
 	numero_pianeti_ = rand() % 2 + 4; //Pianeti da 4 a 5
-	std::cout << numero_pianeti_;
-	//numero_pianeti_ = 1;
 	visitato_ = false;
 	distrutto_ = false;
 	id_pianeta_ = 0;
@@ -142,12 +143,13 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 	int i = 0;
 	int j = 0;
 	int numero_pianeti_tmp = numero_pianeti_;
+
 	//ciclo tante volte quanti sono i pianeti
 	while (numero_pianeti_tmp > 0) {
 		int distanza = 1;
-		//col e row assumono un valore che dipende dalla distanza che si vuole avere tra i vari pianeti escludendo inoltre
-		//la cornice cosi da evitare che i pianeti sforino dallo schermo o che vengano 
-		//attaccati al bordo (sarebbe brutto)
+		/*colonna_ e riga_ assumono un valore che dipende dalla distanza che si vuole avere tra i vari pianeti (1 in questo caso) escludendo 
+		la cornice cosi da evitare che i pianeti vengano attaccati al bordo*/
+
 		do {
 			colonna_ = rand() % (colonne_ - distanza);
 			riga_ = rand() % (righe_ - distanza);
@@ -155,9 +157,11 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 		
 		i = distanza;
 		bool posizione_corretta_ = true;
-		//i due while scorrono una matrice di dimensione [d*2 +1] [d*2 +1] con "al centro" il valore di matriceSpawn[row][col]
-		//cosi da verificare che ne la posizione generata ne le posizioni attorno siano gia occupate da un true
-		//questo serve per non far venire i pianeti attaccati
+
+		/*i due while scorrono una matrice di dimensione [distanza*2 +1] [distanza*2 +1] con "al centro" il valore di matriceSpawn[riga_][colonna_]
+		cosi da verificare che ne la posizione generata ne le posizioni attorno siano gia occupate da un true
+		questo serve per non far venire i pianeti troppo ravvicinati*/
+
 		while (i >= -distanza && posizione_corretta_)
 		{
 			j = distanza;
@@ -169,7 +173,7 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 			}
 			i--;
 		}
-		//se la variabile ok è ancora a true significa che true puo essere assegnato alla posizione matriceSpawn[row][col]
+		//se la variabile posizione_corretta_ è ancora a true significa che true puo essere assegnato alla posizione matriceSpawn[riga_][colonna_]
 		//rispettando comunque il vincolo della distanza
 		if (posizione_corretta_) {
 			matrice_spawn_[riga_][colonna_] = true;
@@ -178,12 +182,17 @@ Universo::Universo(int larghezza_finestra, int altezza_finestra) {
 	}
 
 	generaPianeti();
+
+	//numero_pianeti_precedenti_ servira successivamente per i controlli sul punteggio
 	numero_pianeti_precedenti_ = numero_pianeti_;
 }
 
 Universo::Universo() :Universo(1280, 720) {}
 
 bool Universo::ricercaPianetaAttuale(sf::Vector2f posizione) {
+
+	/*Metodo per ricercare il pianeta nel quale il giocatore vuole entrare*/
+
 	listaPianeti lista_pianeti_tmp = lista_pianeti_;
 	pianeta_attuale_ = nullptr;
 	bool found = false;
@@ -203,6 +212,11 @@ bool Universo::ricercaPianetaAttuale(sf::Vector2f posizione) {
 }
 
 bool Universo::distrutto() {
+
+	/*Questo metodo mi da true quando ho appuna distrutto il sistema solare correnete.
+	Oltre a questo setta a true l'attributo distrutto_. Questo metodo non puo ritornare sempre true una volta distrutto il sistema
+	Perche altrimenti il punteggio aumenterebbe all'infinito*/
+
 	bool distrutto = true;
 	listaPianeti lista_pianeti_tmp = lista_pianeti_;
 

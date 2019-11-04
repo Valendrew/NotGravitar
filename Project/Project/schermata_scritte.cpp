@@ -24,13 +24,10 @@ SchermataScritte::SchermataScritte(int LARGHEZZA, int ALTEZZA) :
 
 
 void SchermataScritte::aggiornaTesto(const char stringa[], float valore) {
-
+	/*Metodo per aggiornare le scritte con valori numerici come vita, carburante e punteggio*/
 	char valoreToString[10];
 	char parteDecimaleToString[10];
 	char stringaCompleta[100];
-
-	
-
 	
 
 	_itoa_s(valore, valoreToString, 10, 10);

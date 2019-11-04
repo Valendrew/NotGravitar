@@ -78,7 +78,7 @@ int Pianeta::bunkerRimanenti() {
 
 Pianeta::Pianeta(float raggio, int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]) {
 
-	std::cout << "\n" << posizione.x << " " << posizione.y;
+	
 	id_ = id;
 	distrutto_ = false;
 	pianeta_.setRadius(raggio);
