@@ -35,7 +35,6 @@ void Gioco::mouseClick(sf::Mouse::Button bottoneMouse) {
 	/*Metodo per la gestione del click del mouse nei menu di inizio, pausa e restart*/
 
 	int gestione_mouse_ = gestisciMouse();
-	
 
 	//caso exit: chiudo il gioco
 	if (bottoneMouse == sf::Mouse::Button::Left && gestione_mouse_ == 1) {
@@ -111,10 +110,13 @@ int Gioco::gestisciMouse() {
 
 void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 {
+	/* Questa funzione si occupa di impostare i booleani per la gestione
+	della nave come veri, se è stato premuto il pulsante associato, oppure falsi
+	Questi booleani verrano poi utilizzati quando verrà verificato se effettuare
+	o meno un determinato movimento */
+
 	if (key == sf::Keyboard::W) {
 		nave_movimento_ = isPressed;
-
-		//nave_.cambiaTextureMovimento(nave_movimento_);
 	}
 	else if (key == sf::Keyboard::A) {
 		nave_rotazioneL_ = isPressed;
@@ -125,14 +127,19 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::Space) {
 		nave_spara_ = isPressed;
 	}
-	else if (key == sf::Keyboard::Down) {
+	else if (key == sf::Keyboard::R) {
 		nave_raggio_ = isPressed;
 	}
 }
 
 void Gioco::movimentoNavicella()
 {
+	/* Viene gestito il movimento dell'astronave e la sua rotazione, quest'ultima
+	viene effettuata solo se il booleano della relativa rotazione è vero*/
+
+	// Viene passato sia il booleano (per determinare se muoverla) che il framerate
 	nave_.muovi(time_frame_, nave_movimento_);
+
 	if (nave_rotazioneL_) {
 		nave_.ruotaSinistra();
 	}
@@ -143,6 +150,8 @@ void Gioco::movimentoNavicella()
 
 void Gioco::controlloSparo()
 {
+	/* Viene effettuato lo sparo dell'astronave solo se
+	è attivato il booleano */
 	if (nave_spara_) {
 		nave_.spara();
 	}
@@ -150,6 +159,10 @@ void Gioco::controlloSparo()
 
 void Gioco::controlloRaggio()
 {
+	/* Viene gestita l'attivazione del raggio traente, passando
+	il booleano alla funzione dell'astronave che se ne occupa, per poi
+	determinare se un oggetto è stato assorbito, e nel caso effettuare
+	l'incremento del relativo parametro */
 	nave_.attivaRaggio(nave_raggio_);
 
 	if (nave_raggio_) {
@@ -172,6 +185,10 @@ void Gioco::controlloRaggio()
 
 void Gioco::controlloPassaggioSistemaSolare()
 {	
+	/* Viene effettuato il controllo per il passaggio da un sistema solare
+	ad un altro. Per questo motivo vengono prima di tutto determinati i punti della
+	parte anteriore dell'astronave. Dopo di che, in base alla posizione, viene determinato
+	verso quale direzione effettuare il passaggio. */
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
 	int direzione_universo = -1;
@@ -187,8 +204,12 @@ void Gioco::controlloPassaggioSistemaSolare()
 		i++;
 	}
 
+	/* Nel caso debba essere effettuato uno spostamento (se possibile), questa condizione
+	restituirà vero. */
 	if (direzione_universo != -1) {
-		// Se è possibile spostare la navicella in un altro universo
+		/* Se è possibile spostare la navicella in un altro sistema solare, allora
+		verrà aggiornata la nuova posizione per permettere un movimento
+		naturale dell'astronave */
 		if (mappa_.spostamentoSistemaSolare(direzione_universo)) {
 			switch (direzione_universo)
 			{
@@ -203,35 +224,43 @@ void Gioco::controlloPassaggioSistemaSolare()
 				break;
 			}
 		}
-		// Se è impossibile visitare l'universo nel quale si vuole accedere
+		/*  Nel caso non sia possibile accedere al sistema solare, allora verrà
+		calcolata una nuova posizione della navicella per simulare un rimbalzo sul bordo */
 		else {
-			// Rimbalzo della navicella sul bordo dello schermo
-			float deg_angolo = nave_.getRotation();
-			float angolo = nave_.getRotation() * PI / 180;
+			// Calcolo per il rimbalzo della navicella sul bordo dello schermo
+			float angolo = nave_.getRotation() * PI / 180; // angolo in radianti
 			float s_x = cos(angolo);
 			float s_y = sin(angolo);
 
-			float new_angolo;
+			float nuovo_angolo;
+			// Nel caso il rimbalzo debba essere effettuato lungo l'asse X
 			if (direzione_universo == 1 || direzione_universo == 3) {
-				new_angolo = asin(s_y * -1) * 180 / PI;
+				nuovo_angolo = asin(s_y * -1) * 180 / PI;
 				if (s_x < 0) {
-					new_angolo = 180 - (new_angolo);
+					nuovo_angolo = 180 - (nuovo_angolo);
 				}
 			}
+			// Nel caso il rimbalzo debba essere effettuato lungo l'asse Y
 			else {
-				new_angolo = acos(s_x * -1) * 180 / PI;
+				nuovo_angolo = acos(s_x * -1) * 180 / PI;
 				if (s_y < 0) {
-					new_angolo = 270 - (new_angolo - 90);
+					nuovo_angolo = 270 - (nuovo_angolo - 90);
 				}
 				
 			}
-			nave_.setRotation(new_angolo);
+			nave_.setRotation(nuovo_angolo); // viene impostato il nuovo angolo
 		}
 	}
 }
 
 void Gioco::controlloPassaggioPianeta()
 {
+	/* Viene effettuato il controllo per entrare devo un pianeta, per questo
+	deve essere ottenuta la posizione frontale dell'astronave, per poi verificare 
+	se la sua posizione coincide con il pianeta. Nel caso si verificasse questa
+	condizione, viene aggiornato il nuovo stato del gioco, su PIANETA, per poi
+	cambiare la posizione dell'astronave, solo dopo aver salvato la posizione precedente
+	(da riutilizzare nell'uscita del pianeta) */
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
 	bool entrata_pianeta = false;
@@ -254,6 +283,10 @@ void Gioco::controlloPassaggioPianeta()
 
 void Gioco::controlloUscitaPianeta()
 {
+	/* Viene gestita l'uscita dal pianeta, controllando se la posizione
+	dell'astronave è vicina al bordo superiore. In tal caso viene cambiato lo stato,
+	da PIANETA a UNIVERSO, per poi aggiornare la posizione dell'astronave a quella
+	precedente all'entrata nel pianeta.*/
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
 	bool uscita_pianeta = false;
@@ -278,6 +311,9 @@ void Gioco::controlloUscitaPianeta()
 
 void Gioco::controlloPassaggioSuperficie()
 {
+	/* Viene gestito il passaggio da una superficie ad un'altra
+	(sono 3 in totale su un singolo pianeta), controllando se la posizione
+	della navicella è vicina al bordo sinistro oppure destro.*/
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
 	int direzione = -1;
@@ -302,6 +338,8 @@ void Gioco::controlloPassaggioSuperficie()
 
 void Gioco::controlloCollisioneSuperficie()
 {
+	/* Viene controllato se l'astronave ha toccato il bordo della superficie, 
+	in tal caso viene effettuato un rimbalzo della nave, per poi diminuire la sua vita*/
 	sf::VertexArray punti = nave_.getPosizioneFrontale();
 
 	bool collisione_superficie = false;
@@ -315,7 +353,6 @@ void Gioco::controlloCollisioneSuperficie()
 
 	if (collisione_superficie) {
 		// La nave viene fatta rimbalzare
-		float deg_angolo = nave_.getRotation();
 		float angolo = nave_.getRotation() * PI / 180;
 		float s_x = cos(angolo);
 		float s_y = sin(angolo);
@@ -328,7 +365,7 @@ void Gioco::controlloCollisioneSuperficie()
 
 		nave_.setRotation(new_angolo);
 
-		nave_.setDannoCollisione();
+		nave_.setDannoCollisione(); // viene diminuita la vita a causa della collisione
 	}
 }
 
@@ -337,11 +374,10 @@ void Gioco::controlloCollisioneProiettili()
 	// Vengono controllati i proiettili della Nave contro i Bunker (e viceversa)
 	nave_.controlloProiettili(mappa_.getProiettili());
 
-	//Viene restituiro un intero dato che ad uno stesso ciclo possono essere stati colpiti piu bunker
-
+	//Viene restituito un intero dato che ad uno stesso ciclo possono essere stati colpiti piu bunker
 	int numeroBunkerColpiti = 0;
-		numeroBunkerColpiti = mappa_.controlloProiettili(nave_.getProiettili());
-		punteggio_ += numeroBunkerColpiti;
+	numeroBunkerColpiti = mappa_.controlloProiettili(nave_.getProiettili());
+	punteggio_ += numeroBunkerColpiti;
 }
 
 void Gioco::controlloCollisioneProiettiliSuperficie()
