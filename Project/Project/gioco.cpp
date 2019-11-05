@@ -398,13 +398,19 @@ void Gioco::controlloCollisioneProiettiliSuperficie()
 void Gioco::controlloAggiornamentoPunteggio() {
 	/*Viene aggiornato il punteggio*/
 
+
+	/*Il metodo controlla se il numero di bunker attuale sul pianeta è minore di quello precedente. In caso affermativo
+	(a meno che i bunker rimasti non siano 0) viene ritornato true.*/
 	if (mappa_.aggiornaPunteggioBunker()) {
 		punteggio_ += 9;
 	}
+	/*Se aggiornaPunteggioBunker() torna false si controlla se il numero di pianeti attuale è minore di quello precedente. In caso affermativo
+	(a meno che non siano rimasti 0) viene ritornato true.*/
 	else if (mappa_.aggiornaPunteggioPianeta()) {
 			punteggio_ += 49;
 	}
-	else if (mappa_.aggiornaPunteggioUniverso()) {
+	/*Se entrambi i controlli precedenti sono falsi viene conrtollato se nell'attuale sistema solore sono stati distrutti tutti i pianeti.*/
+	else if (mappa_.aggiornaPunteggioSistemaSolare()) {
 		punteggio_ += 99;
 	}
 	schermata_scritte_.aggiornaTesto("PUNTEGGIO: ", punteggio_);

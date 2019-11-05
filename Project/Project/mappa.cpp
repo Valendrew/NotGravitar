@@ -207,7 +207,7 @@ bool Mappa::aggiornaPunteggioPianeta()
 	else return false;
 }
 
-bool Mappa::aggiornaPunteggioUniverso()
+bool Mappa::aggiornaPunteggioSistemaSolare()
 {
 	if (posizione_attuale_ != nullptr && (*posizione_attuale_->universo).distrutto())
 		return true;

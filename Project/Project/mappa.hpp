@@ -54,7 +54,7 @@ public:
 
 	bool aggiornaPunteggioBunker();
 	bool aggiornaPunteggioPianeta();
-	bool aggiornaPunteggioUniverso();
+	bool aggiornaPunteggioSistemaSolare();
 	void restart(int width_, int height_);
 };
 
