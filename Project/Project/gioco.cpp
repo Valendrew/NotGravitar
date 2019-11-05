@@ -382,6 +382,9 @@ void Gioco::controlloCollisioneProiettili()
 
 void Gioco::controlloCollisioneProiettiliSuperficie()
 {
+	/* Viene ottenuta una lista ausiliaria contenente i proiettili
+	dell'astronave. Per ogni proiettile viene controllato se la sua posizione
+	è contenuta all'interno della superficie, in caso positivo esso viene eliminato*/
 	proiettile_ptr lista_p = nave_.getProiettili();
 
 	while (lista_p != nullptr)
@@ -418,6 +421,9 @@ void Gioco::controlloAggiornamentoPunteggio() {
 }
 
 void Gioco::controlloGameOver() {
+	/* Se la nave è distrutta, ossia se ha finito
+	il carburante oppure la vita, il gioco termina e viene
+	mostrata la schermata di gameover */
 
 	if (nave_.getDistrutto()) {
 		stato_ = GAMEOVER;
@@ -427,6 +433,7 @@ void Gioco::controlloGameOver() {
 
 void Gioco::update()
 {
+	// Nel caso l'astronave si trovi nell'Universo
 	if (stato_ == UNIVERSO) {
 		controlloGameOver();
 
@@ -435,6 +442,7 @@ void Gioco::update()
 
 		movimentoNavicella();
 	}
+	// Nel caso l'astronave si trovi nel Pianeta
 	else if (stato_ == PIANETA) {
 		controlloGameOver();
 		controlloAggiornamentoPunteggio();
@@ -456,28 +464,32 @@ void Gioco::update()
 
 void Gioco::render()
 {
-	window_.clear(sf::Color::Black);
+	window_.clear(sf::Color::Black); // vengono eliminati i render precedenti
 
+	// Se l'astronave è ancora in gioco (ossia nell'Universo o nel Pianeta)
 	if (stato_ == UNIVERSO || stato_ == PIANETA) {
-		// TODO: SPOSTARE IN UN ALTRA FUNZIONE DI GESTIONE DEL GIOCO
+		// Vengono aggiornati i valori relativi alla vita e al carburante
 		schermata_scritte_.aggiornaTesto("VITA: ", nave_.getVita());
 		schermata_scritte_.aggiornaTesto("CARBURANTE: ", nave_.getCarburante());
 
+		// Viene mostrata l'attuale schermata (che sia il sistema solare oppure il pianeta)
 		window_.draw(mappa_);
-		nave_.drawComportamento(window_, sf::RenderStates());
+		nave_.drawComportamento(window_, sf::RenderStates()); // Viene mostrata l'astronave
 
+		// Vengono disegnati il "bottone" per la pausa, il punteggio, la vita e il carburante
 		window_.draw(pausa_);
 		window_.draw(schermata_scritte_.getPunteggio());
 		window_.draw(schermata_scritte_.getVita());
 		window_.draw(schermata_scritte_.getCarburante());
 	}
-	else {
+	// Nel caso in cui il gioco sia in pausa, nel menù o in schermata di gameover
+	else { 
 		window_.draw(schermata_scritte_.getTitolo());
 		window_.draw(schermata_scritte_.getStart());
 		window_.draw(schermata_scritte_.getExit());
 		window_.draw(schermata_scritte_.getSubtitle());
 
-		if(stato_ != START)
+		if (stato_ != START)
 		window_.draw(schermata_scritte_.getPunteggio());
 	}
 	window_.display();
@@ -490,30 +502,34 @@ Gioco::Gioco() :
 	, mappa_(LARGHEZZA, ALTEZZA)
 	,schermata_scritte_(LARGHEZZA, ALTEZZA)
 {
+	// Pausa opera come un bottone, nonostante sia una shape con la propria texture
 	pausa_.setSize(sf::Vector2f(61.8, 64.0));
 	texture_.loadFromFile("Texture/pausa2.png");
 	texture_.setSmooth(true);
-	pausa_.setFillColor(sf::Color::Color(255,255,255,160));
+	pausa_.setFillColor(sf::Color(255,255,255,160));
 	pausa_.setTexture(&texture_);
-
-	punteggio_ = 0;
-	schermata_scritte_.aggiornaTesto("PUNTEGGIO: ", punteggio_);
 
 	float pausa_size = schermata_scritte_.getPunteggio().getGlobalBounds().height + 15;
 	pausa_.setSize(sf::Vector2f(pausa_size, pausa_size));
 	pausa_.setPosition(LARGHEZZA - pausa_.getSize().x, 0);
 
+	punteggio_ = 0; // viene impostato il punteggio a 0
+	schermata_scritte_.aggiornaTesto("PUNTEGGIO: ", punteggio_);
+
+	// Vengono impostati a falso i booleani relativi ai movimenti e le azioni dell'astronave
 	nave_movimento_ = false;
 	nave_rotazioneL_ = false;
 	nave_rotazioneR_ = false;
 	nave_spara_ = false;
 	nave_raggio_ = false;
-	restart_ = false;
+
+	restart_ = false; // booleano per riavviare il gioco una volta terminato (se desiderato dall'utente)
 
 	posizione_entrata_pianeta_ = sf::Vector2f(); // posizione della nave prima di entrare nel pianeta
 
-	time_frame_ = sf::seconds(1.f / 144.f);
+	time_frame_ = sf::seconds(1.f / 144.f); // frametime
 
+	// Lo stato iniziale sarà il menù
 	stato_ = START;
 }
 
