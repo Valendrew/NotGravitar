@@ -127,7 +127,7 @@ void Gioco::gestisciMovimentoNave(sf::Keyboard::Key key, bool isPressed)
 	else if (key == sf::Keyboard::Space) {
 		nave_spara_ = isPressed;
 	}
-	else if (key == sf::Keyboard::R) {
+	else if (key == sf::Keyboard::LShift) {
 		nave_raggio_ = isPressed;
 	}
 }

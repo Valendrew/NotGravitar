@@ -77,12 +77,12 @@ void SuperficiePianeta::generaBunker()
 	sf::Vector2f grandezza_bunker(ratio * 0.5, ratio * 0.5);
 	sf::Vector2f grandezza_bunker_stronger(ratio * 0.6, ratio * 0.6);
 
-	// Il numero di bunker sarà compreso tra 2 e 4
-	int numero_di_bunker = (rand() % 3) + 2;
+	// Il numero di bunker sarà compreso tra 1 e 3
+	int numero_bunker = (rand() % 3) + 1;
 	int distanza = 4; // distanza tra un bunker e un altro
 	
-	// Viene generato un solo bunker (Stronger) da 3 proiettili per superficie
-	int bunker_stronger = 1;
+	// Viene generato un bunker Stronger (da 3 proiettili), oppure nessuno
+	int numero_bunker_stronger = rand() % 2;
 
 	/* Inizialmente viene scelta casualmente la posizione del bunker
 	tra le linee 1 e (MAX - 1), dopo di che, se nella posizione non è presente
@@ -90,7 +90,7 @@ void SuperficiePianeta::generaBunker()
 	il bunker verrà generato nel punto medio. Nel caso la posizione scelta sia già 
 	occupata, verrà ripetuto il ciclo, diminuendo però la distanza per il controllo*/
 
-	while (numero_di_bunker > 0 || bunker_stronger > 0) {
+	while (numero_bunker > 0 || numero_bunker_stronger > 0) {
 		int posizione_bunker = rand() % (NUMERO_DI_LINEE - 2) + 1; // scelta della linea
 
 		// Viene effettuato un controllo sia sulla linea appena generata, e sia in quelle adiacenti (dipende dalla distanza)
@@ -99,14 +99,14 @@ void SuperficiePianeta::generaBunker()
 				distanza = 4; // viene impostata la distanza a 4, nel caso fosse stata decrementata in precedenza
 
 				// Inizialmente vengono generati i bunker stronger
-				if (bunker_stronger > 0) {
+				if (numero_bunker_stronger > 0) {
 					aggiungiOggetto(posizione_bunker, BUNKER_STRONGER, grandezza_bunker_stronger);
-					bunker_stronger--;
+					numero_bunker_stronger--;
 				}
 				// Caso del bunker "normale"
 				else {
 					aggiungiOggetto(posizione_bunker, BUNKER, grandezza_bunker); // metodo per aggiungere il bunker alla struttura
-					numero_di_bunker--;
+					numero_bunker--;
 				}
 
 				// Posizione impostata a vero, per indicare che adesso è occupata da un bunker
@@ -177,7 +177,7 @@ void SuperficiePianeta::inserisciNodoBunker(sf::Vector2f coordinate, float angol
 {
 	/* Vengono generate le proprietà del bunker, che verrano passate al costruttore della classe */
 	float vita = 50;
-	float danno = 12;
+	float danno = 4;
 
 	Bunker *new_bunker = new Bunker(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_2.png", "Texture/bunker_2d.png", coordinate, dimensione, angolo);
 
@@ -198,7 +198,7 @@ void SuperficiePianeta::inserisciNodoBunkerStronger(sf::Vector2f coordinate, flo
 {
 	/* Vengono generate le proprietà del bunker stronger, che verrano passate al costruttore della classe */
 	float vita = 70;
-	float danno = 16;
+	float danno = 9;
 
 	BunkerStronger *new_bunker = new BunkerStronger(larghezza_finestra_, altezza_finestra_, vita, danno, "Texture/bunker_s_2.png", "Texture/bunker_s_2d.png", coordinate, dimensione, angolo);
 
@@ -382,11 +382,13 @@ SuperficiePianeta::SuperficiePianeta() : SuperficiePianeta(1280, 720, sf::Color:
 
 sf::Vector2f SuperficiePianeta::getFirstVertex()
 {
+	// Restituisce il primo vertice della superficie
 	return vertici_superficie_[0].position;
 }
 
 sf::Vector2f SuperficiePianeta::getLastVertex()
 {
+	// Restituisce l'ultimo vertice della superficie
 	return vertici_superficie_[vertici_superficie_.getVertexCount() - 1].position;
 }
 
@@ -394,6 +396,7 @@ proiettile_ptr SuperficiePianeta::getProiettili()
 {
 	/* In questo metodo viene creata una lista dei proiettili di tutti i bunker e bunker stronger, 
 	da utilizzare per vari controlli (collisioni, danno con astronave)*/
+
 	proiettile_ptr lista_proiettili = nullptr;
 	
 	bunker_ptr tmp_list = bunker_;
@@ -460,8 +463,7 @@ void SuperficiePianeta::resetProiettiliBunker()
 
 sf::VertexArray SuperficiePianeta::getPosizioneLineaSuperficie(sf::Vector2f posizione)
 {
-	/* Vengono restituiti i due vertici di una linea che coincida (come ascisse), come il parametro
-	posizione*/
+	/* Vengono restituiti i due vertici della linea in cui è compresa la posizione*/
 	sf::VertexArray pos_linea(sf::LineStrip, 2);
 
 	bool found = false;
@@ -482,9 +484,10 @@ sf::VertexArray SuperficiePianeta::getPosizioneLineaSuperficie(sf::Vector2f posi
 	return pos_linea;
 }
 
-bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
+bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f posizione)
 {
-	sf::VertexArray pos_linea = getPosizioneLineaSuperficie(pos);
+	/* Viene verificato se la posizione collide con la linea della superficie*/
+	sf::VertexArray pos_linea = getPosizioneLineaSuperficie(posizione);
 
 	sf::Vector2f point_1 = pos_linea[0].position;
 	sf::Vector2f point_2 = pos_linea[1].position;
@@ -494,13 +497,14 @@ bool SuperficiePianeta::controlloCollisioneSuperficie(sf::Vector2f pos)
 
 	float ordinata_origine = point_1.y - point_1.x * coefficiente_angolare;
 
-	float nave_y_retta = pos.x * coefficiente_angolare + ordinata_origine;
+	float nave_y_retta = posizione.x * coefficiente_angolare + ordinata_origine;
 
-	return (nave_y_retta < pos.y);
+	return (nave_y_retta < posizione.y);
 }
 
 int SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 {
+	/* Viene effettuato per ogni proiettile se collide con un bunker della superficie*/
 	bunker_ptr tmp_bunker = bunker_;
 	int numeroBunkerColpiti = 0;
 
@@ -528,6 +532,7 @@ int SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 	}
 	return numeroBunkerColpiti;
 }
+
 bool SuperficiePianeta::intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2) {
 	int x1 = a1.x;
 	int y1 = a1.y;
@@ -549,6 +554,7 @@ bool SuperficiePianeta::intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vecto
 	return false;
 
 }
+
 Tipologia SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
 {
 	Tipologia oggetto_assorbito = DEFAULT;

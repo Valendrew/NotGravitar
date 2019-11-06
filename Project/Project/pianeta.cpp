@@ -77,16 +77,14 @@ int Pianeta::bunkerRimanenti() {
 }
 
 Pianeta::Pianeta(float raggio, int id, sf::Vector2f posizione, unsigned int larghezza_finestra, unsigned int altezza_finestra, const char tipologia[], const char texture[], const char texture_distrutto[]) {
-
-	
-	id_ = id;
+	id_ = id; // id pianeta
 	distrutto_ = false;
-	pianeta_.setRadius(raggio);
-	pianeta_.setPointCount(100);
-	numero_superfici_ = 3;
+	pianeta_.setRadius(raggio); // raggio del pianeta
+	pianeta_.setPointCount(100); 
 	pianeta_.setOrigin(0 , 0);
 	pianeta_.setPosition(posizione);
 
+	// Viene impostato il tipo del pianeta tra i tre disponibili
 	if (strcmp(tipologia, "ACQUA") == 0) {
 		tipo_pianeta_ = ACQUA;
 	}
@@ -96,7 +94,8 @@ Pianeta::Pianeta(float raggio, int id, sf::Vector2f posizione, unsigned int larg
 	else {
 		tipo_pianeta_ = ERBA;
 	}
-
+	
+	// Caricamento della texture
 	texture_.loadFromFile(texture);
 	pianeta_.setTexture(&texture_);
 
@@ -105,12 +104,15 @@ Pianeta::Pianeta(float raggio, int id, sf::Vector2f posizione, unsigned int larg
 	larghezza_finestra_ = larghezza_finestra;
 	altezza_finestra_ = altezza_finestra;
 
+	// Vengono impostato a nulli i due puntatore per gestire le superfici
 	superficie_head_ = nullptr;
 	superficie_tail_ = nullptr;
 
+	// Vengono generate le superfici
 	numero_superfici_ = 3;
 	generaSuperficie();
 
+	/* Viene impostato il numero totale dei bunker */
 	superficie_ptr superficie_tmp = superficie_head_;
 
 	while (superficie_tmp != nullptr) {
@@ -182,6 +184,11 @@ bool Pianeta::getDistrutto()
 
 int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 {
+	/* Viene effettuato un controllo per verificare se la posizione è oltre il bordo, in
+	modo tale da cambiare schermata per mostrare la superficie corretta. Se la posizione è
+	minore di 0, allora si dovrà spostare il puntatore delle superfici verso destra (->next),
+	in caso contrario verso sinistra (->prev). Viene effettuato un controllo nel caso si esca dalla lista*/
+
 	int direzione = -1;
 	int offset = 0;
 
@@ -213,6 +220,7 @@ int Pianeta::controlloPassaggioSuperficie(sf::Vector2f posizione)
 
 bool Pianeta::controlloCollisioneSuperficie(sf::Vector2f posizione)
 {
+	/* Richiama il metodo per controllare la collisione dell'entità con la superficie*/
 	bool collisione_superficie = false;
 	if (superficie_attuale_ != nullptr) {
 		collisione_superficie = (*superficie_attuale_->superficie_item).controlloCollisioneSuperficie(posizione);
