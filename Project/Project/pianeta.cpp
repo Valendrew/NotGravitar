@@ -63,6 +63,11 @@ void Pianeta::generaSuperficie()
 }
 
 int Pianeta::bunkerRimanenti() {
+
+	/*Il metodo restituisce la sommatoria (complessiva di tutte le superfici che compongono il pianeta)
+	di bunker e bunker_stronger non ancora distrutti.
+	Questo Metodo sarà utile successivamente per il calcolo del punteggio. In particolare quando il numero di bunker sulla superficie totale
+	del pianeta diminuira di 1 verrà assegnato del punteggio bonus al giocatore.*/
 	int bunker_rimanenti = 0;
 	superficie_ptr tmp_superficie = superficie_head_;
 
@@ -142,10 +147,15 @@ sf::FloatRect Pianeta::getGlobalBounds()
 
 bool Pianeta::distruzioneSingoloBunker()
 {
+	//numero_bunker_precedenti è inizializzato nel costruttore = al numero totale di bunker sul pianeta
+
+	/*Se bunker_rimanenti_ è minore di numero_bunker_precedenti vuol dire che sul pianeta attuale è appena stato distrutto un bunker
+	Quindi il metodo torna true così da poter aggiornare il punteggio nel modo adeguato.*/
+
 	bool distrutto = false;
 	int bunker_rimanenti_ = bunkerRimanenti();
-	//il controllo != 0 è presente poiche se il numero di bunker rimanenti è 0 siamo nel caso in cui l'intero pianeta è distrutto
 
+	//il controllo != 0 è presente poiche se il numero di bunker rimanenti è 0 siamo nel caso in cui l'intero pianeta è distrutto
 	if (bunker_rimanenti_ != 0 && bunker_rimanenti_ < numero_bunker_precedenti) {
 		distrutto = true;
         numero_bunker_precedenti = bunker_rimanenti_;
@@ -156,6 +166,9 @@ bool Pianeta::distruzioneSingoloBunker()
 
 void Pianeta::isDistrutto()
 {
+	/*Ogni pianeta è costituito da piu superfici, se tutte le superfici che compongono il pianeta sono distrutte
+	assegno true all'attributo distrutto_ e setto la nuova texture al pianeta.*/
+
 	bool distrutto = true;
 
 		superficie_ptr superficie_head_tmp = superficie_head_;
@@ -176,6 +189,9 @@ void Pianeta::isDistrutto()
 
 bool Pianeta::getDistrutto()
 {  
+	/*Se l'attributo distrutto_ è false richiamo il metodo isDistrutto() per eventualmente settarlo a true.
+	Dopo di che restituisco il suo valore*/
+
 	if (!distrutto_) 
 		isDistrutto();
 

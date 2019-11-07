@@ -587,6 +587,10 @@ Tipologia SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
 
 void SuperficiePianeta::isDistrutta()
 {
+	/*Ogni pianeta è costituito da piu superfici, ognuna delle quali ha una lista di bunker e una di bunker_stronger al suo interno.
+	Per controllare se una singola superficie è distrutta viene scorsa sia la lista dei bunker sia la lista dei bunker_stronger e se il booleano
+	distrutta rimane a true dopo entrambi i cicli l'attributo distrutta_ viene settato a true.
+	Conseguentemente un pianeta sarà distrutto quando tutte le superfici che lo compongono avranno l'attributo distrutta_ == true*/
 	bool distrutta = true;
 	bunker_ptr bunker_tmp = bunker_;
 	bunker_stronger_ptr bunker_stronger_tmp = bunker_stronger_;
@@ -609,6 +613,8 @@ void SuperficiePianeta::isDistrutta()
 }
 
 bool SuperficiePianeta::getDistrutta() {
+	
+	/*Se distrutta_ == false richiamo il metodo isDistrutta() per segnarla eventualmente come vera, dopo di che ne restituisco il valore*/
 	if (!distrutta_)
 		isDistrutta();
 	
@@ -617,6 +623,9 @@ bool SuperficiePianeta::getDistrutta() {
 
 int SuperficiePianeta::getNumeroBunker()
 {
+	/*Il metodo restituisce la sommatoria di bunker e bunker_stronger non ancora distrutti.
+	Questo Metodo sarà utile successivamente per il calcolo del punteggio. In particolare quando il numero di bunker sulla superficie totale
+	del pianeta diminuira di 1 verrà assegnato del punteggio bonus al giocatore.*/
 	int numeroBunker = 0;
 	bunker_ptr bunker_tmp = bunker_;
 	bunker_stronger_ptr bunker_stronger_tmp = bunker_stronger_;
