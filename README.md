@@ -5,7 +5,7 @@ Il gioco ricorda le meccaniche del famoso gioco _Gravitar_, l'unica variante è 
 Il giocatore, grazie all'astronave, dovrà esplorare l'universo sconfiggendo i bunker nemici presenti all'interno dei pianeti.
 
 ## SVILUPPO
-Il progetto è stato sviluppato in C++ con SFML (Simple and Fast Multimedia Library), utilizzando l’IDE Visual Studio, con il supporto di bitbucket.
+Il progetto è stato sviluppato in C++ con SFML (Simple and Fast Multimedia Library), utilizzando l’IDE Visual Studio.
 
 ## COMANDI ASTRONAVE
 W: Accelerazione  
