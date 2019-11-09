@@ -498,7 +498,7 @@ void Gioco::render()
 Gioco::Gioco() :
 	window_(sf::VideoMode(LARGHEZZA, ALTEZZA), "Not-Gravitar", sf::Style::Default, sf::ContextSettings(0, 0, 8))
 	, nave_(LARGHEZZA, ALTEZZA, 100, 10, "Texture/ship_1.png", "Texture/ship_1d.png",
-		sf::Vector2f(50, 50), sf::Vector2f(52, 52), 0, 300, 2.f, 10)
+		sf::Vector2f(50, 50), sf::Vector2f(52, 52), 0, 300, 1.5f, 10)
 	, mappa_(LARGHEZZA, ALTEZZA)
 	,schermata_scritte_(LARGHEZZA, ALTEZZA)
 {

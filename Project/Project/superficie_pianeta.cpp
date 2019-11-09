@@ -77,8 +77,8 @@ void SuperficiePianeta::generaBunker()
 	sf::Vector2f grandezza_bunker(ratio * 0.5, ratio * 0.5);
 	sf::Vector2f grandezza_bunker_stronger(ratio * 0.6, ratio * 0.6);
 
-	// Il numero di bunker sarà compreso tra 1 e 3
-	int numero_bunker = (rand() % 3) + 1;
+	// Il numero di bunker sarà compreso tra 2 e 3
+	int numero_bunker = (rand() % 2) + 2;
 	int distanza = 4; // distanza tra un bunker e un altro
 	
 	// Viene generato un bunker Stronger (da 3 proiettili), oppure nessuno
