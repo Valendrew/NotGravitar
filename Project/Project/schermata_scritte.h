@@ -21,14 +21,8 @@ public:
 	void aggiornaTesto(const char stringa[], float valore);
 	void setGameOver();
 	void setPausa();
-
-	void setString(std::string s);
-	sf::FloatRect getGlobalBounds();
-	std::string getString();
-	void setCharacterSize(int size);
-	void setPosition(sf::Vector2f pos);
-	sf::Vector2f getPosition();
-
+	void setStart();
+	void setPunteggio();
 	sf::Text getExit();
 	sf::Text getStart();
 	sf::Text getTitolo();
@@ -37,8 +31,7 @@ public:
 	sf::Text getVita();
 	sf::Text getCarburante();
 	int gestioneMouse(sf::Vector2i pos);
-	void setStart();
-	void setPunteggio();
+	
 
 };
 
