@@ -6,12 +6,6 @@
 class Mappa : public sf::Drawable, public sf::Transformable  {
 protected:
 
-	/*Le coordinate sono utilizzare per mappare i vari sistemi solari nell'universo come in un piano cartesiano.*/
-	struct coordinate {
-		int x;
-		int y;
-	};
-
 	sf::Sprite sfondo_;
 	sf::Texture texture_;
 	int larghezza_finestra_;
@@ -19,7 +13,7 @@ protected:
 	bool stato_attacco_;
 	struct nodoMappa {
 		Universo *universo;
-		coordinate posizione;
+		sf::Vector2i posizione;
 		nodoMappa *next;
 	};
 
