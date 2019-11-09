@@ -29,7 +29,7 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 
 	velocita_sparo_ = 5.f;
 
-	proiettili_ = nullptr;
+	proiettili_ = nullptr; // lista dei proiettili inizialmente vuota
 
 	
 	int i = 0;
@@ -47,6 +47,7 @@ Comportamento::Comportamento(unsigned int larghezza_finestra, unsigned int altez
 
 	esplosione_corrente_ = 0;
 
+	/*Imposta la texture dell'espolsione*/
 	texture_esplosione_.loadFromFile("Texture/bunker_esplosione_1.png"); //imposta texture
 	esplosione_ = sf::RectangleShape(dimensione);
 	esplosione_.setTexture(&texture_esplosione_);

@@ -502,6 +502,8 @@ int SuperficiePianeta::controlloProiettili(proiettile_ptr lista_proiettili)
 	return numeroBunkerColpiti;
 }
 bool SuperficiePianeta::intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vector2f a2, sf::Vector2f b2) {
+	/*restituisce se il segmento a1 b1 interseca (a destra di a 2)
+	con la retta passante per a2 b2*/
 	int x1 = a1.x;
 	int y1 = a1.y;
 	int x2 = b1.x;
@@ -511,19 +513,22 @@ bool SuperficiePianeta::intersezione(sf::Vector2f a1, sf::Vector2f b1, sf::Vecto
 	int y3 = a2.y;
 	int x4 = b2.x;
 	int y4 = b2.y;
+
 	if (y1 == y2)y1++;
-	if (((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4)) != 0)
+	if (((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4)) != 0)	//controllo di non dividere per 0
 	{
-		double retX = ((x1*y2 - y1 * x2)*(x3 - x4) - (x1 - x2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
-		double retY = ((x1*y2 - y1 * x2)*(y3 - y4) - (y1 - y2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
+		double retX = ((x1*y2 - y1 * x2)*(x3 - x4) - (x1 - x2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));	//punto x di intersezione
+		double retY = ((x1*y2 - y1 * x2)*(y3 - y4) - (y1 - y2)*(x3*y4 - y3 * x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));	//punto y di intersezione
 		return retX > x3 && ((retX <= x1 && retX >= x2) || (retX >= x1 && retX <= x2)) &&
-			((retY <= y1 && retY >= y2) || (retY >= y1 && retY <= y2));
+			((retY <= y1 && retY >= y2) || (retY >= y1 && retY <= y2)); //restituisco se il punto di intesezione è a destra di a2 e è contenuto nel segmento a1 b1
 	}
 	return false;
 
 }
 Tipologia SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
 {
+	/*controllo se l'oggetto è contenuto nel raggio traente,
+	restituisce l'oggetto contenuti*/
 	Tipologia oggetto_assorbito = DEFAULT;
 	if (oggetto_bonus != NULL) {
 		int i = 0;
@@ -533,18 +538,20 @@ Tipologia SuperficiePianeta::controlloRaggio(sf::ConvexShape raggio)
 		sf::Vector2f d = raggio.getTransform().transformPoint(raggio.getPoint(3));
 
 
-		sf::Vector2f posBenzina = (*oggetto_bonus).getPosition();
-		sf::Vector2f posBenzina2 = (*oggetto_bonus).getPosition();
-		posBenzina2.x = posBenzina.x + 30;
+		sf::Vector2f posOggetto = (*oggetto_bonus).getPosition();
+		sf::Vector2f posOggetto2 = (*oggetto_bonus).getPosition();	//necessito di due punti per tracciare una retta 
+		posOggetto2.x = posOggetto.x + 30;
 
-		if (intersezione(a, b, posBenzina, posBenzina2)) i++;
-		if (intersezione(b, c, posBenzina, posBenzina2)) i++;
-		if (intersezione(c, d, posBenzina, posBenzina2)) i++;
-		if (intersezione(d, a, posBenzina, posBenzina2)) i++;
+		/*controolo quante intersezioni ci sono tra la semiretta orizzontale che 
+		parte dalla posizione dell'oggetto e va verso destra e i segmenti del raggio*/
+		if (intersezione(a, b, posOggetto, posOggetto2)) i++;
+		if (intersezione(b, c, posOggetto, posOggetto2)) i++;
+		if (intersezione(c, d, posOggetto, posOggetto2)) i++;
+		if (intersezione(d, a, posOggetto, posOggetto2)) i++;
 
-		if (i == 1) {
+		if (i == 1) {	//se le intersezioni sono una sola, significa che l'oggetto è all'interno del raggio
 			oggetto_assorbito = (*oggetto_bonus).getTipologia();
-			delete oggetto_bonus;
+			delete oggetto_bonus;	//elimino l'oggetto puntato
 			oggetto_bonus = nullptr;
 		}
 	}
