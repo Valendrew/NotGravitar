@@ -1,7 +1,7 @@
 #include "mappa.hpp";
 #include <iostream>;
 
-Mappa::listaUniversi Mappa::aggiungiUniverso(int coordinata_universo_x, int coordinata_universo_y) {
+Mappa::listaUniversi Mappa::aggiungiSistemaSolare(int coordinata_universo_x, int coordinata_universo_y) {
 	//quando creo un nuovo universo lo aggiungo in testa alla lista cosi da avere l'inserimento in O(1)
 	listaUniversi tmp = new nodoMappa;
 	tmp->posizione.x = coordinata_universo_x;
@@ -12,7 +12,7 @@ Mappa::listaUniversi Mappa::aggiungiUniverso(int coordinata_universo_x, int coor
 	return list_universi_;
 }
 
-Mappa::listaUniversi Mappa::cercaUniverso(int x, int y) {
+Mappa::listaUniversi Mappa::cercaSistemaSolare(int x, int y) {
 	//Dato che ogni universo è associato ad una coppia di coordinate cosi da distinguelo in modo univoco per sapere se un
 	//universo è gia presente in lista o meno cerco all'interno della lista un universo con le coordinate di interesse
 	listaUniversi list_universi_tmp = list_universi_;
@@ -57,7 +57,7 @@ Mappa::Mappa(int larghezza_finestra, int altezza_finestra) {
 	list_universi_->universo = new Universo(larghezza_finestra, altezza_finestra);
 	list_universi_->next = nullptr;
 
-	universo_di_gioco_ = list_universi_;
+	sistema_solare_di_gioco_ = list_universi_;
 	posizione_attuale_ = list_universi_;
 }
 
@@ -85,7 +85,7 @@ void Mappa::uscitaPianeta() {
 	(*posizione_attuale_->universo).uscitaPianeta();
 }
 
-bool Mappa::spostamentoUniverso(int direzione) {
+bool Mappa::spostamentoSistemaSolare(int direzione) {
 	/*
 		0 = nord
 		1 = est
@@ -95,66 +95,68 @@ bool Mappa::spostamentoUniverso(int direzione) {
 		In base alla posizione in cui la navicella si sposta creo (se non gia presenti) gli universi vicini a quello nel quale
 		mi sono appena spostato
 	*/
-	bool ritorno = true, set_stato = false;
-	//Se nell'universo attuale ho distrutto tutti i pianeti setto lo statoAttacco a false
-	if (universo_di_gioco_ != nullptr && (*universo_di_gioco_->universo).getDistrutto())
+	bool movimento_ = true, set_stato_ = false;
+	//Se nel sistema solare attuale ho distrutto tutti i pianeti setto lo statoAttacco a false
+	if (sistema_solare_di_gioco_ != nullptr && (*sistema_solare_di_gioco_->universo).getDistrutto())
 		stato_attacco_ = false;
 		
 		listaUniversi posizione_attuale_tmp = posizione_attuale_;
 
 		switch (direzione) {
 		case 0:
-			posizione_attuale_ = cercaUniverso(posizione_attuale_->posizione.x, posizione_attuale_->posizione.y + 1);
-			//Se lo statoAttacco è false e la posizione cercata è nulla (ovvero sto cercando di andare in un uiverso nuovo) aggiorno la list_universi mettendo in testa il
-			//nuovo universo e setto un bool a true
+			posizione_attuale_ = cercaSistemaSolare(posizione_attuale_->posizione.x, posizione_attuale_->posizione.y + 1);
+			/*Se lo statoAttacco è false e la posizione cercata è nulla 
+			(ovvero sto cercando di andare in un sistema nuovo) aggiorno la list_universi mettendo in testa il
+			nuovo sistema solare e setto un bool a true*/
 			if (posizione_attuale_ == nullptr && !(stato_attacco_)) {
-				list_universi_ = aggiungiUniverso(posizione_attuale_tmp->posizione.x, posizione_attuale_tmp->posizione.y + 1);
-				set_stato = true;
+				list_universi_ = aggiungiSistemaSolare(posizione_attuale_tmp->posizione.x, posizione_attuale_tmp->posizione.y + 1);
+				set_stato_ = true;
 			}
 			break;
 		case 1:
-			posizione_attuale_ = cercaUniverso(posizione_attuale_->posizione.x + 1, posizione_attuale_->posizione.y);
+			posizione_attuale_ = cercaSistemaSolare(posizione_attuale_->posizione.x + 1, posizione_attuale_->posizione.y);
 			if (posizione_attuale_ == nullptr && !(stato_attacco_)) {
-				list_universi_ = aggiungiUniverso(posizione_attuale_tmp->posizione.x + 1, posizione_attuale_tmp->posizione.y);
-				set_stato = true;
+				list_universi_ = aggiungiSistemaSolare(posizione_attuale_tmp->posizione.x + 1, posizione_attuale_tmp->posizione.y);
+				set_stato_ = true;
 			}
 			break;
 		case 2:
-			posizione_attuale_ = cercaUniverso(posizione_attuale_->posizione.x, posizione_attuale_->posizione.y - 1);
+			posizione_attuale_ = cercaSistemaSolare(posizione_attuale_->posizione.x, posizione_attuale_->posizione.y - 1);
 			if (posizione_attuale_ == nullptr && !(stato_attacco_)) {
-				list_universi_ = aggiungiUniverso(posizione_attuale_tmp->posizione.x, posizione_attuale_tmp->posizione.y - 1);
-				set_stato = true;
+				list_universi_ = aggiungiSistemaSolare(posizione_attuale_tmp->posizione.x, posizione_attuale_tmp->posizione.y - 1);
+				set_stato_ = true;
 			}
 			break;
 		case 3:
-			posizione_attuale_ = cercaUniverso(posizione_attuale_->posizione.x - 1, posizione_attuale_->posizione.y);
+			posizione_attuale_ = cercaSistemaSolare(posizione_attuale_->posizione.x - 1, posizione_attuale_->posizione.y);
 			if (posizione_attuale_ == nullptr && !(stato_attacco_)) {
-				list_universi_ = aggiungiUniverso(posizione_attuale_tmp->posizione.x - 1, posizione_attuale_tmp->posizione.y);
-				set_stato = true;
+				list_universi_ = aggiungiSistemaSolare(posizione_attuale_tmp->posizione.x - 1, posizione_attuale_tmp->posizione.y);
+				set_stato_ = true;
 			}
 			break;
 		}
-		//Se setStato è true significa che mi muovero verso un universo nuovo mai visitato e quindi setto statoAttacco a true, e aggiorno sia l'universo di gioco
-		//sia la posizione attuale
-		if (set_stato) {
+		/*Se setStato è true significa che mi muovero verso un sistema 
+		nuovo, mai visitato e quindi setto statoAttacco a true, aggiorno sia il sistema solare di gioco
+		sia la posizione attuale*/
+		if (set_stato_) {
 			stato_attacco_ = true;
 			posizione_attuale_ = list_universi_;
-			universo_di_gioco_ = posizione_attuale_;
+			sistema_solare_di_gioco_ = posizione_attuale_;
 		}
 
-		//Se setStato è false significa che non mi muoverso verso un universo nuovo
-		//se non mi ci muovo perche tanto di andare verso un universo gia visitato
+		//Se set_stato è false significa che non mi muovero verso un sistema nuovo
+		//se non mi ci muovo è perche tanto di andare verso un universo gia visitato
 
 		else if (stato_attacco_) {
 
-			//caso in cui l'universo in cui voglio andare non sia ancora stato sbloccato
+			//caso in cui il sistema in cui voglio andare non sia ancora stato sbloccato
 			if (posizione_attuale_ == nullptr) {
 				posizione_attuale_ = posizione_attuale_tmp;
-				ritorno = false;
+				movimento_ = false;
 			}
-			//Il caso in cui torno a visitare un universo gia distrutto è già gestito
+			//Il caso in cui torno a visitare un sistema gia distrutto è già gestito
 		}
-	return ritorno;
+	return movimento_;
 }
 
 bool Mappa::ricercaPianeta(sf::Vector2f posizione) {
@@ -205,7 +207,7 @@ bool Mappa::aggiornaPunteggioPianeta()
 	else return false;
 }
 
-bool Mappa::aggiornaPunteggioUniverso()
+bool Mappa::aggiornaPunteggioSistemaSolare()
 {
 	if (posizione_attuale_ != nullptr && (*posizione_attuale_->universo).distrutto())
 		return true;
@@ -213,9 +215,11 @@ bool Mappa::aggiornaPunteggioUniverso()
 }
 
 void Mappa::restart(int width_, int height_) {
+	/*Metodo per il restart in cui vengono reinizializzati gli attributi*/
+
 
 	stato_attacco_ = true;
-	universo_di_gioco_ = nullptr;
+	sistema_solare_di_gioco_ = nullptr;
 	posizione_attuale_ = nullptr;
 	delete list_universi_;
 	list_universi_ = new nodoMappa;
@@ -224,6 +228,6 @@ void Mappa::restart(int width_, int height_) {
 	list_universi_->universo = new Universo(width_, height_);
 	list_universi_->next = nullptr;
 
-	universo_di_gioco_ = list_universi_;
+	sistema_solare_di_gioco_ = list_universi_;
 	posizione_attuale_ = list_universi_;
 }

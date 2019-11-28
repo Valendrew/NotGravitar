@@ -6,11 +6,6 @@
 class Mappa : public sf::Drawable, public sf::Transformable  {
 protected:
 
-	struct coordinate {
-		int x;
-		int y;
-	};
-
 	sf::Sprite sfondo_;
 	sf::Texture texture_;
 	int larghezza_finestra_;
@@ -18,7 +13,7 @@ protected:
 	bool stato_attacco_;
 	struct nodoMappa {
 		Universo *universo;
-		coordinate posizione;
+		sf::Vector2i posizione;
 		nodoMappa *next;
 	};
 
@@ -26,12 +21,12 @@ protected:
 
 	listaUniversi list_universi_;
 	listaUniversi posizione_attuale_; //puntatore  dove si trova l'astronave
-	listaUniversi universo_di_gioco_;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
+	listaUniversi sistema_solare_di_gioco_;  //puntatore all'universo dove attualmente si devono distruggere i pianeti
 
-	listaUniversi aggiungiUniverso(int x, int y); //addUniveso aggiunge un universo con coordinate x,y alla lista di universi
+	listaUniversi aggiungiSistemaSolare(int x, int y); //aggiungiUniverso aggiunge un universo con coordinate (x, y) alla lista di universi
 	
-	//findUniversi cerca un universo con coordinate x,y all'interno della lista e lo resistuisce (ritorna NULL se non lo trova)
-	listaUniversi cercaUniverso(int x, int y);
+	//cercaSistemaSolore cerca un universo con coordinate x,y all'interno della lista e lo resistuisce (ritorna NULL se non lo trova)
+	listaUniversi cercaSistemaSolare(int x, int y);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 public:
 	Mappa(int larghezza_finestra, int altezza_finestra);
@@ -41,9 +36,9 @@ public:
 	bool controlloCollisioneSuperficie(sf::Vector2f pos);
 
 	void uscitaPianeta();
-	/*spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea nuovi universi
+	/*spostamento gestisce lo spostamento della navicella, modificando il puntatore posizioneAttuale ed eventualmente crea un nuovo sistema solare
 	adiacenti a quello attuale */
-	bool spostamentoUniverso(int direzione);
+	bool spostamentoSistemaSolare(int direzione);
 	bool ricercaPianeta(sf::Vector2f posizione);
 
 	proiettile_ptr getProiettili();
@@ -53,7 +48,7 @@ public:
 
 	bool aggiornaPunteggioBunker();
 	bool aggiornaPunteggioPianeta();
-	bool aggiornaPunteggioUniverso();
+	bool aggiornaPunteggioSistemaSolare();
 	void restart(int width_, int height_);
 };
 
